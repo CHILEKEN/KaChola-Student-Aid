@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>KaChola Student Aid - Collateral-Based Student Loans</title>
 
-  <!-- Google Fonts: Oswald for bold/condensed style -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
@@ -22,6 +22,8 @@
             'kachola-gold-lt': '#E8C670',
             'apply-btn':       '#F59E0B',
             'apply-btn-hover':'#D97706',
+            'approve-green':   '#10B981',   // emerald green
+            'decline-red':     '#EF4444',   // red-500
           },
           fontFamily: {
             oswald: ['Oswald', 'sans-serif'],
@@ -32,9 +34,8 @@
   </script>
 
   <style>
-    body {
-      background-color: #F5F0E9;
-    }
+    body { background-color: #F5F0E9; }
+    #due-modal { display: none; }
   </style>
 </head>
 <body class="font-oswald text-gray-800">
@@ -66,12 +67,8 @@
   <main class="pt-4">
 
     <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-white rounded-xl shadow-lg">
-      <h3 class="text-2xl font-bold text-kachola-gold text-center mb-5">
-        Interest Rates (Flat – Charged Upfront)
-      </h3>
-      <p class="text-center mb-6 text-gray-700">
-        Repayment in full at end of term. Collateral required. No hidden fees.
-      </p>
+      <h3 class="text-2xl font-bold text-kachola-gold text-center mb-5">Interest Rates (Flat – Charged Upfront)</h3>
+      <p class="text-center mb-6 text-gray-700">Repayment in full at end of term. Collateral required. No hidden fees.</p>
 
       <div class="overflow-x-auto">
         <table class="min-w-full bg-kachola-cream border border-kachola-brown-light rounded-lg overflow-hidden">
@@ -96,9 +93,7 @@
     </section>
 
     <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-12" id="form">
-      <h3 class="text-2xl sm:text-3xl font-bold text-kachola-gold text-center mb-8">
-        Loan Application
-      </h3>
+      <h3 class="text-2xl sm:text-3xl font-bold text-kachola-gold text-center mb-8">Loan Application</h3>
 
       <form id="loan-form" class="max-w-lg mx-auto bg-white p-6 sm:p-8 rounded-xl shadow-xl border border-kachola-brown-light/30"
             action="https://api.web3forms.com/submit" method="POST">
@@ -106,6 +101,7 @@
         <input type="hidden" name="access_key" value="fe293e23-d328-4bad-86e8-d9b531e2a37d">
 
         <div class="space-y-5">
+          <!-- Form fields (same as before) -->
           <div>
             <label for="full-name" class="block text-kachola-gold font-medium mb-1.5">Full Name</label>
             <input type="text" id="full-name" name="full_name" required class="w-full px-4 py-2.5 border border-kachola-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream">
@@ -190,11 +186,29 @@
 
   </main>
 
+  <!-- Custom Due Date Confirmation Modal -->
+  <div id="due-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50" style="display:none;">
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 p-6 border border-kachola-brown-light">
+      <h3 class="text-xl font-bold text-kachola-gold mb-4 text-center">Loan Due Date</h3>
+      <p id="modal-due-text" class="text-center text-lg mb-6 text-gray-800">
+        Your loan will be due on <span id="modal-date" class="font-semibold text-kachola-gold"></span>.
+      </p>
+      <div class="flex justify-center gap-4">
+        <button id="decline-btn" class="px-8 py-3 bg-decline-red text-white font-bold rounded-lg hover:bg-red-700 transition shadow">
+          DECLINE
+        </button>
+        <button id="approve-btn" class="px-8 py-3 bg-approve-green text-white font-bold rounded-lg hover:bg-green-700 transition shadow">
+          APPROVE
+        </button>
+      </div>
+    </div>
+  </div>
+
   <footer class="bg-kachola-brown text-white py-8 text-center mt-16">
     <p class="text-sm">© 2026 KaChola Student Aid. All rights reserved.</p>
   </footer>
 
-  <!-- JavaScript (updated with due date confirmation & thank you alert) -->
+  <!-- JavaScript -->
   <script>
     const form = document.getElementById('loan-form');
     const amountInput = document.getElementById('loan-amount');
@@ -206,9 +220,16 @@
     const formMessage = document.getElementById('form-message');
     const confirmationCheck = document.getElementById('confirmation');
 
+    const modal = document.getElementById('due-modal');
+    const modalDateSpan = document.getElementById('modal-date');
+    const approveBtn = document.getElementById('approve-btn');
+    const declineBtn = document.getElementById('decline-btn');
+
     const rates = { 1: 0.11, 2: 0.22, 3: 0.345, 4: 0.39 };
     const minAmount = 200;
     const maxAmount = 5000;
+
+    let currentWeeks = 0; // to store selected weeks when confirming
 
     function validateAmount(amount) {
       if (isNaN(amount) || amount < minAmount) {
@@ -260,28 +281,42 @@
       submitBtn.disabled = !(allValid && amountValid && termValid && confirmed);
     }
 
-    // Format date as DD Month YYYY
+    // Format date: DD Month YYYY
     function formatDate(date) {
       const options = { day: 'numeric', month: 'long', year: 'numeric' };
       return date.toLocaleDateString('en-GB', options);
     }
 
-    // Handle form submission with due date confirmation
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const weeks = parseInt(termSelect.value);
+    // Show custom modal with due date
+    function showDueModal(weeks) {
       const today = new Date();
       const dueDate = new Date(today);
       dueDate.setDate(today.getDate() + weeks * 7);
 
-      const dueDateStr = formatDate(dueDate);
+      modalDateSpan.textContent = formatDate(dueDate);
+      modal.style.display = 'flex';
+      currentWeeks = weeks; // store for later use if needed
+    }
 
-      const confirmMsg = `Your loan will be due on ${dueDateStr}.\n\nApprove Submission?`;
+    // Hide modal
+    function hideModal() {
+      modal.style.display = 'none';
+    }
 
-      if (!window.confirm(confirmMsg)) {
-        return; // User cancelled
-      }
+    // Submit logic
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const weeks = parseInt(termSelect.value);
+      if (!weeks || weeks < 1 || weeks > 4) return;
+
+      // Show modal instead of submitting immediately
+      showDueModal(weeks);
+    });
+
+    // Approve → actually submit the form
+    approveBtn.addEventListener('click', async () => {
+      hideModal();
 
       submitBtn.disabled = true;
       formMessage.textContent = 'Submitting application...';
@@ -315,7 +350,12 @@
       }
     });
 
-    // Existing event listeners
+    // Decline → just close modal
+    declineBtn.addEventListener('click', () => {
+      hideModal();
+    });
+
+    // Existing listeners
     amountInput.addEventListener('input', updatePreview);
     termSelect.addEventListener('change', updatePreview);
     confirmationCheck.addEventListener('change', checkFormReady);
