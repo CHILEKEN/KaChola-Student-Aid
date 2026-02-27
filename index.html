@@ -27,167 +27,186 @@
     </style>
 </head>
 <body class="font-sans text-kachola-brown antialiased">
-    <!-- Header Section -->
-    <header class="bg-kachola-brown text-kachola-gold py-6">
-        <div class="container mx-auto px-4 text-center">
-            <img src="logo.png" alt="KaChola Student Aid Logo" class="mx-auto h-24 mb-4" /> <!-- Replace with your logo file path -->
-            <h1 class="text-3xl font-bold">KaChola Student Aid</h1>
-            <p class="text-lg mt-2">Collateral-Based Loans for Students at UNZA, CBU, or Evelyn Hone College</p>
+
+    <!-- Navigation Bar -->
+    <nav class="bg-kachola-brown text-kachola-gold shadow-lg fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <!-- Logo on the left -->
+            <a href="#" class="flex items-center">
+                <img src="pic.png" alt="KaChola Student Aid Logo" class="h-10 w-auto object-contain" />
+            </a>
+
+            <!-- Centered Title -->
+            <div class="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold hidden md:block">
+                KaChola Student Aid
+            </div>
+
+            <!-- Optional right-side items (can add links/menu later) -->
+            <div class="flex items-center space-x-6">
+                <!-- Empty for now – you can add "Contact" / "About" links here -->
+            </div>
         </div>
-    </header>
+    </nav>
 
-    <!-- Intro Section -->
-    <section class="container mx-auto px-4 py-8">
-        <p class="text-center text-lg mb-6">
-            Fast financial support exclusively for currently enrolled students. Secured by collateral. Quick application process.
-        </p>
-    </section>
+    <!-- Spacer to prevent content from being hidden under fixed nav -->
+    <div class="h-16"></div>
 
-    <!-- Interest Rates Section -->
-    <section class="container mx-auto px-4 py-8 bg-white rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold text-kachola-gold text-center mb-4">Loan Interest Rates (Flat Rates – Charged Upfront)</h2>
-        <p class="text-center mb-6">All loans are collateral-secured. Repayment in full at the end of the term. No hidden fees.</p>
-        <div class="overflow-x-auto">
-            <table class="min-w-full bg-kachola-cream border border-kachola-brown-light">
-                <thead class="bg-kachola-brown text-kachola-gold">
-                    <tr>
-                        <th class="px-4 py-2">Term</th>
-                        <th class="px-4 py-2">Interest Rate</th>
-                    </tr>
-                </thead>
-                <tbody class="text-center">
-                    <tr>
-                        <td class="px-4 py-2 border">1 Week</td>
-                        <td class="px-4 py-2 border">11%</td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-2 border">2 Weeks</td>
-                        <td class="px-4 py-2 border">22%</td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-2 border">3 Weeks</td>
-                        <td class="px-4 py-2 border">34.5%</td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-2 border">4 Weeks</td>
-                        <td class="px-4 py-2 border">39%</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <p class="text-center mt-4 text-sm">Example: For a ZMW 5,000 loan over 2 weeks → Interest = ZMW 1,100 → Total repayment = ZMW 6,100</p>
-    </section>
+    <!-- Main Content -->
+    <main class="pt-4">
+        <!-- Header/Intro Section -->
+        <header class="container mx-auto px-4 py-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-kachola-gold mb-4">Collateral-Based Loans</h1>
+            <p class="text-lg max-w-3xl mx-auto">
+                Fast financial support exclusively for currently enrolled students at UNZA, CBU, or Evelyn Hone College. Secured by collateral. Quick application process.
+            </p>
+        </header>
 
-    <!-- Application Form Section -->
-    <section class="container mx-auto px-4 py-8">
-        <h2 class="text-2xl font-bold text-kachola-gold text-center mb-6">Loan Application Form</h2>
-        <form id="loan-form" class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md" action="https://api.web3forms.com/submit" method="POST">
-            <!-- Web3Forms Access Key (Replace with your actual key) -->
-            <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_HERE">
-
-            <!-- Full Name -->
-            <div class="mb-4">
-                <label for="full-name" class="block text-kachola-gold font-medium mb-1">Full Name</label>
-                <input type="text" id="full-name" name="full_name" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+        <!-- Interest Rates Section -->
+        <section class="container mx-auto px-4 py-8 bg-white rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold text-kachola-gold text-center mb-4">Loan Interest Rates (Flat Rates – Charged Upfront)</h2>
+            <p class="text-center mb-6">All loans are collateral-secured. Repayment in full at the end of the term. No hidden fees.</p>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-kachola-cream border border-kachola-brown-light">
+                    <thead class="bg-kachola-brown text-kachola-gold">
+                        <tr>
+                            <th class="px-4 py-2">Term</th>
+                            <th class="px-4 py-2">Interest Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <tr>
+                            <td class="px-4 py-2 border">1 Week</td>
+                            <td class="px-4 py-2 border">11%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-2 border">2 Weeks</td>
+                            <td class="px-4 py-2 border">22%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-2 border">3 Weeks</td>
+                            <td class="px-4 py-2 border">34.5%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-2 border">4 Weeks</td>
+                            <td class="px-4 py-2 border">39%</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+            <p class="text-center mt-4 text-sm">Example: For a ZMW 5,000 loan over 2 weeks → Interest = ZMW 1,100 → Total repayment = ZMW 6,100</p>
+        </section>
 
-            <!-- Student ID -->
-            <div class="mb-4">
-                <label for="student-id" class="block text-kachola-gold font-medium mb-1">Student ID / Registration Number</label>
-                <input type="text" id="student-id" name="student_id" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
-            </div>
+        <!-- Application Form Section -->
+        <section class="container mx-auto px-4 py-10">
+            <h2 class="text-2xl font-bold text-kachola-gold text-center mb-6">Loan Application Form</h2>
+            <form id="loan-form" class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md" action="https://api.web3forms.com/submit" method="POST">
+                <!-- Web3Forms Access Key – REPLACE THIS -->
+                <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_HERE">
 
-            <!-- Institution -->
-            <div class="mb-4">
-                <label for="institution" class="block text-kachola-gold font-medium mb-1">Institution</label>
-                <select id="institution" name="institution" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
-                    <option value="">Select Institution</option>
-                    <option value="UNZA">University of Zambia (UNZA)</option>
-                    <option value="CBU">Copperbelt University (CBU)</option>
-                    <option value="Evelyn Hone">Evelyn Hone College</option>
-                </select>
-            </div>
-
-            <!-- Program & Year -->
-            <div class="mb-4">
-                <label for="program-year" class="block text-kachola-gold font-medium mb-1">Program & Year of Study</label>
-                <input type="text" id="program-year" name="program_year" placeholder="e.g., BSc Computer Science, Year 3" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
-            </div>
-
-            <!-- Phone Number -->
-            <div class="mb-4">
-                <label for="phone" class="block text-kachola-gold font-medium mb-1">Phone Number</label>
-                <input type="tel" id="phone" name="phone" placeholder="e.g., +260 97x xxx xxx" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
-            </div>
-
-            <!-- Email -->
-            <div class="mb-4">
-                <label for="email" class="block text-kachola-gold font-medium mb-1">Email Address</label>
-                <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
-            </div>
-
-            <!-- NRC Number -->
-            <div class="mb-4">
-                <label for="nrc" class="block text-kachola-gold font-medium mb-1">National ID / NRC Number</label>
-                <input type="text" id="nrc" name="nrc" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
-            </div>
-
-            <!-- Loan Amount -->
-            <div class="mb-4">
-                <label for="loan-amount" class="block text-kachola-gold font-medium mb-1">Loan Amount (ZMW)</label>
-                <input type="number" id="loan-amount" name="loan_amount" min="200" max="5000" step="1" placeholder="e.g., 2000" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
-                <p id="amount-error" class="text-red-600 text-sm mt-1 hidden"></p>
-            </div>
-
-            <!-- Loan Term -->
-            <div class="mb-4">
-                <label for="loan-term" class="block text-kachola-gold font-medium mb-1">Loan Term</label>
-                <select id="loan-term" name="loan_term" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
-                    <option value="">Select loan term</option>
-                    <option value="1">1 week – 11% interest</option>
-                    <option value="2">2 weeks – 22% interest</option>
-                    <option value="3">3 weeks – 34.5% interest</option>
-                    <option value="4">4 weeks – 39% interest</option>
-                </select>
-            </div>
-
-            <!-- Repayment Preview -->
-            <div id="repayment-preview" class="hidden mt-4 p-4 bg-green-100 border border-green-400 text-green-800 rounded-lg">
-                <p id="repayment-text" class="font-medium"></p>
-                <div class="mt-3">
-                    <input type="checkbox" id="accept-repayment" class="mr-2">
-                    <label for="accept-repayment" class="text-green-900">Yes, I acknowledge and accept this repayment amount</label>
+                <!-- Full Name -->
+                <div class="mb-4">
+                    <label for="full-name" class="block text-kachola-gold font-medium mb-1">Full Name</label>
+                    <input type="text" id="full-name" name="full_name" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
                 </div>
-            </div>
 
-            <!-- Collateral Details -->
-            <div class="mb-4">
-                <label for="collateral" class="block text-kachola-gold font-medium mb-1">Collateral Details</label>
-                <textarea id="collateral" name="collateral" rows="3" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" placeholder="e.g., Laptop model XYZ, estimated value 8000 ZMW" required></textarea>
-            </div>
+                <!-- Student ID -->
+                <div class="mb-4">
+                    <label for="student-id" class="block text-kachola-gold font-medium mb-1">Student ID / Registration Number</label>
+                    <input type="text" id="student-id" name="student_id" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+                </div>
 
-            <!-- Additional Message -->
-            <div class="mb-4">
-                <label for="message" class="block text-kachola-gold font-medium mb-1">Additional Message (Optional)</label>
-                <textarea id="message" name="message" rows="3" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream"></textarea>
-            </div>
+                <!-- Institution -->
+                <div class="mb-4">
+                    <label for="institution" class="block text-kachola-gold font-medium mb-1">Institution</label>
+                    <select id="institution" name="institution" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+                        <option value="">Select Institution</option>
+                        <option value="UNZA">University of Zambia (UNZA)</option>
+                        <option value="CBU">Copperbelt University (CBU)</option>
+                        <option value="Evelyn Hone">Evelyn Hone College</option>
+                    </select>
+                </div>
 
-            <!-- Confirmation Checkbox -->
-            <div class="mb-4">
-                <input type="checkbox" id="confirmation" name="confirmation" class="mr-2" required>
-                <label for="confirmation" class="text-kachola-brown">I confirm that I am currently enrolled at one of the listed institutions and the information provided is accurate.</label>
-            </div>
+                <!-- Program & Year -->
+                <div class="mb-4">
+                    <label for="program-year" class="block text-kachola-gold font-medium mb-1">Program & Year of Study</label>
+                    <input type="text" id="program-year" name="program_year" placeholder="e.g., BSc Computer Science, Year 3" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+                </div>
 
-            <!-- Submit Button -->
-            <button type="submit" id="submit-btn" class="w-full bg-kachola-gold text-kachola-brown font-bold py-2 px-4 rounded-md hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed" disabled>Submit Application</button>
+                <!-- Phone Number -->
+                <div class="mb-4">
+                    <label for="phone" class="block text-kachola-gold font-medium mb-1">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="e.g., +260 97x xxx xxx" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+                </div>
 
-            <!-- Success/Error Message -->
-            <p id="form-message" class="mt-4 text-center text-sm"></p>
-        </form>
-    </section>
+                <!-- Email -->
+                <div class="mb-4">
+                    <label for="email" class="block text-kachola-gold font-medium mb-1">Email Address</label>
+                    <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+                </div>
+
+                <!-- NRC Number -->
+                <div class="mb-4">
+                    <label for="nrc" class="block text-kachola-gold font-medium mb-1">National ID / NRC Number</label>
+                    <input type="text" id="nrc" name="nrc" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+                </div>
+
+                <!-- Loan Amount -->
+                <div class="mb-4">
+                    <label for="loan-amount" class="block text-kachola-gold font-medium mb-1">Loan Amount (ZMW)</label>
+                    <input type="number" id="loan-amount" name="loan_amount" min="200" max="5000" step="1" placeholder="e.g., 2000" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+                    <p id="amount-error" class="text-red-600 text-sm mt-1 hidden"></p>
+                </div>
+
+                <!-- Loan Term -->
+                <div class="mb-4">
+                    <label for="loan-term" class="block text-kachola-gold font-medium mb-1">Loan Term</label>
+                    <select id="loan-term" name="loan_term" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+                        <option value="">Select loan term</option>
+                        <option value="1">1 week – 11% interest</option>
+                        <option value="2">2 weeks – 22% interest</option>
+                        <option value="3">3 weeks – 34.5% interest</option>
+                        <option value="4">4 weeks – 39% interest</option>
+                    </select>
+                </div>
+
+                <!-- Repayment Preview -->
+                <div id="repayment-preview" class="hidden mt-4 p-4 bg-green-100 border border-green-400 text-green-800 rounded-lg">
+                    <p id="repayment-text" class="font-medium"></p>
+                    <div class="mt-3">
+                        <input type="checkbox" id="accept-repayment" class="mr-2">
+                        <label for="accept-repayment" class="text-green-900">Yes, I acknowledge and accept this repayment amount</label>
+                    </div>
+                </div>
+
+                <!-- Collateral Details -->
+                <div class="mb-4">
+                    <label for="collateral" class="block text-kachola-gold font-medium mb-1">Collateral Details</label>
+                    <textarea id="collateral" name="collateral" rows="3" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" placeholder="e.g., Laptop model XYZ, estimated value 8000 ZMW" required></textarea>
+                </div>
+
+                <!-- Additional Message -->
+                <div class="mb-4">
+                    <label for="message" class="block text-kachola-gold font-medium mb-1">Additional Message (Optional)</label>
+                    <textarea id="message" name="message" rows="3" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream"></textarea>
+                </div>
+
+                <!-- Confirmation Checkbox -->
+                <div class="mb-6">
+                    <input type="checkbox" id="confirmation" name="confirmation" class="mr-2" required>
+                    <label for="confirmation" class="text-kachola-brown">I confirm that I am currently enrolled at one of the listed institutions and the information provided is accurate.</label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submit-btn" class="w-full bg-kachola-gold text-kachola-brown font-bold py-3 px-6 rounded-md hover:bg-opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>Submit Application</button>
+
+                <!-- Form Status Message -->
+                <p id="form-message" class="mt-4 text-center text-sm"></p>
+            </form>
+        </section>
+    </main>
 
     <!-- Footer -->
-    <footer class="bg-kachola-brown text-kachola-gold py-4 text-center">
+    <footer class="bg-kachola-brown text-kachola-gold py-6 text-center mt-12">
         <p>&copy; 2026 KaChola Student Aid. All rights reserved.</p>
     </footer>
 
