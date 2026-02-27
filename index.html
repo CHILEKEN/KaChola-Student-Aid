@@ -43,40 +43,26 @@
   <nav class="bg-kachola-brown text-white fixed top-0 left-0 right-0 z-50 shadow-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16 md:h-18">
-        
-        <!-- Left: Logo + Brand Name -->
         <div class="flex items-center space-x-3 sm:space-x-4">
-          <img 
-            src="pic.png" 
-            alt="KaChola Logo" 
-            class="h-9 sm:h-10 md:h-12 w-auto object-contain"
-          />
+          <img src="pic.png" alt="KaChola Logo" class="h-9 sm:h-10 md:h-12 w-auto object-contain" />
           <span class="text-xl sm:text-2xl md:text-3xl font-bold tracking-wide">
             KaChola <span class="text-kachola-gold-lt">Student Aid</span>
           </span>
         </div>
-
-        <!-- Right: Apply Now button + My Applications link -->
         <div class="flex items-center space-x-5 sm:space-x-8">
-          <a href="#form"
-             class="px-5 py-2.5 bg-apply-btn text-white font-semibold rounded-full 
-                    hover:bg-apply-btn-hover transition shadow-sm text-sm sm:text-base">
+          <a href="#form" class="px-5 py-2.5 bg-apply-btn text-white font-semibold rounded-full hover:bg-apply-btn-hover transition shadow-sm text-sm sm:text-base">
             Apply Now
           </a>
-          <a href="#"
-             class="text-white hover:text-kachola-gold-lt font-medium text-sm sm:text-base">
+          <a href="#" class="text-white hover:text-kachola-gold-lt font-medium text-sm sm:text-base">
             My Applications
           </a>
         </div>
-
       </div>
     </div>
   </nav>
 
-  <!-- Spacer for fixed nav -->
   <div class="h-16 md:h-18"></div>
 
-  <!-- Main content starts directly with Interest Rates -->
   <main class="pt-4">
 
     <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-white rounded-xl shadow-lg">
@@ -177,7 +163,6 @@
             </select>
           </div>
 
-          <!-- Small green preview with bright red text -->
           <div id="repayment-preview" class="hidden p-3 bg-green-50 border border-green-300 rounded-lg text-center">
             <p id="repayment-text" class="text-base font-semibold text-red-600"></p>
           </div>
@@ -209,11 +194,8 @@
     <p class="text-sm">© 2026 KaChola Student Aid. All rights reserved.</p>
   </footer>
 
-  <!-- JavaScript (form logic) -->
+  <!-- JavaScript (updated with due date confirmation & thank you alert) -->
   <script>
-    // ────────────────────────────────────────────────
-    // Your existing JavaScript logic (unchanged)
-    // ────────────────────────────────────────────────
     const form = document.getElementById('loan-form');
     const amountInput = document.getElementById('loan-amount');
     const termSelect = document.getElementById('loan-term');
@@ -278,15 +260,29 @@
       submitBtn.disabled = !(allValid && amountValid && termValid && confirmed);
     }
 
-    amountInput.addEventListener('input', updatePreview);
-    termSelect.addEventListener('change', updatePreview);
-    confirmationCheck.addEventListener('change', checkFormReady);
-    form.querySelectorAll('input, select, textarea').forEach(el => {
-      el.addEventListener('input', checkFormReady);
-    });
+    // Format date as DD Month YYYY
+    function formatDate(date) {
+      const options = { day: 'numeric', month: 'long', year: 'numeric' };
+      return date.toLocaleDateString('en-GB', options);
+    }
 
+    // Handle form submission with due date confirmation
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      const weeks = parseInt(termSelect.value);
+      const today = new Date();
+      const dueDate = new Date(today);
+      dueDate.setDate(today.getDate() + weeks * 7);
+
+      const dueDateStr = formatDate(dueDate);
+
+      const confirmMsg = `Your loan will be due on ${dueDateStr}.\n\nApprove Submission?`;
+
+      if (!window.confirm(confirmMsg)) {
+        return; // User cancelled
+      }
+
       submitBtn.disabled = true;
       formMessage.textContent = 'Submitting application...';
       formMessage.className = 'text-blue-600';
@@ -303,6 +299,7 @@
         if (data.success) {
           formMessage.textContent = 'Application sent successfully! We will contact you soon.';
           formMessage.className = 'text-green-600';
+          alert('Thank you for trusting KaChola Student Aid! We will contact you soon.');
           form.reset();
           previewDiv.classList.add('hidden');
           confirmationCheck.checked = false;
@@ -316,6 +313,14 @@
       } finally {
         submitBtn.disabled = false;
       }
+    });
+
+    // Existing event listeners
+    amountInput.addEventListener('input', updatePreview);
+    termSelect.addEventListener('change', updatePreview);
+    confirmationCheck.addEventListener('change', checkFormReady);
+    form.querySelectorAll('input, select, textarea').forEach(el => {
+      el.addEventListener('input', checkFormReady);
     });
   </script>
 
