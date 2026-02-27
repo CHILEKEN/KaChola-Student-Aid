@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>KaChola Student Aid - Collateral-Based Student Loans</title>
 
-    <!-- Google Fonts: Oswald for thick bold condensed look + fallback -->
+    <!-- Google Fonts: Oswald for thick bold condensed look -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700;800&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
                     colors: {
                         'kachola-brown': '#3B2415',
                         'kachola-gold': '#D4A017',
-                        'kachola-gold-light': '#E8C670',  // Lighter gold for contrast
+                        'kachola-gold-light': '#E8C670',
                         'kachola-brown-light': '#704923',
                         'kachola-cream': '#F5F0E9',
                     },
@@ -109,29 +109,27 @@
             </p>
         </section>
 
-        <!-- Application Form (same as before) -->
+        <!-- Application Form -->
         <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-12" id="form">
             <h3 class="text-2xl sm:text-3xl font-bold text-kachola-gold text-center mb-8">Loan Application</h3>
 
             <form id="loan-form" class="max-w-lg mx-auto bg-white p-6 sm:p-8 rounded-xl shadow-xl border border-kachola-brown-light/30"
                   action="https://api.web3forms.com/submit" method="POST">
 
-                <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_HERE">
+                <!-- Your Web3Forms Access Key is now integrated here -->
+                <input type="hidden" name="access_key" value="fe293e23-d328-4bad-86e8-d9b531e2a37d">
 
                 <div class="space-y-5">
-                    <!-- Full Name -->
                     <div>
                         <label for="full-name" class="block text-kachola-gold font-medium mb-1.5">Full Name</label>
                         <input type="text" id="full-name" name="full_name" required class="w-full px-4 py-2.5 border border-kachola-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream">
                     </div>
 
-                    <!-- Student ID -->
                     <div>
                         <label for="student-id" class="block text-kachola-gold font-medium mb-1.5">Student ID / Registration Number</label>
                         <input type="text" id="student-id" name="student_id" required class="w-full px-4 py-2.5 border border-kachola-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream">
                     </div>
 
-                    <!-- Institution -->
                     <div>
                         <label for="institution" class="block text-kachola-gold font-medium mb-1.5">Institution</label>
                         <select id="institution" name="institution" required class="w-full px-4 py-2.5 border border-kachola-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream">
@@ -142,38 +140,32 @@
                         </select>
                     </div>
 
-                    <!-- Program & Year -->
                     <div>
                         <label for="program-year" class="block text-kachola-gold font-medium mb-1.5">Program & Year of Study</label>
                         <input type="text" id="program-year" name="program_year" placeholder="e.g. BSc Computer Science, Year 3" required class="w-full px-4 py-2.5 border border-kachola-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream">
                     </div>
 
-                    <!-- Phone -->
                     <div>
                         <label for="phone" class="block text-kachola-gold font-medium mb-1.5">Phone Number</label>
                         <input type="tel" id="phone" name="phone" placeholder="+260 97x xxx xxx" required class="w-full px-4 py-2.5 border border-kachola-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream">
                     </div>
 
-                    <!-- Email -->
                     <div>
                         <label for="email" class="block text-kachola-gold font-medium mb-1.5">Email Address</label>
                         <input type="email" id="email" name="email" required class="w-full px-4 py-2.5 border border-kachola-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream">
                     </div>
 
-                    <!-- NRC -->
                     <div>
                         <label for="nrc" class="block text-kachola-gold font-medium mb-1.5">National ID / NRC Number</label>
                         <input type="text" id="nrc" name="nrc" required class="w-full px-4 py-2.5 border border-kachola-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream">
                     </div>
 
-                    <!-- Loan Amount -->
                     <div>
                         <label for="loan-amount" class="block text-kachola-gold font-medium mb-1.5">Loan Amount (ZMW)</label>
                         <input type="number" id="loan-amount" name="loan_amount" min="200" max="5000" step="1" placeholder="200 – 5000" required class="w-full px-4 py-2.5 border border-kachola-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream">
                         <p id="amount-error" class="text-red-600 text-sm mt-1.5 hidden"></p>
                     </div>
 
-                    <!-- Loan Term -->
                     <div>
                         <label for="loan-term" class="block text-kachola-gold font-medium mb-1.5">Loan Term</label>
                         <select id="loan-term" name="loan_term" required class="w-full px-4 py-2.5 border border-kachola-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream">
@@ -185,7 +177,6 @@
                         </select>
                     </div>
 
-                    <!-- Repayment Preview -->
                     <div id="repayment-preview" class="hidden p-5 bg-green-50 border border-green-300 rounded-lg">
                         <p id="repayment-text" class="font-medium text-green-800 leading-relaxed"></p>
                         <div class="mt-4 flex items-center">
@@ -194,19 +185,16 @@
                         </div>
                     </div>
 
-                    <!-- Collateral -->
                     <div>
                         <label for="collateral" class="block text-kachola-gold font-medium mb-1.5">Collateral Details</label>
                         <textarea id="collateral" name="collateral" rows="3" placeholder="e.g. Laptop – model XYZ – approx. value ZMW 8,000" required class="w-full px-4 py-2.5 border border-kachola-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream"></textarea>
                     </div>
 
-                    <!-- Message -->
                     <div>
                         <label for="message" class="block text-kachola-gold font-medium mb-1.5">Additional Message (optional)</label>
                         <textarea id="message" name="message" rows="3" class="w-full px-4 py-2.5 border border-kachola-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream"></textarea>
                     </div>
 
-                    <!-- Confirmation -->
                     <div class="flex items-start">
                         <input type="checkbox" id="confirmation" name="confirmation" required class="h-5 w-5 mt-1 text-kachola-gold focus:ring-kachola-gold border-kachola-brown-light">
                         <label for="confirmation" class="ml-2 text-sm text-kachola-brown">
@@ -214,7 +202,6 @@
                         </label>
                     </div>
 
-                    <!-- Submit -->
                     <button type="submit" id="submit-btn" class="w-full bg-kachola-gold text-kachola-brown font-bold py-3.5 px-6 rounded-lg hover:bg-opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-md" disabled>
                         Submit Application
                     </button>
@@ -229,7 +216,7 @@
         <p class="text-sm">© 2026 KaChola Student Aid. All rights reserved.</p>
     </footer>
 
-    <!-- JavaScript (unchanged) -->
+    <!-- JavaScript Logic -->
     <script>
         const form = document.getElementById('loan-form');
         const amountInput = document.getElementById('loan-amount');
