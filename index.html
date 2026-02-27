@@ -1,308 +1,309 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>KaChola Student Aid – Quick Short-Term Loans</title>
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-  <style>
-    :root { --primary: #4B2E1A; --accent: #D4AF37; --bg: #F5F0E9; }
-    body {
-      min-height: 100vh;
-      font-family: system-ui, sans-serif;
-      color: #333;
-      background-color: #F5F0E9;
-      background-image: url('photo.png');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-    }
-    body::before {
-      content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background-color: rgba(255, 255, 255, 0.7); z-index: -1;
-    }
-    .card {
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(10px);
-      border-radius: 1rem;
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
-    }
-    .navbar { background-color: rgba(75, 46, 26, 0.95); backdrop-filter: blur(4px); }
-    .step-indicator div {
-      width: 1.8rem; height: 1.8rem; border-radius: 50%;
-      background: #e5e7eb; display: flex; align-items: center; justify-content: center;
-      font-size: 0.8rem; font-weight: bold; transition: 0.3s;
-    }
-    .step-indicator div.active { background: var(--accent); color: var(--primary); }
-    .step-indicator div.completed { background: var(--primary); color: white; }
-    .error-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7); z-index: 1000;
-      display: flex; align-items: center; justify-content: center;
-      visibility: hidden; opacity: 0; transition: 0.3s;
-    }
-    .error-overlay.show { visibility: visible; opacity: 1; }
-    .error-box { background: white; padding: 2.5rem; border-radius: 1rem; text-align: center; max-width: 400px; }
-  </style>
-</head>
-<body>
-  <div id="root"></div>
-
-  <script type="text/babel">
-    const { useState, useEffect } = React;
-
-    // Helper: Safely parse JSON from storage
-    const getSaved = (key, def) => {
-      const val = localStorage.getItem(key);
-      if (!val) return def;
-      try { return JSON.parse(val); } catch { return val; }
-    };
-
-    const formatZMW = (num) => "K " + Number(num).toLocaleString('en-ZM', { minimumFractionDigits: 2 });
-
-    function App() {
-      const [activeTab, setActiveTab] = useState(() => getSaved('kachola_tab', 'apply'));
-      const [currentStep, setCurrentStep] = useState(0);
-      const [loans, setLoans] = useState(() => getSaved('kachola_loans', []));
-      const [errorMessage, setErrorMessage] = useState(null);
-
-      // Form State
-      const [form, setForm] = useState({
-        firstName: '', lastName: '', nrc: '', institution: '', studentId: '',
-        year: '', program: '', phone: '', email: '', parentPhone: '',
-        idType: 'studentId', collateralType: '', ownership: '', ownerDetails: '',
-        amount: '', weeks: '1'
-      });
-
-      useEffect(() => { localStorage.setItem('kachola_tab', activeTab); }, [activeTab]);
-      useEffect(() => { localStorage.setItem('kachola_loans', JSON.stringify(loans)); }, [loans]);
-
-      const handleInput = (e) => {
-        const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: value }));
-      };
-
-      const validateStep = () => {
-        const phoneRegex = /^(0(9|7|5))\d{8}$/;
-        if (currentStep === 0 && (!form.firstName || !form.lastName || !form.nrc)) return "Please fill in all personal details.";
-        if (currentStep === 1 && (!form.institution || !form.studentId)) return "Academic details are required.";
-        if (currentStep === 2) {
-          if (!phoneRegex.test(form.phone)) return "Invalid student phone number format.";
-          if (!phoneRegex.test(form.parentPhone)) return "Invalid parent phone number format.";
-        }
-        if (currentStep === 4 && !form.collateralType) return "Please select a collateral type.";
-        if (currentStep === 5 && (form.amount < 200 || form.amount > 5000)) return "Amount must be between K200 and K5000.";
-        return null;
-      };
-
-      const handleNext = () => {
-        const err = validateStep();
-        if (err) setErrorMessage(err);
-        else setCurrentStep(s => s + 1);
-      };
-
-      const calculateTotal = () => {
-        const amt = Number(form.amount) || 0;
-        const rates = { '1': 0.11, '2': 0.21, '3': 0.30, '4': 0.38 };
-        const interest = amt * (rates[form.weeks] || 0);
-        return amt + interest;
-      };
-
-      const handleSubmit = () => {
-        const total = calculateTotal();
-        const newLoan = {
-          ...form,
-          id: Date.now(),
-          totalRepay: total,
-          date: new Date().toLocaleDateString(),
-          status: 'Pending Approval'
-        };
-        setLoans([newLoan, ...loans]);
-        alert("Application Submitted!");
-        setActiveTab('myloans');
-        setCurrentStep(0);
-      };
-
-      return (
-        <div className="min-h-screen flex flex-col">
-          {/* Error Modal */}
-          <div className={`error-overlay ${errorMessage ? 'show' : ''}`}>
-            <div className="error-box">
-              <div className="text-4xl mb-4">⚠️</div>
-              <h3 className="text-xl font-bold text-red-600 mb-2">Wait a moment</h3>
-              <p className="text-gray-600 mb-6">{errorMessage}</p>
-              <button onClick={() => setErrorMessage(null)} className="bg-red-600 text-white px-8 py-2 rounded-lg font-bold">OK</button>
-            </div>
-          </div>
-
-          <nav className="navbar text-white sticky top-0 z-40 p-4 shadow-md">
-            <div className="max-w-5xl mx-auto flex justify-between items-center">
-              <h1 className="text-xl font-bold">KaChola <span className="text-[var(--accent)]">Student Aid</span></h1>
-              <div className="flex gap-2">
-                <button onClick={() => setActiveTab('apply')} className={`px-4 py-1 rounded-full text-sm ${activeTab==='apply'?'bg-[var(--accent)] text-black':'bg-white/10'}`}>Apply</button>
-                <button onClick={() => setActiveTab('myloans')} className={`px-4 py-1 rounded-full text-sm ${activeTab==='myloans'?'bg-[var(--accent)] text-black':'bg-white/10'}`}>Loans</button>
-                <button onClick={() => setActiveTab('eligibility')} className={`px-4 py-1 rounded-full text-sm ${activeTab==='eligibility'?'bg-[var(--accent)] text-black':'bg-white/10'}`}>Info</button>
-              </div>
-            </div>
-          </nav>
-
-          <main className="flex-grow max-w-4xl mx-auto w-full p-4 mt-6">
-            {activeTab === 'apply' && (
-              <div className="card p-6 sm:p-10">
-                <div className="step-indicator flex justify-center gap-2 mb-8">
-                  {[1,2,3,4,5,6].map(i => (
-                    <div key={i} className={currentStep === i-1 ? 'active' : currentStep >= i ? 'completed' : ''}>
-                      {currentStep >= i ? '✓' : i}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="space-y-6">
-                  {currentStep === 0 && (
-                    <div className="animate-fade-in">
-                      <h2 className="text-2xl font-bold mb-4">Personal Info</h2>
-                      <input name="firstName" placeholder="First Name" className="w-full p-4 border rounded-xl mb-3" onChange={handleInput} value={form.firstName} />
-                      <input name="lastName" placeholder="Last Name" className="w-full p-4 border rounded-xl mb-3" onChange={handleInput} value={form.lastName} />
-                      <input name="nrc" placeholder="NRC (e.g. 123456/12/1)" className="w-full p-4 border rounded-xl" onChange={handleInput} value={form.nrc} />
-                    </div>
-                  )}
-
-                  {currentStep === 1 && (
-                    <div>
-                      <h2 className="text-2xl font-bold mb-4">Academic Details</h2>
-                      <select name="institution" className="w-full p-4 border rounded-xl mb-3" onChange={handleInput} value={form.institution}>
-                        <option value="">Select Institution</option>
-                        <option>UNZA</option><option>CBU</option><option>Evelyn Hone</option>
-                      </select>
-                      <input name="studentId" placeholder="Student ID Number" className="w-full p-4 border rounded-xl" onChange={handleInput} value={form.studentId} />
-                    </div>
-                  )}
-
-                  {currentStep === 2 && (
-                    <div>
-                      <h2 className="text-2xl font-bold mb-4">Contact</h2>
-                      <input name="phone" placeholder="Student Phone (09...)" className="w-full p-4 border rounded-xl mb-3" onChange={handleInput} value={form.phone} />
-                      <input name="email" placeholder="Email Address" className="w-full p-4 border rounded-xl mb-3" onChange={handleInput} value={form.email} />
-                      <input name="parentPhone" placeholder="Parent/Guardian Phone" className="w-full p-4 border rounded-xl" onChange={handleInput} value={form.parentPhone} />
-                    </div>
-                  )}
-
-                  {currentStep === 3 && (
-                    <div>
-                      <h2 className="text-2xl font-bold mb-4">ID Verification</h2>
-                      <div className="flex bg-gray-100 p-1 rounded-lg mb-4">
-                        <button onClick={()=>setForm({...form, idType:'studentId'})} className={`flex-1 py-2 rounded-md ${form.idType==='studentId'?'bg-white shadow':''}`}>Student ID</button>
-                        <button onClick={()=>setForm({...form, idType:'nrc'})} className={`flex-1 py-2 rounded-md ${form.idType==='nrc'?'bg-white shadow':''}`}>NRC</button>
-                      </div>
-                      <input type="file" className="w-full p-4 border border-dashed rounded-xl bg-gray-50" />
-                    </div>
-                  )}
-
-                  {currentStep === 4 && (
-                    <div>
-                      <h2 className="text-2xl font-bold mb-4">Collateral</h2>
-                      <select name="collateralType" className="w-full p-4 border rounded-xl mb-3" onChange={handleInput} value={form.collateralType}>
-                        <option value="">Select Item</option>
-                        <option>Phone</option><option>Laptop</option><option>TV</option>
-                      </select>
-                      <select name="ownership" className="w-full p-4 border rounded-xl" onChange={handleInput} value={form.ownership}>
-                        <option>Personal</option><option>Borrowed</option>
-                      </select>
-                    </div>
-                  )}
-
-                  {currentStep === 5 && (
-                    <div>
-                      <h2 className="text-2xl font-bold mb-4">Loan Details</h2>
-                      <input name="amount" type="number" placeholder="Amount (K200 - K5000)" className="w-full p-4 border rounded-xl mb-3" onChange={handleInput} value={form.amount} />
-                      <select name="weeks" className="w-full p-4 border rounded-xl mb-4" onChange={handleInput} value={form.weeks}>
-                        <option value="1">1 Week (11% Interest)</option>
-                        <option value="2">2 Weeks (21% Interest)</option>
-                        <option value="4">4 Weeks (38% Interest)</option>
-                      </select>
-                      <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-xl text-center">
-                        <p className="text-sm text-gray-600">Total Repayment:</p>
-                        <p className="text-2xl font-bold text-[var(--primary)]">{formatZMW(calculateTotal())}</p>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex justify-between mt-8">
-                    {currentStep > 0 && <button onClick={() => setCurrentStep(s=>s-1)} className="px-6 py-2 text-gray-500 font-bold">Back</button>}
-                    {currentStep < 5 ? 
-                      <button onClick={handleNext} className="bg-[var(--primary)] text-white px-10 py-3 rounded-xl font-bold ml-auto">Next</button> :
-                      <button onClick={handleSubmit} className="bg-green-700 text-white px-10 py-3 rounded-xl font-bold ml-auto">Submit Application</button>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaChola Student Aid - Collateral-Based Student Loans</title>
+    <!-- Tailwind CSS via CDN with custom colors -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'kachola-brown': '#3B2415',      // Deep shield brown
+                        'kachola-gold': '#D4A017',       // Metallic gold accent
+                        'kachola-brown-light': '#704923', // Lighter brown for borders
+                        'kachola-cream': '#F5F0E9',      // Light background
                     }
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'myloans' && (
-              <div className="space-y-4">
-                <h2 className="text-2xl font-bold mb-6">My Applications</h2>
-                {loans.length === 0 ? (
-                  <div className="text-center py-20 text-gray-400">No applications yet.</div>
-                ) : (
-                  loans.map(loan => (
-                    <div key={loan.id} className="card p-5 border-l-4 border-[var(--accent)]">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <p className="text-lg font-bold">{formatZMW(loan.amount)}</p>
-                          <p className="text-xs text-gray-500">{loan.date} • {loan.weeks} Week(s)</p>
-                        </div>
-                        <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-bold">{loan.status}</span>
-                      </div>
-                      <div className="mt-3 text-sm text-gray-600">
-                        Repay Amount: <strong>{formatZMW(loan.totalRepay)}</strong>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            )}
-
-            {activeTab === 'eligibility' && (
-              <div className="card p-8">
-                <h2 className="text-2xl font-bold mb-6 text-center">Eligibility Criteria</h2>
-                <ul className="space-y-4">
-                  <li className="flex gap-3">
-                    <span className="text-[var(--accent)] font-bold">✓</span>
-                    <span><strong>Student Status:</strong> Active enrollment in a Zambian college or university.</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-[var(--accent)] font-bold">✓</span>
-                    <span><strong>NRC:</strong> Must be a Zambian citizen with a valid NRC.</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-[var(--accent)] font-bold">✓</span>
-                    <span><strong>Collateral:</strong> A physical item (Phone, Laptop) must be presented as security.</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-[var(--accent)] font-bold">✓</span>
-                    <span><strong>Repayment:</strong> Ability to repay within 1 to 4 weeks.</span>
-                  </li>
-                </ul>
-              </div>
-            )}
-          </main>
-
-          <footer className="bg-[var(--primary)] text-white py-10 text-center mt-12">
-            <p className="mb-4">Need help? Contact us via WhatsApp</p>
-            <a href="https://wa.me/260979236667" className="inline-block bg-green-500 px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition">Chat Support</a>
-            <p className="mt-8 opacity-40 text-xs">&copy; 2026 KaChola Student Aid</p>
-          </footer>
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #F5F0E9; /* kachola-cream */
+        }
+    </style>
+</head>
+<body class="font-sans text-kachola-brown antialiased">
+    <!-- Header Section -->
+    <header class="bg-kachola-brown text-kachola-gold py-6">
+        <div class="container mx-auto px-4 text-center">
+            <img src="logo.png" alt="KaChola Student Aid Logo" class="mx-auto h-24 mb-4" /> <!-- Replace with your logo file path -->
+            <h1 class="text-3xl font-bold">KaChola Student Aid</h1>
+            <p class="text-lg mt-2">Collateral-Based Loans for Students at UNZA, CBU, or Evelyn Hone College</p>
         </div>
-      );
-    }
+    </header>
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-  </script>
+    <!-- Intro Section -->
+    <section class="container mx-auto px-4 py-8">
+        <p class="text-center text-lg mb-6">
+            Fast financial support exclusively for currently enrolled students. Secured by collateral. Quick application process.
+        </p>
+    </section>
+
+    <!-- Interest Rates Section -->
+    <section class="container mx-auto px-4 py-8 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold text-kachola-gold text-center mb-4">Loan Interest Rates (Flat Rates – Charged Upfront)</h2>
+        <p class="text-center mb-6">All loans are collateral-secured. Repayment in full at the end of the term. No hidden fees.</p>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-kachola-cream border border-kachola-brown-light">
+                <thead class="bg-kachola-brown text-kachola-gold">
+                    <tr>
+                        <th class="px-4 py-2">Term</th>
+                        <th class="px-4 py-2">Interest Rate</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr>
+                        <td class="px-4 py-2 border">1 Week</td>
+                        <td class="px-4 py-2 border">11%</td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2 border">2 Weeks</td>
+                        <td class="px-4 py-2 border">22%</td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2 border">3 Weeks</td>
+                        <td class="px-4 py-2 border">34.5%</td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2 border">4 Weeks</td>
+                        <td class="px-4 py-2 border">39%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="text-center mt-4 text-sm">Example: For a ZMW 5,000 loan over 2 weeks → Interest = ZMW 1,100 → Total repayment = ZMW 6,100</p>
+    </section>
+
+    <!-- Application Form Section -->
+    <section class="container mx-auto px-4 py-8">
+        <h2 class="text-2xl font-bold text-kachola-gold text-center mb-6">Loan Application Form</h2>
+        <form id="loan-form" class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md" action="https://api.web3forms.com/submit" method="POST">
+            <!-- Web3Forms Access Key (Replace with your actual key) -->
+            <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_HERE">
+
+            <!-- Full Name -->
+            <div class="mb-4">
+                <label for="full-name" class="block text-kachola-gold font-medium mb-1">Full Name</label>
+                <input type="text" id="full-name" name="full_name" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+            </div>
+
+            <!-- Student ID -->
+            <div class="mb-4">
+                <label for="student-id" class="block text-kachola-gold font-medium mb-1">Student ID / Registration Number</label>
+                <input type="text" id="student-id" name="student_id" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+            </div>
+
+            <!-- Institution -->
+            <div class="mb-4">
+                <label for="institution" class="block text-kachola-gold font-medium mb-1">Institution</label>
+                <select id="institution" name="institution" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+                    <option value="">Select Institution</option>
+                    <option value="UNZA">University of Zambia (UNZA)</option>
+                    <option value="CBU">Copperbelt University (CBU)</option>
+                    <option value="Evelyn Hone">Evelyn Hone College</option>
+                </select>
+            </div>
+
+            <!-- Program & Year -->
+            <div class="mb-4">
+                <label for="program-year" class="block text-kachola-gold font-medium mb-1">Program & Year of Study</label>
+                <input type="text" id="program-year" name="program_year" placeholder="e.g., BSc Computer Science, Year 3" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="mb-4">
+                <label for="phone" class="block text-kachola-gold font-medium mb-1">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="e.g., +260 97x xxx xxx" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-4">
+                <label for="email" class="block text-kachola-gold font-medium mb-1">Email Address</label>
+                <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+            </div>
+
+            <!-- NRC Number -->
+            <div class="mb-4">
+                <label for="nrc" class="block text-kachola-gold font-medium mb-1">National ID / NRC Number</label>
+                <input type="text" id="nrc" name="nrc" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+            </div>
+
+            <!-- Loan Amount -->
+            <div class="mb-4">
+                <label for="loan-amount" class="block text-kachola-gold font-medium mb-1">Loan Amount (ZMW)</label>
+                <input type="number" id="loan-amount" name="loan_amount" min="200" max="5000" step="1" placeholder="e.g., 2000" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+                <p id="amount-error" class="text-red-600 text-sm mt-1 hidden"></p>
+            </div>
+
+            <!-- Loan Term -->
+            <div class="mb-4">
+                <label for="loan-term" class="block text-kachola-gold font-medium mb-1">Loan Term</label>
+                <select id="loan-term" name="loan_term" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" required>
+                    <option value="">Select loan term</option>
+                    <option value="1">1 week – 11% interest</option>
+                    <option value="2">2 weeks – 22% interest</option>
+                    <option value="3">3 weeks – 34.5% interest</option>
+                    <option value="4">4 weeks – 39% interest</option>
+                </select>
+            </div>
+
+            <!-- Repayment Preview -->
+            <div id="repayment-preview" class="hidden mt-4 p-4 bg-green-100 border border-green-400 text-green-800 rounded-lg">
+                <p id="repayment-text" class="font-medium"></p>
+                <div class="mt-3">
+                    <input type="checkbox" id="accept-repayment" class="mr-2">
+                    <label for="accept-repayment" class="text-green-900">Yes, I acknowledge and accept this repayment amount</label>
+                </div>
+            </div>
+
+            <!-- Collateral Details -->
+            <div class="mb-4">
+                <label for="collateral" class="block text-kachola-gold font-medium mb-1">Collateral Details</label>
+                <textarea id="collateral" name="collateral" rows="3" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream" placeholder="e.g., Laptop model XYZ, estimated value 8000 ZMW" required></textarea>
+            </div>
+
+            <!-- Additional Message -->
+            <div class="mb-4">
+                <label for="message" class="block text-kachola-gold font-medium mb-1">Additional Message (Optional)</label>
+                <textarea id="message" name="message" rows="3" class="w-full px-4 py-2 border border-kachola-brown-light rounded-md focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream"></textarea>
+            </div>
+
+            <!-- Confirmation Checkbox -->
+            <div class="mb-4">
+                <input type="checkbox" id="confirmation" name="confirmation" class="mr-2" required>
+                <label for="confirmation" class="text-kachola-brown">I confirm that I am currently enrolled at one of the listed institutions and the information provided is accurate.</label>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="submit-btn" class="w-full bg-kachola-gold text-kachola-brown font-bold py-2 px-4 rounded-md hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed" disabled>Submit Application</button>
+
+            <!-- Success/Error Message -->
+            <p id="form-message" class="mt-4 text-center text-sm"></p>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-kachola-brown text-kachola-gold py-4 text-center">
+        <p>&copy; 2026 KaChola Student Aid. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript for Form Logic -->
+    <script>
+        const form = document.getElementById('loan-form');
+        const amountInput = document.getElementById('loan-amount');
+        const termSelect = document.getElementById('loan-term');
+        const previewDiv = document.getElementById('repayment-preview');
+        const previewText = document.getElementById('repayment-text');
+        const acceptCheck = document.getElementById('accept-repayment');
+        const amountError = document.getElementById('amount-error');
+        const submitBtn = document.getElementById('submit-btn');
+        const formMessage = document.getElementById('form-message');
+        const confirmationCheck = document.getElementById('confirmation');
+
+        const rates = { 1: 0.11, 2: 0.22, 3: 0.345, 4: 0.39 };
+        const minAmount = 200;
+        const maxAmount = 5000;
+
+        function validateAmount(amount) {
+            if (amount < minAmount) {
+                amountError.textContent = `Minimum loan amount is ZMW ${minAmount}`;
+                amountError.classList.remove('hidden');
+                return false;
+            } else if (amount > maxAmount) {
+                amountError.textContent = `Maximum loan amount is ZMW ${maxAmount}`;
+                amountError.classList.remove('hidden');
+                return false;
+            } else {
+                amountError.classList.add('hidden');
+                return true;
+            }
+        }
+
+        function updatePreview() {
+            const amount = parseFloat(amountInput.value) || 0;
+            const weeks = parseInt(termSelect.value) || 0;
+
+            if (validateAmount(amount) && weeks >= 1 && weeks <= 4) {
+                const rate = rates[weeks];
+                const interest = amount * rate;
+                const total = amount + interest;
+
+                const formattedAmount = Math.round(amount).toLocaleString('en-US');
+                const formattedInterest = Math.round(interest).toLocaleString('en-US');
+                const formattedTotal = Math.round(total).toLocaleString('en-US');
+                const ratePercent = (rate * 100).toFixed(weeks === 3 ? 1 : 0);
+
+                previewText.innerHTML = `You will repay ZMW ${formattedTotal} in \( {weeks} week \){weeks > 1 ? 's' : ''}<br>(principal ZMW ${formattedAmount} + ${ratePercent}% interest ZMW ${formattedInterest})`;
+                previewDiv.classList.remove('hidden');
+            } else {
+                previewDiv.classList.add('hidden');
+            }
+
+            checkIfFormReady();
+        }
+
+        function checkIfFormReady() {
+            const allInputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+            let allFilled = true;
+
+            allInputs.forEach(input => {
+                if (!input.value.trim()) allFilled = false;
+            });
+
+            const amountValid = validateAmount(parseFloat(amountInput.value) || 0);
+            const termSelected = !!termSelect.value;
+            const accepted = acceptCheck.checked;
+            const confirmed = confirmationCheck.checked;
+
+            submitBtn.disabled = !(allFilled && amountValid && termSelected && accepted && confirmed);
+        }
+
+        // Event Listeners
+        amountInput.addEventListener('input', updatePreview);
+        termSelect.addEventListener('change', updatePreview);
+        acceptCheck.addEventListener('change', checkIfFormReady);
+        confirmationCheck.addEventListener('change', checkIfFormReady);
+        form.querySelectorAll('input, select, textarea').forEach(el => el.addEventListener('input', checkIfFormReady));
+
+        // Handle Form Submission with AJAX
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            formMessage.textContent = 'Submitting...';
+            formMessage.className = 'text-blue-600';
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    formMessage.textContent = 'Application submitted successfully! We will contact you soon.';
+                    formMessage.className = 'text-green-600';
+                    form.reset();
+                    previewDiv.classList.add('hidden');
+                    acceptCheck.checked = false;
+                    confirmationCheck.checked = false;
+                } else {
+                    formMessage.textContent = 'Submission failed. Please try again.';
+                    formMessage.className = 'text-red-600';
+                }
+            } catch (error) {
+                formMessage.textContent = 'An error occurred. Please try again.';
+                formMessage.className = 'text-red-600';
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>
