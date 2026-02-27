@@ -20,7 +20,7 @@
             'kachola-brown':   '#3B2415',
             'kachola-gold':    '#D4A017',
             'kachola-gold-lt': '#E8C670',
-            'apply-btn':       '#F59E0B',     // orange-yellow from screenshot
+            'apply-btn':       '#F59E0B',
             'apply-btn-hover':'#D97706',
           },
           fontFamily: {
@@ -39,9 +39,7 @@
 </head>
 <body class="font-oswald text-gray-800">
 
-  <!-- ────────────────────────────────────────────────
-       NAVIGATION BAR (matches your screenshot style)
-  ──────────────────────────────────────────────── -->
+  <!-- Navigation Bar -->
   <nav class="bg-kachola-brown text-white fixed top-0 left-0 right-0 z-50 shadow-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16 md:h-18">
@@ -78,19 +76,8 @@
   <!-- Spacer for fixed nav -->
   <div class="h-16 md:h-18"></div>
 
-  <!-- ────────────────────────────────────────────────
-       MAIN CONTENT (your previous content)
-  ──────────────────────────────────────────────── -->
+  <!-- Main content starts directly with Interest Rates -->
   <main class="pt-4">
-
-    <header class="container mx-auto px-4 sm:px-6 lg:px-8 py-10 text-center">
-      <h2 class="text-3xl sm:text-4xl font-bold text-kachola-gold mb-5">
-        Collateral-Based Student Loans
-      </h2>
-      <p class="text-lg max-w-3xl mx-auto leading-relaxed">
-        Fast, secure financial support exclusively for currently enrolled students at UNZA, CBU, or Evelyn Hone College.
-      </p>
-    </header>
 
     <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-white rounded-xl shadow-lg">
       <h3 class="text-2xl font-bold text-kachola-gold text-center mb-5">
@@ -133,9 +120,6 @@
         <input type="hidden" name="access_key" value="fe293e23-d328-4bad-86e8-d9b531e2a37d">
 
         <div class="space-y-5">
-          <!-- ────────────────────────────────────────────────
-               Your form fields (unchanged from last version)
-          ──────────────────────────────────────────────── -->
           <div>
             <label for="full-name" class="block text-kachola-gold font-medium mb-1.5">Full Name</label>
             <input type="text" id="full-name" name="full_name" required class="w-full px-4 py-2.5 border border-kachola-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream">
@@ -227,6 +211,9 @@
 
   <!-- JavaScript (form logic) -->
   <script>
+    // ────────────────────────────────────────────────
+    // Your existing JavaScript logic (unchanged)
+    // ────────────────────────────────────────────────
     const form = document.getElementById('loan-form');
     const amountInput = document.getElementById('loan-amount');
     const termSelect = document.getElementById('loan-term');
