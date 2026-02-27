@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>KaChola Student Aid - Collateral-Based Student Loans</title>
 
-    <!-- Google Fonts: Playfair Display (fancy serif) + Montserrat (clean sans) -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS CDN + custom config -->
+    <!-- Tailwind + custom config -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -33,7 +33,7 @@
 
     <style>
         body {
-            background-color: #F5F0E9; /* kachola-cream */
+            background-color: #F5F0E9;
         }
         .brand-text {
             text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
@@ -45,31 +45,35 @@
 
     <!-- Navigation Bar -->
     <nav class="bg-kachola-brown text-kachola-gold shadow-xl fixed top-0 left-0 right-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between">
-            <!-- Logo + Business Name -->
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+            <!-- Logo + Business Name (logo stays left, bigger & visible) -->
             <div class="flex items-center space-x-3 sm:space-x-4">
                 <a href="#" class="flex-shrink-0">
-                    <img src="pic.png" alt="KaChola Student Aid Logo" class="h-10 sm:h-12 w-auto object-contain" />
+                    <img 
+                        src="pic.png" 
+                        alt="KaChola Student Aid Logo" 
+                        class="h-12 sm:h-14 md:h-16 lg:h-18 w-auto object-contain drop-shadow-md"
+                    />
                 </a>
-                <div class="text-center sm:text-left">
-                    <h1 class="text-2xl sm:text-3xl font-bold font-serif-fancy brand-text tracking-tight">KaChola</h1>
-                    <p class="text-base sm:text-lg font-medium opacity-95 tracking-wide">Student Aid</p>
+                <div class="hidden sm:block text-left">
+                    <h1 class="text-2xl md:text-3xl font-bold font-serif-fancy brand-text tracking-tight">KaChola</h1>
+                    <p class="text-base md:text-lg font-medium opacity-95 tracking-wide">Student Aid</p>
                 </div>
             </div>
 
-            <!-- Optional right side (can add links later) -->
-            <div class="mt-3 sm:mt-0 text-sm sm:text-base">
-                <!-- e.g. <a href="#form" class="hover:text-kachola-cream transition">Apply Now</a> -->
+            <!-- Right side placeholder (can be used for menu/links later) -->
+            <div class="text-sm sm:text-base">
+                <!-- Optional: <a href="#form" class="hover:text-kachola-cream transition">Apply Now</a> -->
             </div>
         </div>
     </nav>
 
-    <!-- Spacer for fixed nav -->
-    <div class="h-28 sm:h-20"></div>
+    <!-- Spacer -->
+    <div class="h-20 sm:h-24 md:h-28"></div>
 
     <main class="pt-4">
-        <!-- Intro Header -->
-        <header class="container mx-auto px-4 py-10 text-center">
+        <!-- Intro -->
+        <header class="container mx-auto px-4 sm:px-6 lg:px-8 py-10 text-center">
             <h2 class="text-3xl sm:text-4xl font-bold text-kachola-gold mb-5">Collateral-Based Student Loans</h2>
             <p class="text-lg max-w-3xl mx-auto leading-relaxed">
                 Fast, secure financial support exclusively for currently enrolled students at UNZA, CBU, or Evelyn Hone College.
@@ -77,7 +81,7 @@
         </header>
 
         <!-- Interest Rates -->
-        <section class="container mx-auto px-4 py-10 bg-white rounded-xl shadow-lg">
+        <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-white rounded-xl shadow-lg">
             <h3 class="text-2xl font-bold text-kachola-gold text-center mb-5">Interest Rates (Flat – Charged Upfront)</h3>
             <p class="text-center mb-6 text-gray-700">Repayment in full at end of term. Collateral required. No hidden fees.</p>
 
@@ -104,13 +108,12 @@
         </section>
 
         <!-- Application Form -->
-        <section class="container mx-auto px-4 py-12" id="form">
+        <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-12" id="form">
             <h3 class="text-2xl sm:text-3xl font-bold text-kachola-gold text-center mb-8">Loan Application</h3>
 
-            <form id="loan-form" class="max-w-lg mx-auto bg-white p-7 sm:p-8 rounded-xl shadow-xl border border-kachola-brown-light/30"
+            <form id="loan-form" class="max-w-lg mx-auto bg-white p-6 sm:p-8 rounded-xl shadow-xl border border-kachola-brown-light/30"
                   action="https://api.web3forms.com/submit" method="POST">
 
-                <!-- Replace with your real Web3Forms key -->
                 <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_HERE">
 
                 <div class="space-y-5">
@@ -171,7 +174,6 @@
                         </select>
                     </div>
 
-                    <!-- Dynamic Repayment Preview -->
                     <div id="repayment-preview" class="hidden p-5 bg-green-50 border border-green-300 rounded-lg">
                         <p id="repayment-text" class="font-medium text-green-800 leading-relaxed"></p>
                         <div class="mt-4 flex items-center">
@@ -211,7 +213,7 @@
         <p class="text-sm">© 2026 KaChola Student Aid. All rights reserved.</p>
     </footer>
 
-    <!-- JavaScript Logic -->
+    <!-- JavaScript (form logic) -->
     <script>
         const form = document.getElementById('loan-form');
         const amountInput = document.getElementById('loan-amount');
@@ -283,7 +285,6 @@
             submitBtn.disabled = !(allValid && amountValid && termValid && accepted && confirmed);
         }
 
-        // Event listeners
         amountInput.addEventListener('input', updatePreview);
         termSelect.addEventListener('change', updatePreview);
         acceptCheck.addEventListener('change', checkFormReady);
@@ -292,7 +293,6 @@
             el.addEventListener('input', checkFormReady);
         });
 
-        // AJAX form submission
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             submitBtn.disabled = true;
