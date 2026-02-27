@@ -167,13 +167,9 @@
                         </select>
                     </div>
 
-                    <!-- Simplified Green Preview -->
-                    <div id="repayment-preview" class="hidden p-5 bg-green-50 border border-green-300 rounded-lg text-center">
-                        <p id="repayment-text" class="text-lg font-bold text-green-800 mb-4"></p>
-                        <div class="flex items-center justify-center">
-                            <input type="checkbox" id="accept-repayment" class="h-5 w-5 text-kachola-gold focus:ring-kachola-gold border-kachola-brown-light">
-                            <label for="accept-repayment" class="ml-3 text-green-900 font-medium">I acknowledge and accept this repayment amount</label>
-                        </div>
+                    <!-- Very green preview with red text -->
+                    <div id="repayment-preview" class="hidden p-6 bg-green-600 border-2 border-green-800 rounded-xl text-center shadow-lg">
+                        <p id="repayment-text" class="text-2xl font-bold text-red-100 drop-shadow-md"></p>
                     </div>
 
                     <div>
@@ -209,7 +205,6 @@
         const termSelect = document.getElementById('loan-term');
         const previewDiv = document.getElementById('repayment-preview');
         const previewText = document.getElementById('repayment-text');
-        const acceptCheck = document.getElementById('accept-repayment');
         const amountError = document.getElementById('amount-error');
         const submitBtn = document.getElementById('submit-btn');
         const formMessage = document.getElementById('form-message');
@@ -264,15 +259,13 @@
 
             const amountValid = validateAmount(parseFloat(amountInput.value) || 0);
             const termValid = !!termSelect.value;
-            const accepted = acceptCheck.checked;
             const confirmed = confirmationCheck.checked;
 
-            submitBtn.disabled = !(allValid && amountValid && termValid && accepted && confirmed);
+            submitBtn.disabled = !(allValid && amountValid && termValid && confirmed);
         }
 
         amountInput.addEventListener('input', updatePreview);
         termSelect.addEventListener('change', updatePreview);
-        acceptCheck.addEventListener('change', checkFormReady);
         confirmationCheck.addEventListener('change', checkFormReady);
         form.querySelectorAll('input, select, textarea').forEach(el => {
             el.addEventListener('input', checkFormReady);
@@ -298,7 +291,6 @@
                     formMessage.className = 'text-green-600';
                     form.reset();
                     previewDiv.classList.add('hidden');
-                    acceptCheck.checked = false;
                     confirmationCheck.checked = false;
                 } else {
                     formMessage.textContent = data.message || 'Submission failed. Please try again.';
