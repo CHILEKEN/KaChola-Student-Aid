@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KaChola Student Aid – Quick Short-Term Loans</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- React and ReactDOM from CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel Standalone for JSX transformation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4B2E1A;
+      --accent: #D4AF37;
+      --bg: #F5F0E9;
+    }
+    body {
+      min-height: 100vh;
+      font-family: system-ui, sans-serif;
+      color: #333;
+
+      background-image: url('photo.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-color: #F5F0E9; /* Fallback color */
+
+      position: relative;
+      z-index: 0;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.6);
+      z-index: -1;
+    }
+
+.card {
+      background: rgba(255,255,255,0.4);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(229,231,235,0.5);
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+      color: #1f2937;
+    }
+
+.navbar {
+      background-color: rgba(75, 46, 26, 0.5);
+      backdrop-filter: blur(4px);
+      transition: transform 0.3s ease-in-out;
+    }
+
+.navbar-hidden {
+      transform: translateY(-100%);
+    }
+
+.navbar button {
+      color: white;
+    }
+
+    input.bg-white, select.bg-white {
+      color: #333!important;
+    }
+
+    input::placeholder, select::placeholder {
+      font-style: italic;
+      font-size: 0.75em;
+      opacity: 1;
+    }
+
+    input[placeholder*="Amount"]::placeholder {
+      color: #0000FF;
+    }
+
+    input[placeholder*="weeks"]::placeholder {
+      color: #008000;
+    }
+
+.input-wrapper {
+      position: relative;
+    }
+.purpose-repay-message {
+      background: #fee2e2;
+      border: 1px solid #ef4444;
+      color: #b91c1c;
+      padding: 0.8rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 58px;
+    }
+
+    /* Styles for the multi-step form indicator */
+.step-indicator {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+.step-indicator > div {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      background-color: #e5e7eb; /* light gray */
+      margin: 0 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280; /* gray */
+      font-weight: bold;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+.step-indicator > div.active {
+      background-color: var(--accent);
+      color: var(--primary);
+    }
+.step-indicator > div.completed {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    /* UPDATED: Styles for the error overlay */
+.error-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+.error-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+.error-message-box {
+      background-color: white;
+      padding: 2.5rem 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 15px 30px -5px rgba(0,0,0,0.3);
+      text-align: center;
+      max-width: 380px; /* Slightly wider for better text flow */
+      transform: translateY(-20px) scale(0.95);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Springy effect */
+      opacity: 0;
+    }
+    /* Corrected:.error-message-box.show for the inner box animation */
+.error-message-box.show {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+.error-message-box h3 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #dc2626; /* Red heading */
+      margin-bottom: 1rem;
+    }
+.error-message-box p {
+      color: #333; /* Darker text for readability */
+      font-weight: 500;
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.4;
+    }
+.error-message-box button {
+      background-color: #dc2626;
+      color: white;
+      padding: 0.75rem 2rem;
+      border-radius: 0.75rem; /* More rounded */
+      font-weight: bold;
+      font-size: 1rem;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+      cursor: pointer;
+    }
+.error-message-box button:hover {
+      background-color: #ef4444;
+      transform: translateY(-2px);
+    }
+.error-message-box button:active {
+      transform: translateY(0);
+    }
+.danger-icon {
+      font-size: 3rem; /* Even larger icon */
+      color: #dc2626;
+      margin-bottom: 1rem;
+      display: block; /* Ensures it takes full width for centering */
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const formatZMW = (value) => {
+      return new Intl.NumberFormat('en-ZM', {
+        style: 'currency',
+        currency: 'ZMW',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(value).replace(/^ZMW\s*/, 'K ');
+    };
+
+    const roundTo50 = (val) => {
+      const num = Number(val);
+      if (isNaN(num) || num < 200) return 200;
+      return Math.max(200, Math.min(5000, Math.round(num / 50) * 50));
+    };
+
+    // Helper function to safely get item from localStorage
+    const getSavedValue = (key, defaultValue) => {
+      const saved = localStorage.getItem(key);
+      if (saved === null) return defaultValue;
+      try {
+        // Attempt to parse if it might be an object/array, otherwise return string
+        const parsed = JSON.parse(saved);
+        // If parsed value is null/undefined, return defaultValue instead of actual null/undefined
+        return parsed!== null && parsed!== undefined? parsed : defaultValue;
+      } catch (e) {
+        // If parsing fails (e.g., not a JSON string), return the raw string or defaultValue
+        return saved!== null && saved!== undefined? saved : defaultValue;
+      }
+    };
+
+    // Helper function to safely set item to localStorage
+    const setSavedValue = (key, value) => {
+      try {
+        if (typeof value === 'object' && value!== null) {
+          localStorage.setItem(key, JSON.stringify(value));
+        } else {
+          localStorage.setItem(key, String(value)); // Ensure value is a string
+        }
+      } catch (e) {
+        console.error(`Error saving to localStorage for key "${key}":`, e);
+      }
+    };
+
+    function App() {
+      const tabOrder = ['apply', 'myloans', 'eligibility'];
+      const formSteps = ['personal', 'academic', 'contact', 'id_proof', 'collateral', 'loan_details'];
+
+      const [activeTab, setActiveTab] = useState(() => getSavedValue('kachola_activeTab', 'apply'));
+
+      // Ensure currentStep also persists and resets correctly when tab changes
+      const [currentStep, setCurrentStep] = useState(() => getSavedValue('kachola_currentStep', 0));
+      useEffect(() => {
+          setSavedValue('kachola_currentStep', currentStep);
+      }, [currentStep]);
+
+      const [loans, setLoans] = useState(() => getSavedValue('kachola_loans', []));
+
+      const [applyAmountRaw, setApplyAmountRaw] = useState(() => getSavedValue('kachola_applyAmount', ''));
+      const [applyWeeks, setApplyWeeks] = useState(() => getSavedValue('kachola_applyWeeks', ''));
+
+      // States for form fields - now with persistence
+      const [firstName, setFirstName] = useState(() => getSavedValue('kachola_firstName', ''));
+      const [lastName, setLastName] = useState(() => getSavedValue('kachola_lastName', ''));
+      const [studentId, setStudentId] = useState(() => getSavedValue('kachola_studentId', ''));
+      const [nrcNumber, setNrcNumber] = useState(() => getSavedValue('kachola_nrcNumber', ''));
+      const [yearOfStudy, setYearOfStudy] = useState(() => getSavedValue('kachola_yearOfStudy', ''));
+      const [programOfStudy, setProgramOfStudy] = useState(() => getSavedValue('kachola_programOfStudy', ''));
+      const [phoneNumber, setPhoneNumber] = useState(() => getSavedValue('kachola_phoneNumber', ''));
+      const [emailAddress, setEmailAddress] = useState(() => getSavedValue('kachola_emailAddress', ''));
+      const [parentNumber, setParentNumber] = useState(() => getSavedValue('kachola_parentNumber', ''));
+      const [institutionName, setInstitutionName] = useState(() => getSavedValue('kachola_institutionName', ''));
+
+      const [idPhotoType, setIdPhotoType] = useState(() => getSavedValue('kachola_idPhotoType', 'studentId'));
+      const [studentIdPhoto, setStudentIdPhoto] = useState(null); // Files are not persisted via local storage
+      const [nrcFrontPhoto, setNrcFrontPhoto] = useState(null);
+      const [nrcBackPhoto, setNrcBackPhoto] = useState(null);
+
+      // Collateral states - now with persistence
+      const [collateralType, setCollateralType] = useState(() => getSavedValue('kachola_collateralType', ''));
+      const [collateralOwnership, setCollateralOwnership] = useState(() => getSavedValue('kachola_collateralOwnership', ''));
+      const [ownerDetails, setOwnerDetails] = useState(() => getSavedValue('kachola_ownerDetails', ''));
+
+      const [errorMessage, setErrorMessage] = useState(null);
+
+      const mainContentRef = useRef(null);
+
+      // --- Persistence Effects for individual fields ---
+      useEffect(() => { setSavedValue('kachola_applyAmount', applyAmountRaw); }, [applyAmountRaw]);
+      useEffect(() => { setSavedValue('kachola_applyWeeks', applyWeeks); }, [applyWeeks]);
+      useEffect(() => { setSavedValue('kachola_activeTab', activeTab); }, [activeTab]);
+      useEffect(() => { setSavedValue('kachola_firstName', firstName); }, [firstName]);
+      useEffect(() => { setSavedValue('kachola_lastName', lastName); }, [lastName]);
+      useEffect(() => { setSavedValue('kachola_studentId', studentId); }, [studentId]);
+      useEffect(() => { setSavedValue('kachola_nrcNumber', nrcNumber); }, [nrcNumber]);
+      useEffect(() => { setSavedValue('kachola_yearOfStudy', yearOfStudy); }, [yearOfStudy]);
+      useEffect(() => { setSavedValue('kachola_programOfStudy', programOfStudy); }, [programOfStudy]);
+      useEffect(() => { setSavedValue('kachola_phoneNumber', phoneNumber); }, [phoneNumber]);
+      useEffect(() => { setSavedValue('kachola_emailAddress', emailAddress); }, [emailAddress]);
+      useEffect(() => { setSavedValue('kachola_parentNumber', parentNumber); }, [parentNumber]);
+      useEffect(() => { setSavedValue('kachola_institutionName', institutionName); }, [institutionName]);
+      useEffect(() => { setSavedValue('kachola_idPhotoType', idPhotoType); }, [idPhotoType]);
+      useEffect(() => { setSavedValue('kachola_collateralType', collateralType); }, [collateralType]);
+      useEffect(() => { setSavedValue('kachola_collateralOwnership', collateralOwnership); }, [collateralOwnership]);
+      useEffect(() => { setSavedValue('kachola_ownerDetails', ownerDetails); }, [ownerDetails]);
+
+      // Scroll-hide/show navbar logic
+      useEffect(() => {
+        let lastScrollY = window.scrollY;
+        const navbar = document.querySelector('.navbar');
+
+        const handleScroll = () => {
+          const currentScrollY = window.scrollY;
+          if (!navbar) return;
+
+          if (currentScrollY === 0) {
+            navbar.classList.remove('navbar-hidden');
+            lastScrollY = currentScrollY;
+            return;
+          }
+
+          if (currentScrollY > lastScrollY && currentScrollY > 100) {
+            navbar.classList.add('navbar-hidden');
+          } else if (currentScrollY < lastScrollY) {
+            navbar.classList.remove('navbar-hidden');
+          }
+          lastScrollY = currentScrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+          window.removeEventListener('scroll', handleScroll);
+        };
+      }, []);
+
+      // The useEffect for swipe gestures has been removed completely.
+
+      const saveLoans = (newLoans) => {
+        setSavedValue('kachola_loans', newLoans);
+        setLoans(newLoans);
+      };
+
+      const calculateLoan = (rawAmount, rawWeeks) => {
+        const amount = roundTo50(rawAmount || 0);
+        const weeks = Math.max(1, Math.min(4, Number(rawWeeks) || 1));
+
+        const rates = { 1: 0.11, 2: 0.21, 3: 0.30, 4: 0.38 };
+        const rate = rates[weeks] || 0;
+
+        const interest = amount * rate;
+        const totalRepay = amount + interest;
+        const weeklyRepay = totalRepay / weeks;
+
+        return { amount, weeks, totalInterest: interest, totalRepay, weeklyRepay };
+      };
+
+      const apply = calculateLoan(applyAmountRaw, applyWeeks);
+
+      const isCalculable =
+        applyAmountRaw.trim()!== '' &&
+     !isNaN(Number(applyAmountRaw)) &&
+        Number(applyAmountRaw) >= 200 &&
+        applyWeeks.trim()!== '' &&
+     !isNaN(Number(applyWeeks)) &&
+        Number(applyWeeks) >= 1 && Number(applyWeeks) <= 4;
+
+      const validateCurrentStep = () => {
+        const currentStepName = formSteps[currentStep];
+        let currentErrorMessage = '';
+
+        const isFilled = (value) => {
+            if (typeof value === 'string') return value.trim()!== '';
+            return value!== null && value!== undefined; // Check for null or undefined
+        };
+
+        // Regex for validation
+        const nrcPattern = /^\d{6}\/\d{2}\/1$/;
+        const zambianPhonePattern = /^(0(57|97|77|95|55|75|76|96|56))\d{7}$/; // Starts with specified prefix, followed by 7 digits, making total 10
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const namePattern = /^[A-Za-z\s'-]+$/;
+        const studentIdPattern = /^\d+$/;
+
+        switch (currentStepName) {
+          case 'personal':
+            if (!isFilled(firstName)) currentErrorMessage = 'First Name is required.';
+            else if (!namePattern.test(firstName)) currentErrorMessage = 'First Name contains invalid characters.';
+            else if (!isFilled(lastName)) currentErrorMessage = 'Last Name is required.';
+            else if (!namePattern.test(lastName)) currentErrorMessage = 'Last Name contains invalid characters.';
+            else if (!isFilled(nrcNumber)) currentErrorMessage = 'NRC Number is required.';
+            else if (!nrcPattern.test(nrcNumber)) currentErrorMessage = 'NRC Number format is invalid (e.g., 123456/12/1, ending with /1).';
+            break;
+          case 'academic':
+            if (!isFilled(institutionName)) currentErrorMessage = 'Name of Institution is required.';
+            else if (!isFilled(studentId)) currentErrorMessage = 'Student ID is required.';
+            else if (!studentIdPattern.test(studentId)) currentErrorMessage = 'Student ID must contain only numbers.';
+            else if (!isFilled(yearOfStudy)) currentErrorMessage = 'Year of Study is required.';
+            else if (!isFilled(programOfStudy)) currentErrorMessage = 'Program of Study is required.';
+            break;
+          case 'contact':
+            if (!isFilled(phoneNumber)) currentErrorMessage = 'Phone Number is required.';
+            else if (!zambianPhonePattern.test(phoneNumber)) currentErrorMessage = 'Phone Number format is invalid (must be 10 digits, e.g., 097xxxxxxx).';
+            else if (!isFilled(emailAddress)) currentErrorMessage = 'Email Address is required.';
+            else if (!emailPattern.test(emailAddress)) currentErrorMessage = 'Email Address format is invalid.';
+            else if (!isFilled(parentNumber)) currentErrorMessage = "Parent/Guardian's Phone Number is required.";
+            else if (!zambianPhonePattern.test(parentNumber)) currentErrorMessage = "Parent/Guardian's Phone Number format is invalid (must be 10 digits, e.g., 097xxxxxxx).";
+            else if (phoneNumber === parentNumber) currentErrorMessage = "Student's Phone Number and Parent/Guardian's Phone Number cannot be the same.";
+            break;
+          case 'id_proof':
+            if (idPhotoType === 'studentId') {
+                if (!studentIdPhoto) currentErrorMessage = 'Student ID Photo is required.';
+            } else { // idPhotoType === 'nrc'
+                if (!nrcFrontPhoto) currentErrorMessage = 'NRC Front Photo is required.';
+                else if (!nrcBackPhoto) currentErrorMessage = 'NRC Back Photo is required.';
+            }
+            break;
+          case 'collateral':
+            if (!isFilled(collateralType)) currentErrorMessage = 'Type of collateral is required.';
+            else if (!isFilled(collateralOwnership)) currentErrorMessage = 'Collateral ownership is required.';
+            else if (collateralOwnership === 'Borrowed' &&!isFilled(ownerDetails)) currentErrorMessage = 'Owner details are required for borrowed collateral.';
+            break;
+          case 'loan_details':
+            if (!isFilled(applyAmountRaw)) currentErrorMessage = 'Loan Amount is required.';
+            else if (!isFilled(applyWeeks)) currentErrorMessage = 'Loan Tenure is required.';
+            else {
+                const w = Number(applyWeeks);
+                if (w < 1 || w > 4 ||!Number.isInteger(w)) {
+                    currentErrorMessage = 'Loan Tenure must be between 1 and 4 weeks.';
+                }
+            }
+            break;
+          default:
+            break;
+        }
+
+        if (currentErrorMessage) {
+            setErrorMessage(currentErrorMessage);
+            return false;
+        }
+        setErrorMessage(null);
+        return true;
+      };
+
+      const handleNextStep = () => {
+        if (validateCurrentStep()) {
+          setCurrentStep(prev => Math.min(formSteps.length - 1, prev + 1));
+          window.scrollTo(0, 0);
+        }
+      };
+
+      const handlePreviousStep = () => {
+        setCurrentStep(prev => Math.max(0, prev - 1));
+        setErrorMessage(null); // Clear error when moving backward
+        window.scrollTo(0, 0);
+      };
+
+      const handleApply = () => {
+        if (!validateCurrentStep()) {
+            return;
+        }
+        const w = Number(applyWeeks);
+
+        const newLoan = {
+          id: Date.now(),
+          amount: apply.amount,
+          purpose: 'General Student Aid',
+          weeks: w,
+          totalInterest: apply.totalInterest.toFixed(2),
+          totalRepay: apply.totalRepay.toFixed(2),
+          weeklyRepay: apply.weeklyRepay.toFixed(2),
+          date: new Date().toLocaleDateString('en-ZM'),
+          status: 'Pending Approval',
+          firstName,
+          lastName,
+          studentId,
+          nrcNumber,
+          yearOfStudy,
+          programOfStudy,
+          phoneNumber,
+          emailAddress,
+          parentNumber,
+          institutionName,
+          idPhotoType,
+          // For display purposes, storing just the file name. Real app would upload files.
+          studentIdPhoto: studentIdPhoto? studentIdPhoto.name : null,
+          nrcFrontPhoto: nrcFrontPhoto? nrcFrontPhoto.name : null,
+          nrcBackPhoto: nrcBackPhoto? nrcBackPhoto.name : null,
+          collateralType,
+          collateralOwnership,
+          ownerDetails: collateralOwnership === 'Borrowed'? ownerDetails : null,
+        };
+
+        const updatedLoans = [...loans, newLoan];
+        saveLoans(updatedLoans);
+        alert('Application submitted! We will review it soon.');
+
+        // Clear all form fields and reset step after submission
+        setFirstName('');
+        setLastName('');
+        setStudentId('');
+        setNrcNumber('');
+        setYearOfStudy('');
+        setProgramOfStudy('');
+        setPhoneNumber('');
+        setEmailAddress('');
+        setParentNumber('');
+        setInstitutionName('');
+        setCollateralType('');
+        setCollateralOwnership('');
+        setOwnerDetails('');
+        setApplyAmountRaw('');
+        setApplyWeeks('');
+        setIdPhotoType('studentId');
+        setStudentIdPhoto(null);
+        setNrcFrontPhoto(null);
+        setNrcBackPhoto(null);
+        setCurrentStep(0);
+        setErrorMessage(null);
+        setActiveTab('myloans');
+      };
+
+      const handleDeleteLoan = (id) => {
+        if (confirm('Delete this application?')) {
+          const filtered = loans.filter(l => l.id!== id);
+          saveLoans(filtered);
+        }
+      };
+
+      const handleAmountBlur = () => {
+        if (applyAmountRaw) {
+          setApplyAmountRaw(roundTo50(applyAmountRaw).toString());
+        }
+      };
+
+      const handleFileChange = (e, type) => {
+        const file = e.target.files?.[0]; // Use optional chaining to safely access files[0]
+        if (file) {
+          if (type === 'studentId') {
+            setStudentIdPhoto(file);
+          } else if (type === 'nrcFront') {
+            setNrcFrontPhoto(file);
+          } else if (type === 'nrcBack') {
+            setNrcBackPhoto(file);
+          }
+        } else {
+          // If the file input was cleared (e.g., user cancels file selection), reset the state
+          if (type === 'studentId') {
+            setStudentIdPhoto(null);
+          } else if (type === 'nrcFront') {
+            setNrcFrontPhoto(null);
+          } else if (type === 'nrcBack') {
+            setNrcBackPhoto(null);
+          }
+        }
+        setErrorMessage(null);
+      };
+
+      return (
+        <div className="min-h-screen flex flex-col"> {/* Added flex and flex-col here */}
+          <div className={`error-overlay ${errorMessage? 'show' : ''}`}>
+            {errorMessage && (
+              <div className={`error-message-box ${errorMessage? 'show' : ''}`}>
+                <span className="danger-icon">⚠️</span>
+                <h3>Attention!</h3>
+                <p>You can't proceed until you provide all details: <br />{errorMessage}</p>
+                <button onClick={() => setErrorMessage(null)}>OK</button>
+              </div>
+            )}
+          </div>
+          {/* Navbar */}
+          <nav className="navbar text-white shadow-lg sticky top-0 z-10">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+              <h1 className="text-2xl sm:text-3xl font-bold text-[var(--primary)]">
+                KaChola <span className="text-[var(--accent)]">Student Aid</span>
+              </h1>
+              <div className="flex gap-2 text-sm sm:text-base">
+                {tabOrder.map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => {
+                      setActiveTab(tab);
+                      setCurrentStep(0); // Reset step when changing tabs
+                      setErrorMessage(null);
+                    }}
+                    className={`px-4 sm:px-5 py-2 rounded-full font-medium transition-all ${
+                      activeTab === tab
+                    ? 'bg-[var(--accent)] text-[var(--primary)] shadow-md'
+                        : 'hover:bg-white/20'
+                    }`}
+                  >
+                    {tab === 'apply'? 'Apply Now' : tab === 'myloans'? 'My Applications' : 'Eligibility'}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </nav>
+
+          {/* Added ref to main content area */}
+          <main ref={mainContentRef} className="flex-grow max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10 pt-20"> {/* flex-grow to push footer down */}
+            {/* Apply Now */}
+            {activeTab === 'apply' && (
+              <div className="card max-w-lg mx-auto p-6 sm:p-8">
+                <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-center text-[var(--primary)]">
+                  Apply for Quick Short-Term Aid
+                </h2>
+
+                {/* --- Step Indicator --- */}
+                <div className="step-indicator">
+                  {formSteps.map((step, index) => (
+                    <div
+                      key={step} /* Use step directly as key, it's unique */
+                      className={`${index === currentStep? 'active' : ''} ${index < currentStep? 'completed' : ''}`}
+                    >
+                      {index < currentStep? '✓' : index + 1}
+                    </div>
+                  ))}
+                </div>
+
+                <form onSubmit={e => e.preventDefault()} className="space-y-5">
+                  {/* --- Step 1: Personal Information --- */}
+                  {currentStep === 0 && (
+                    <div className="space-y-5">
+                      <h3 className="text-xl font-semibold text-[var(--primary)]">Personal Information</h3>
+                      <div className="input-wrapper">
+                        <label className="block text-sm font-medium mb-2">First Name</label>
+                        <input
+                          type="text"
+                          value={firstName}
+                          onChange={e => { setFirstName(e.target.value); setErrorMessage(null); }}
+                          required
+                          className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white"
+                          placeholder="Enter your first name"
+                        />
+                      </div>
+                      <div className="input-wrapper">
+                        <label className="block text-sm font-medium mb-2">Last Name</label>
+                        <input
+                          type="text"
+                          value={lastName}
+                          onChange={e => { setLastName(e.target.value); setErrorMessage(null); }}
+                          required
+                          className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white"
+                          placeholder="Enter your last name"
+                        />
+                      </div>
+                      <div className="input-wrapper">
+                        <label className="block text-sm font-medium mb-2">NRC Number</label>
+                        <input
+                          type="text"
+                          value={nrcNumber}
+                          onChange={e => { setNrcNumber(e.target.value); setErrorMessage(null); }}
+                          required
+                          className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white"
+                          placeholder="e.g., 123456/12/1"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* --- Step 2: Academic Information --- */}
+                  {currentStep === 1 && (
+                    <div className="space-y-5">
+                      <h3 className="text-xl font-semibold text-[var(--primary)]">Academic Information</h3>
+                      <div className="input-wrapper">
+                        <label className="block text-sm font-medium mb-2">Name of Institution</label>
+                        <select
+                          value={institutionName}
+                          onChange={e => { setInstitutionName(e.target.value); setErrorMessage(null); }}
+                          required
+                          className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white"
+                        >
+                          <option value="">Select Institution</option>
+                          <option value="UNZA">UNZA</option>
+                          <option value="CBU">CBU</option>
+                          <option value="Evelyn Hone College">Evelyn Hone College</option>
+                        </select>
+                      </div>
+                      <div className="input-wrapper">
+                        <label className="block text-sm font-medium mb-2">Student ID</label>
+                        <input
+                          type="text"
+                          value={studentId}
+                          onChange={e => { setStudentId(e.target.value); setErrorMessage(null); }}
+                          required
+                          className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white"
+                          placeholder="e.g., 20230001 (numbers only)"
+                        />
+                      </div>
+                      <div className="input-wrapper">
+                        <label className="block text-sm font-medium mb-2">Year of Study</label>
+                        <select
+                          value={yearOfStudy}
+                          onChange={e => { setYearOfStudy(e.target.value); setErrorMessage(null); }}
+                          required
+                          className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white"
+                        >
+                          <option value="">Select Year</option>
+                          <option value="1st Year">1st Year</option>
+                          <option value="2nd Year">2nd Year</option>
+                          <option value="3rd Year">3rd Year</option>
+                          <option value="4th Year">4th Year</option>
+                          <option value="5th Year">5th Year</option>
+                          <option value="6th Year">6th Year</option>
+                          <option value="Final Year">Final Year</option>
+                          <option value="Postgraduate">Postgraduate</option>
+                        </select>
+                      </div>
+                      <div className="input-wrapper">
+                        <label className="block text-sm font-medium mb-2">Program of Study</label>
+                        <input
+                          type="text"
+                          value={programOfStudy}
+                          onChange={e => { setProgramOfStudy(e.target.value); setErrorMessage(null); }}
+                          required
+                          className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white"
+                          placeholder="e.g., Bachelor of Computer Science"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* --- Step 3: Contact Information --- */}
+                  {currentStep === 2 && (
+                    <div className="space-y-5">
+                      <h3 className="text-xl font-semibold text-[var(--primary)]">Contact Information</h3>
+                      <div className="input-wrapper">
+                        <label className="block text-sm font-medium mb-2">Phone Number</label>
+                        <input
+                          type="tel"
+                          value={phoneNumber}
+                          onChange={e => { setPhoneNumber(e.target.value); setErrorMessage(null); }}
+                          required
+                          className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white"
+                          placeholder="e.g., 0971234567"
+                        />
+                      </div>
+                      <div className="input-wrapper">
+                        <label className="block text-sm font-medium mb-2">Email Address</label>
+                        <input
+                          type="email"
+                          value={emailAddress}
+                          onChange={e => { setEmailAddress(e.target.value); setErrorMessage(null); }}
+                          required
+                          className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white"
+                          placeholder="e.g., your.email@example.com"
+                        />
+                      </div>
+                      <div className="input-wrapper">
+                        <label className="block text-sm font-medium mb-2">Parent/Guardian Phone Number</label>
+                        <input
+                          type="tel"
+                          value={parentNumber}
+                          onChange={e => { setParentNumber(e.target.value); setErrorMessage(null); }}
+                          required
+                          className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white"
+                          placeholder="e.g., 0978765432"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* --- Step 4: ID Proof --- */}
+                  {currentStep === 3 && (
+                    <div className="space-y-5">
+                      <h3 className="text-xl font-semibold text-[var(--primary)]">ID Proof</h3>
+                      <div className="input-wrapper space-y-4">
+                        <label className="block text-sm font-medium mb-2">Identification Document</label>
+                        <div className="flex justify-around bg-white p-2 rounded-xl border">
+                            <button
+                                type="button"
+                                onClick={() => { setIdPhotoType('studentId'); setErrorMessage(null); }}
+                                className={`flex-1 py-2 text-center rounded-lg transition-all ${idPhotoType === 'studentId'? 'bg-[var(--primary)] text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                            >
+                                Student ID
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => { setIdPhotoType('nrc'); setErrorMessage(null); }}
+                                className={`flex-1 py-2 text-center rounded-lg transition-all ${idPhotoType === 'nrc'? 'bg-[var(--primary)] text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                            >
+                                NRC
+                            </button>
+                        </div>
+
+                        {idPhotoType === 'studentId' && (
+                            <div className="space-y-3">
+                                <label className="block text-sm font-medium">Upload Student ID Photo</label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    capture="environment"
+                                    onChange={e => handleFileChange(e, 'studentId')}
+                                    required={idPhotoType === 'studentId'}
+                                    className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[var(--primary)] file:text-white hover:file:bg-[var(--primary)]/90"
+                                />
+                                {studentIdPhoto && <p className="text-sm text-gray-600 mt-2">Selected: {studentIdPhoto.name}</p>}
+                            </div>
+                        )}
+
+                        {idPhotoType === 'nrc' && (
+                            <div className="space-y-3">
+                                <div>
+                                    <label className="block text-sm font-medium">Upload NRC Front Photo</label>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        capture="environment"
+                                        onChange={e => handleFileChange(e, 'nrcFront')}
+                                        required={idPhotoType === 'nrc'}
+                                        className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[var(--primary)] file:text-white hover:file:bg-[var(--primary)]/90"
+                                    />
+                                    {nrcFrontPhoto && <p className="text-sm text-gray-600 mt-2">Selected: {nrcFrontPhoto.name}</p>}
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium">Upload NRC Back Photo</label>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        capture="environment"
+                                        onChange={e => handleFileChange(e, 'nrcBack')}
+                                        required={idPhotoType === 'nrc'}
+                                        className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[var(--primary)] file:text-white hover:file:bg-[var(--primary)]/90"
+                                    />
+                                    {nrcBackPhoto && <p className="text-sm text-gray-600 mt-2">Selected: {nrcBackPhoto.name}</p>}
+                                </div>
+                            </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* --- NEW STEP: Collateral Information --- */}
+                  {currentStep === 4 && (
+                    <div className="space-y-5">
+                      <h3 className="text-xl font-semibold text-[var(--primary)]">Collateral Information</h3>
+                      <div className="input-wrapper">
+                        <label className="block text-sm font-medium mb-2">Type of Collateral</label>
+                        <select
+                          value={collateralType}
+                          onChange={e => { setCollateralType(e.target.value); setErrorMessage(null); }}
+                          required
+                          className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white"
+                        >
+                          <option value="">Select Collateral Type</option>
+                          <option value="Phone">Phone</option>
+                          <option value="Laptop">Laptop</option>
+                          <option value="Refrigerator">Refrigerator</option>
+                          <option value="Car">Car</option>
+                          <option value="Motorbike">Motorbike</option>
+                          <option value="TV">TV</option>
+                        </select>
+                      </div>
+                      <div className="input-wrapper">
+                        <label className="block text-sm font-medium mb-2">Ownership</label>
+                        <select
+                          value={collateralOwnership}
+                          onChange={e => { setCollateralOwnership(e.target.value); setErrorMessage(null); }}
+                          required
+                          className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white"
+                        >
+                          <option value="">Select Ownership Type</option>
+                          <option value="Personal">Personal</option>
+                          <option value="Borrowed">Borrowed</option>
+                        </select>
+                      </div>
+                      {collateralOwnership === 'Borrowed' && (
+                        <div className="input-wrapper">
+                          <label className="block text-sm font-medium mb-2">Owner Details (Name and Contact)</label>
+                          <input
+                            type="text"
+                            value={ownerDetails}
+                            onChange={e => { setOwnerDetails(e.target.value); setErrorMessage(null); }}
+                            required
+                            className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white"
+                            placeholder="e.g., John Doe, 0971234567"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* --- Step 5 (now 6): Loan Details --- */}
+                  {currentStep === 5 && (
+                    <div className="space-y-5">
+                      <h3 className="text-xl font-semibold text-[var(--primary)]">Loan Details</h3>
+                      <div className="input-wrapper">
+                        <label className="block text-sm font-medium mb-2">Amount (multiples of K 50)</label>
+                        <input
+                          type="number"
+                          value={applyAmountRaw}
+                          onChange={e => { setApplyAmountRaw(e.target.value); setErrorMessage(null); }}
+                          onBlur={handleAmountBlur}
+                          min="200" max="5000" step="50"
+                          required
+                          className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] bg-white"
+                          placeholder="Amount cannot be less than 200 and not more than 5000"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Estimated Repayment</label>
+                        {isCalculable? (
+                          <div className="purpose-repay-message">
+                            After {apply.weeks} week{apply.weeks > 1? 's' : ''} you will pay back {formatZMW(apply.totalRepay)}
+                          </div>
+                        ) : (
+                          <p className="text-gray-500 text-sm italic px-5 py-4 border border-gray-200 rounded-xl bg-white">
+                            Enter amount and tenure above to see estimated repayment.
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Tenure (weeks, 1-4)</label>
+                        <input
+                          type="number"
+                          value={applyWeeks}
+                          onChange={e => { setApplyWeeks(e.target.value); setErrorMessage(null); }}
+                          min="1" max="4" step="1"
+                          required
+                          className="w-full px-5 py-4 border rounded-xl text-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)]"
+                          placeholder="Enter number of weeks (1-4)"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* --- Navigation Buttons --- */}
+                  <div className="flex justify-between pt-6">
+                    {currentStep > 0 && (
+                      <button
+                        type="button"
+                        onClick={handlePreviousStep}
+                        className="px-6 py-3 bg-gray-300 text-gray-800 font-semibold rounded-xl transition hover:bg-gray-400"
+                      >
+                        Previous
+                      </button>
+                    )}
+                    {currentStep < formSteps.length - 1 && (
+                      <button
+                        type="button"
+                        onClick={handleNextStep}
+                        className={`px-6 py-3 bg-[var(--primary)] text-white font-semibold rounded-xl transition ${currentStep === 0? 'ml-auto' : ''} hover:bg-[var(--primary)]/90`}
+                      >
+                        Next
+                      </button>
+                    )}
+                    {currentStep === formSteps.length - 1 && (
+                      <button
+                        type="submit"
+                        onClick={handleApply}
+                        className="w-full bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white font-semibold py-4 rounded-xl text-xl transition shadow-md"
+                      >
+                        Submit Application
+                      </button>
+                    )}
+                  </div>
+                </form>
+              </div>
+            )}
+
+            {/* My Loans */}
+            {activeTab === 'myloans' && (
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-[var(--primary)]">
+                  My Loan Applications ({loans.length})
+                </h2>
+                {loans.length === 0? (
+                  <p className="text-center text-gray-600 py-16 text-lg">
+                    No applications yet.<br/>Head to "Apply Now" to get started!
+                  </p>
+                ) : (
+                  <div className="grid gap-6 sm:grid-cols-2">
+                    {loans.map(loan => (
+                      <div key={loan.id} className="card p-6">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <div className="text-2xl font-bold text-[var(--primary)]">
+                              {formatZMW(loan.amount)}
+                            </div>
+                            <div className="text-sm text-gray-600">{loan.purpose}</div>
+                          </div>
+                          <span className="px-4 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                            {loan.status}
+                          </span>
+                        </div>
+                        <div className="space-y-2 text-sm text-gray-700">
+                          <div className="flex justify-between"><span>Total Interest</span><span className="font-medium">{formatZMW(loan.totalInterest)}</span></div>
+                          <div className="flex justify-between"><span>Weekly Repayment</span><span>{formatZMW(loan.weeklyRepay)}</span></div>
+                          <div className="flex justify-between"><span>Total Repay</span><span>{formatZMW(loan.totalRepay)}</span></div>
+                          <div className="flex justify-between"><span>Tenure</span><span>{loan.weeks} week{loan.weeks!== 1? 's' : ''}</span></div>
+                          <div className="flex justify-between"><span>Applied</span><span>{loan.date}</span></div>
+                          <div className="flex justify-between"><span>Name</span><span>{loan.firstName} {loan.lastName}</span></div>
+                          <div className="flex justify-between"><span>Student ID</span><span>{loan.studentId}</span></div>
+                          <div className="flex justify-between"><span>NRC</span><span>{loan.nrcNumber}</span></div>
+                          <div className="flex justify-between"><span>Institution</span><span>{loan.institutionName}</span></div>
+                          <div className="flex justify-between"><span>Year of Study</span><span>{loan.yearOfStudy}</span></div>
+                          <div className="flex justify-between"><span>Program</span><span>{loan.programOfStudy}</span></div>
+                          <div className="flex justify-between"><span>Phone</span><span>{loan.phoneNumber}</span></div>
+                          <div className="flex justify-between"><span>Email</span><span>{loan.emailAddress}</span></div>
+                          <div className="flex justify-between"><span>Parent #</span><span>{loan.parentNumber}</span></div>
+                          {loan.idPhotoType === 'studentId' && <div className="flex justify-between"><span>ID Photo</span><span>{loan.studentIdPhoto}</span></div>}
+                          {loan.idPhotoType === 'nrc' && (
+                            <>
+                                <div className="flex justify-between"><span>NRC Front</span><span>{loan.nrcFrontPhoto}</span></div>
+                                <div className="flex justify-between"><span>NRC Back</span><span>{loan.nrcBackPhoto}</span></div>
+                            </>
+                          )}
+                          <div className="flex justify-between"><span>Collateral Type</span><span>{loan.collateralType}</span></div>
+                          <div className="flex justify-between"><span>Ownership</span><span>{loan.collateralOwnership}</span></div>
+                          {loan.collateralOwnership === 'Borrowed' && <div className="flex justify-between"><span>Owner Details</span><span>{loan.ownerDetails}</span></div>}
+                        </div>
+                        <button
+                          onClick={() => handleDeleteLoan(loan.id)}
+                          className="mt-5 text-red-600 hover:text-red-800 text-sm font-medium underline"
+                        >
+                          Delete Application
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Eligibility */}
+            {activeTab === 'eligibility' && (
+              <div className="card max-w-3xl mx-auto p-6 sm:p-8">
+                <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-center text-[var(--primary)]">
+                  Student Loan Eligibility Criteria
+                </h2>
+                <p className="text-center text-gray-700 mb-8 font-medium">
+                  KaChola Student Aid provides quick short-term loans <strong>exclusively for students</strong>. To qualify for K 200 – K 5,000 (1–4 weeks tenure), you must meet these student-specific requirements:
+                </p>
+                <ul className="space-y-5 text-gray-800 text-base sm:text-lg">
+                  <li className="flex items-start">
+                    <span className="text-[var(--accent)] text-3xl mr-4 font-bold">✓</span>
+                    <span><strong>Current Student Status:</strong> Must be enrolled and actively attending a recognized secondary school, college, university, TVET institution, or vocational training program in Zambia. Proof of enrollment or valid student ID/card required.</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-[var(--accent)] text-3xl mr-4 font-bold">✓</span>
+                    <span><strong>Age & Citizenship:</strong> 18 years or older (or 16+ with parent/guardian consent and signature). Must be a Zambian citizen with a valid green National Registration Card (NRC).</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-[var(--accent)] text-3xl mr-4 font-bold">✓</span>
+                    <span><strong>Repayment Ability:</strong> Verifiable means to repay (e.g., student allowance/stipend, part-time work, family/guardian support, pocket money, or expected future salary after studies). Mobile money wallet or bank account active for disbursement and weekly repayments.</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-[var(--accent)] text-3xl mr-4 font-bold">✓</span>
+                    <span><strong>Clean Credit Record:</strong> No active defaults or blacklisting with other lenders. We perform a quick check.</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-[var(--accent)] text-3xl mr-4 font-bold">✓</span>
+                    <span><strong>Loan Purpose:</strong> Funds must be for genuine student needs (tuition top-up, books, stationery, laptop repair, exam fees, accommodation, transport, food/emergency, etc.).</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-[var(--accent)] text-3xl mr-4 font-bold">✓</span>
+                    <span><strong>Loan Limits:</strong> K 200 minimum – K 5,000 maximum, tenure strictly 1 to 4 weeks only. Multiples of K 50 only.</span>
+                  </li>
+                </ul>
+                <p className="mt-10 text-center text-gray-600 italic text-base">
+                  These criteria ensure we support genuine Zambian students responsibly. Meeting them does not guarantee approval — final decision based on quick assessment. Apply now to see if you qualify!
+                </p>
+              </div>
+            )}
+          </main>
+
+          {/* NEW: Footer Section */}
+          <footer className="bg-[var(--primary)] text-white py-6 mt-12">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
+              <p className="text-lg font-semibold mb-3">Connect with us on WhatsApp</p>
+              <a
+                href="https://wa.me/260979236667"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-6 py-3 bg-[#25D366] text-white font-bold rounded-full shadow-md hover:bg-[#1DA851] transition-all"
+              >
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12.04 2C7.3 2 3.31 5.99 3.31 10.74c0 1.94.63 3.75 1.7 5.24L3 22l6.23-1.65c1.47.8 3.16 1.25 4.81 1.25 4.74 0 8.73-3.99 8.73-8.74S16.78 2 12.04 2zM17 15.65c-.24.08-.81.42-.94.49-.13.07-.26.08-.49-.07-.23-.15-.9-.35-1.72-.85-.82-.5-1.36-.93-1.63-1.03-.27-.1-.2-.08-.4-.08s-.48-.07-.74.34c-.26.41-1.01 1.3-1.23 1.55-.22.24-.44.27-.81.09-.37-.17-.99-.37-1.89-1.16-.7-.6-.94-1.07-.94-1.3-.01-.24.03-.46.12-.66.08-.2.17-.35.26-.5-.04-.08-.09-.16-.13-.24-.05-.09-.01-.15.34-.14h.47c.1-.01.21-.02.3-.02.13 0.28.03.49.49.21.45.69 1.63.75 1.76.06.13.11.15.2.1.09-.05.69-.26.96-.46.27-.2.45-.33.51-.43.06-.1.14-.18.2-.14.07.05.45.24.64.38.19.13.31.2.39.26.08.06.5.34.61.35.1.01.2.0.2-.14.0-.14.24-.8.36-1.3C17.06 12.83 17.26 12 17.3 11.95c.04-.06.27-.06.47-.03.2.03.49.03.69.04.2.02.32.0.4.15s.26.65.61 1.29c.35.63.35 1.25.1 1.34-.25.1-.82.35-.94.39z"/>
+                </svg>
+                Chat on WhatsApp
+              </a>
+              <p className="mt-6 text-sm opacity-80">
+                &copy; {new Date().getFullYear()} KaChola Student Aid. All rights reserved.
+              </p>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
