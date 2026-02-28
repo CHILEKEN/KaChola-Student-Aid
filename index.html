@@ -99,7 +99,7 @@
             action="https://api.web3forms.com/submit" method="POST">
 
         <input type="hidden" name="access_key" value="fe293e23-d328-4bad-86e8-d9b531e2a37d">
-        <!-- Hidden field for due date - will be filled before submit -->
+        <!-- Hidden field for due date – populated on approve -->
         <input type="hidden" name="due_date" id="hidden-due-date">
 
         <div class="space-y-5">
@@ -209,7 +209,7 @@
     <p class="text-sm">© 2026 KaChola Student Aid. All rights reserved.</p>
   </footer>
 
-  <!-- JavaScript -->
+  <!-- JavaScript – full logic restored + due date in email -->
   <script>
     const form = document.getElementById('loan-form');
     const amountInput = document.getElementById('loan-amount');
@@ -220,7 +220,7 @@
     const submitBtn = document.getElementById('submit-btn');
     const formMessage = document.getElementById('form-message');
     const confirmationCheck = document.getElementById('confirmation');
-    const hiddenDueDateInput = document.getElementById('hidden-due-date');
+    const hiddenDueDate = document.getElementById('hidden-due-date');
 
     const modal = document.getElementById('due-modal');
     const modalDateSpan = document.getElementById('modal-date');
@@ -299,24 +299,23 @@
       modal.style.display = 'none';
     }
 
-    // When APPROVE is clicked → set hidden due_date field and submit
+    // APPROVE → set due_date in hidden field + submit form
     approveBtn.addEventListener('click', () => {
       hideModal();
 
-      // Calculate and set due date in hidden field
       const weeks = parseInt(termSelect.value);
       const today = new Date();
       const dueDate = new Date(today);
       dueDate.setDate(today.getDate() + weeks * 7);
-      hiddenDueDateInput.value = formatDate(dueDate);
+      hiddenDueDate.value = formatDate(dueDate);
 
-      // Trigger actual form submission
+      // Trigger the form's submit event
       form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
 
     declineBtn.addEventListener('click', hideModal);
 
-    // Main form submission handler (runs after approval)
+    // Form submission handler – only runs after APPROVE
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -340,7 +339,7 @@
           form.reset();
           previewDiv.classList.add('hidden');
           confirmationCheck.checked = false;
-          hiddenDueDateInput.value = ''; // clear for next submission
+          hiddenDueDate.value = ''; // clear hidden field
         } else {
           formMessage.textContent = data.message || 'Submission failed. Please try again.';
           formMessage.className = 'text-red-600';
@@ -353,7 +352,7 @@
       }
     });
 
-    // Event listeners for form interaction
+    // Event listeners
     amountInput.addEventListener('input', updatePreview);
     termSelect.addEventListener('change', updatePreview);
     confirmationCheck.addEventListener('change', checkFormReady);
