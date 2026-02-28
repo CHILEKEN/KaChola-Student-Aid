@@ -171,7 +171,7 @@
             </label>
           </div>
 
-          <button type="button" id="submit-btn" class="w-full bg-kachola-gold text-kachola-brown font-bold py-3.5 px-6 rounded-lg hover:bg-opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-md" disabled>
+          <button type="button" id="submit-btn" class="w-full bg-kachola-gold text-kachola-brown font-bold py-3.5 px-6 rounded-lg hover:bg-opacity-90 transition shadow-md">
             Submit Application
           </button>
 
@@ -220,14 +220,13 @@
   <!-- JavaScript -->
   <script>
     // Elements
-    const form = document.getElementById('loan-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const formMessage = document.getElementById('form-message');
     const amountInput = document.getElementById('loan-amount');
     const termSelect = document.getElementById('loan-term');
     const previewDiv = document.getElementById('repayment-preview');
     const previewText = document.getElementById('repayment-text');
     const amountError = document.getElementById('amount-error');
-    const submitBtn = document.getElementById('submit-btn');
-    const formMessage = document.getElementById('form-message');
     const confirmationCheck = document.getElementById('confirmation');
     const hiddenDueDate = document.getElementById('hidden-due-date');
 
@@ -243,12 +242,12 @@
     const minAmount = 200;
     const maxAmount = 5000;
 
-    // Hide modals immediately (prevents any flash)
+    // Hide modals immediately
     dueModal.style.display = 'none';
     thankModal.style.display = 'none';
 
     // ────────────────────────────────────────────────
-    // Repayment Preview & Form Readiness
+    // Repayment Preview & Validation
     // ────────────────────────────────────────────────
     function validateAmount(amount) {
       if (isNaN(amount) || amount < minAmount) {
@@ -281,37 +280,23 @@
       } else {
         previewDiv.classList.add('hidden');
       }
-
-      checkFormReady();
     }
 
+    // Simple readiness – button enables when all required fields filled
     function checkFormReady() {
       const required = form.querySelectorAll('[required]');
       let valid = true;
       required.forEach(field => {
         if (!field.value.trim()) valid = false;
       });
-
-      const amountValid = validateAmount(parseFloat(amountInput.value) || 0);
-      const termValid = !!termSelect.value;
-      const confirmed = confirmationCheck.checked;
-
-      submitBtn.disabled = !(valid && amountValid && termValid && confirmed);
-    }
-
-    // ────────────────────────────────────────────────
-    // Date formatting
-    // ────────────────────────────────────────────────
-    function formatDate(date) {
-      const options = { day: 'numeric', month: 'long', year: 'numeric' };
-      return date.toLocaleDateString('en-GB', options);
+      submitBtn.disabled = !valid;
     }
 
     // ────────────────────────────────────────────────
     // Submit button click → show due date modal
     // ────────────────────────────────────────────────
     submitBtn.addEventListener('click', () => {
-      if (submitBtn.disabled) return;
+      console.log("Submit button clicked");  // Debug: check console
 
       const weeks = parseInt(termSelect.value);
       if (!weeks || weeks < 1 || weeks > 4) {
@@ -328,7 +313,7 @@
     });
 
     // ────────────────────────────────────────────────
-    // APPROVE → submit + show thank you on success
+    // APPROVE → submit form
     // ────────────────────────────────────────────────
     approveBtn.addEventListener('click', async () => {
       dueModal.style.display = 'none';
@@ -374,13 +359,13 @@
     });
 
     // ────────────────────────────────────────────────
-    // Close buttons
+    // Close / Decline
     // ────────────────────────────────────────────────
     declineBtn.addEventListener('click', () => dueModal.style.display = 'none');
     closeThankBtn.addEventListener('click', () => thankModal.style.display = 'none');
 
     // ────────────────────────────────────────────────
-    // Listeners for preview & readiness
+    // Listeners
     // ────────────────────────────────────────────────
     amountInput.addEventListener('input', updatePreview);
     termSelect.addEventListener('change', updatePreview);
