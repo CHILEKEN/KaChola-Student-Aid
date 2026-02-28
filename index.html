@@ -225,7 +225,7 @@
   <!-- JavaScript -->
   <script>
     // ────────────────────────────────────────────────
-    // DOM Elements
+    // Elements
     // ────────────────────────────────────────────────
     const form = document.getElementById('loan-form');
     const submitBtn = document.getElementById('submit-btn');
@@ -242,22 +242,26 @@
     const closeThankBtn = document.getElementById('close-thank-btn');
 
     // ────────────────────────────────────────────────
-    // Form validation & preview logic (your existing code - add it here)
+    // Form readiness & preview (minimal version – expand as needed)
     // ────────────────────────────────────────────────
-    // Example placeholder - replace with your full validation/preview code
-    function updatePreview() {
-      // Your repayment preview logic here...
-    }
-
     function checkFormReady() {
-      // Your logic to enable/disable submit button
-      const isValid = /* your conditions */;
-      submitBtn.disabled = !isValid;
+      const required = form.querySelectorAll('[required]');
+      let valid = true;
+      required.forEach(field => {
+        if (!field.value.trim()) valid = false;
+      });
+      submitBtn.disabled = !valid;
     }
 
-    // Attach your input/change listeners here
-    // document.getElementById('loan-amount').addEventListener('input', updatePreview);
-    // etc.
+    // Add your full preview/validation logic here
+    // e.g. updatePreview(), amount validation, repayment calculation...
+
+    // Basic listeners
+    form.querySelectorAll('input, select, textarea').forEach(el => {
+      el.addEventListener('input', checkFormReady);
+      el.addEventListener('change', checkFormReady);
+    });
+    confirmationCheck.addEventListener('change', checkFormReady);
 
     // ────────────────────────────────────────────────
     // Date formatting
@@ -268,15 +272,18 @@
     }
 
     // ────────────────────────────────────────────────
-    // Show due date modal when Submit button is clicked
+    // Show due date modal when user clicks Submit button
     // ────────────────────────────────────────────────
     submitBtn.addEventListener('click', (e) => {
-      e.preventDefault(); // Prevent default form submission
+      e.preventDefault();
 
       if (submitBtn.disabled) return;
 
       const weeks = parseInt(document.getElementById('loan-term').value);
-      if (!weeks || weeks < 1 || weeks > 4) return;
+      if (!weeks || weeks < 1 || weeks > 4) {
+        alert('Please select a valid loan term.');
+        return;
+      }
 
       const today = new Date();
       const dueDate = new Date(today);
@@ -287,9 +294,9 @@
     });
 
     // ────────────────────────────────────────────────
-    // APPROVE → set hidden due_date + submit form
+    // APPROVE → submit form + show thank you
     // ────────────────────────────────────────────────
-    approveBtn.addEventListener('click', () => {
+    approveBtn.addEventListener('click', async () => {
       dueModal.style.display = 'none';
 
       const weeks = parseInt(document.getElementById('loan-term').value);
@@ -298,32 +305,6 @@
       dueDate.setDate(today.getDate() + weeks * 7);
       hiddenDueDate.value = formatDate(dueDate);
 
-      // Perform actual submission
-      submitApplication();
-    });
-
-    declineBtn.addEventListener('click', () => {
-      dueModal.style.display = 'none';
-    });
-
-    // ────────────────────────────────────────────────
-    // Thank you modal auto-close
-    // ────────────────────────────────────────────────
-    function showThankModal() {
-      thankModal.style.display = 'flex';
-      setTimeout(() => {
-        thankModal.style.display = 'none';
-      }, 5000); // 5 seconds
-    }
-
-    closeThankBtn.addEventListener('click', () => {
-      thankModal.style.display = 'none';
-    });
-
-    // ────────────────────────────────────────────────
-    // Actual form submission function
-    // ────────────────────────────────────────────────
-    async function submitApplication() {
       submitBtn.disabled = true;
       formMessage.textContent = 'Submitting application...';
       formMessage.className = 'text-blue-600';
@@ -338,27 +319,36 @@
         const data = await res.json();
 
         if (data.success) {
-          formMessage.textContent = 'Application sent successfully! We will contact you soon.';
+          formMessage.textContent = 'Application sent successfully!';
           formMessage.className = 'text-green-600';
-          showThankModal();
+          thankModal.style.display = 'flex';
+          setTimeout(() => { thankModal.style.display = 'none'; }, 5000);
           form.reset();
           document.getElementById('repayment-preview').classList.add('hidden');
           confirmationCheck.checked = false;
           hiddenDueDate.value = '';
         } else {
-          formMessage.textContent = data.message || 'Submission failed. Please try again.';
+          formMessage.textContent = data.message || 'Submission failed.';
           formMessage.className = 'text-red-600';
         }
       } catch (err) {
-        formMessage.textContent = 'Network error. Please check your connection.';
+        formMessage.textContent = 'Network error. Please try again.';
         formMessage.className = 'text-red-600';
       } finally {
         submitBtn.disabled = false;
       }
-    }
+    });
 
-    // Attach your other listeners (validation, preview, etc.) as before
-    // ...
+    declineBtn.addEventListener('click', () => {
+      dueModal.style.display = 'none';
+    });
+
+    closeThankBtn.addEventListener('click', () => {
+      thankModal.style.display = 'none';
+    });
+
+    // Initial check
+    checkFormReady();
   </script>
 
 </body>
