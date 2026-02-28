@@ -5,12 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>KaChola Student Aid - Collateral-Based Student Loans</title>
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -21,13 +19,10 @@
             'kachola-gold':    '#D4A017',
             'kachola-gold-lt': '#E8C670',
             'apply-btn':       '#F59E0B',
-            'apply-btn-hover':'#D97706',
             'approve-green':   '#10B981',
             'decline-red':     '#EF4444',
           },
-          fontFamily: {
-            oswald: ['Oswald', 'sans-serif'],
-          }
+          fontFamily: { oswald: ['Oswald', 'sans-serif'] }
         }
       }
     }
@@ -40,12 +35,12 @@
 </head>
 <body class="font-oswald text-gray-800">
 
-  <!-- Navigation Bar -->
+  <!-- Navigation -->
   <nav class="bg-kachola-brown text-white fixed top-0 left-0 right-0 z-50 shadow-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16 md:h-18">
         <div class="flex items-center space-x-3 sm:space-x-4">
-          <img src="pic.png" alt="KaChola Logo" class="h-9 sm:h-10 md:h-12 w-auto object-contain" />
+          <img src="pic.png" alt="Logo" class="h-9 sm:h-10 md:h-12 w-auto object-contain" />
           <span class="text-xl sm:text-2xl md:text-3xl font-bold tracking-wide">
             KaChola <span class="text-kachola-gold-lt">Student Aid</span>
           </span>
@@ -93,7 +88,7 @@
       </p>
     </section>
 
-    <!-- Application Form -->
+    <!-- Form -->
     <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-12" id="form">
       <h3 class="text-2xl sm:text-3xl font-bold text-kachola-gold text-center mb-8">Loan Application</h3>
 
@@ -103,6 +98,7 @@
         <input type="hidden" name="due_date" id="hidden-due-date">
 
         <div class="space-y-5">
+          <!-- Form fields -->
           <div>
             <label for="full-name" class="block text-kachola-gold font-medium mb-1.5">Full Name</label>
             <input type="text" id="full-name" name="full_name" required class="w-full px-4 py-2.5 border border-kachola-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-kachola-gold bg-kachola-cream">
@@ -160,7 +156,7 @@
             </select>
           </div>
 
-          <!-- Repayment Preview - RESTORED -->
+          <!-- Repayment Preview -->
           <div id="repayment-preview" class="hidden p-3 bg-green-50 border border-green-300 rounded-lg text-center">
             <p id="repayment-text" class="text-base font-semibold text-red-600"></p>
           </div>
@@ -188,7 +184,7 @@
 
   </main>
 
-  <!-- Due Date Confirmation Modal -->
+  <!-- Due Date Modal -->
   <div id="due-modal" class="modal fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
     <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 p-6 border border-kachola-brown-light">
       <h3 class="text-xl font-bold text-kachola-gold mb-4 text-center">Loan Due Date</h3>
@@ -206,7 +202,7 @@
     </div>
   </div>
 
-  <!-- Thank You Modal (auto-closes after 5 seconds) -->
+  <!-- Thank You Modal -->
   <div id="thank-modal" class="modal fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
     <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 p-8 border border-kachola-brown-light text-center">
       <h3 class="text-3xl font-bold text-kachola-gold mb-4">THANK YOU FOR TRUSTING US</h3>
@@ -227,15 +223,15 @@
   <script>
     // Elements
     const form = document.getElementById('loan-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const formMessage = document.getElementById('form-message');
+    const confirmationCheck = document.getElementById('confirmation');
+    const hiddenDueDate = document.getElementById('hidden-due-date');
     const amountInput = document.getElementById('loan-amount');
     const termSelect = document.getElementById('loan-term');
     const previewDiv = document.getElementById('repayment-preview');
     const previewText = document.getElementById('repayment-text');
     const amountError = document.getElementById('amount-error');
-    const submitBtn = document.getElementById('submit-btn');
-    const formMessage = document.getElementById('form-message');
-    const confirmationCheck = document.getElementById('confirmation');
-    const hiddenDueDate = document.getElementById('hidden-due-date');
 
     const dueModal = document.getElementById('due-modal');
     const modalDate = document.getElementById('modal-date');
@@ -249,8 +245,14 @@
     const minAmount = 200;
     const maxAmount = 5000;
 
+    // Force hide modals on every load
+    window.addEventListener('load', () => {
+      dueModal.style.display = 'none';
+      thankModal.style.display = 'none';
+    });
+
     // ────────────────────────────────────────────────
-    // Repayment Preview Logic - RESTORED
+    // Repayment Preview & Validation
     // ────────────────────────────────────────────────
     function validateAmount(amount) {
       if (isNaN(amount) || amount < minAmount) {
@@ -311,7 +313,7 @@
     }
 
     // ────────────────────────────────────────────────
-    // Show due date modal ONLY on Submit button click
+    // Submit button click → show due date modal
     // ────────────────────────────────────────────────
     submitBtn.addEventListener('click', () => {
       if (submitBtn.disabled) return;
@@ -331,7 +333,7 @@
     });
 
     // ────────────────────────────────────────────────
-    // APPROVE → set due_date + submit form
+    // APPROVE → submit + show thank you on success
     // ────────────────────────────────────────────────
     approveBtn.addEventListener('click', async () => {
       dueModal.style.display = 'none';
@@ -376,12 +378,14 @@
       }
     });
 
+    // ────────────────────────────────────────────────
+    // Close / Decline buttons
+    // ────────────────────────────────────────────────
     declineBtn.addEventListener('click', () => dueModal.style.display = 'none');
-
     closeThankBtn.addEventListener('click', () => thankModal.style.display = 'none');
 
     // ────────────────────────────────────────────────
-    // Event Listeners
+    // Event Listeners for preview & readiness
     // ────────────────────────────────────────────────
     amountInput.addEventListener('input', updatePreview);
     termSelect.addEventListener('change', updatePreview);
