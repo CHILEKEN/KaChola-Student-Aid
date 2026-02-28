@@ -35,7 +35,7 @@
 
   <style>
     body { background-color: #F5F0E9; }
-    #due-modal { display: none; }
+    .modal { display: none; }
   </style>
 </head>
 <body class="font-oswald text-gray-800">
@@ -99,7 +99,6 @@
             action="https://api.web3forms.com/submit" method="POST">
 
         <input type="hidden" name="access_key" value="fe293e23-d328-4bad-86e8-d9b531e2a37d">
-        <!-- Hidden field for due date – populated on approve -->
         <input type="hidden" name="due_date" id="hidden-due-date">
 
         <div class="space-y-5">
@@ -187,21 +186,34 @@
 
   </main>
 
-  <!-- Custom Due Date Confirmation Modal -->
-  <div id="due-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50" style="display:none;">
+  <!-- Due Date Confirmation Modal -->
+  <div id="due-modal" class="modal fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
     <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 p-6 border border-kachola-brown-light">
       <h3 class="text-xl font-bold text-kachola-gold mb-4 text-center">Loan Due Date</h3>
-      <p class="text-center text-lg mb-6 text-gray-800">
+      <p class="text-center text-lg mb-6 text-kachola-brown">
         Your loan will be due on <span id="modal-date" class="font-semibold text-kachola-gold"></span>.
       </p>
-      <div class="flex justify-center gap-4">
-        <button id="decline-btn" class="px-8 py-3 bg-decline-red text-white font-bold rounded-lg hover:bg-red-700 transition shadow">
+      <div class="flex justify-center gap-6">
+        <button id="decline-btn" class="px-8 py-3 bg-decline-red text-white font-bold rounded-lg hover:bg-red-600 transition shadow">
           DECLINE
         </button>
-        <button id="approve-btn" class="px-8 py-3 bg-approve-green text-white font-bold rounded-lg hover:bg-green-700 transition shadow">
+        <button id="approve-btn" class="px-8 py-3 bg-approve-green text-white font-bold rounded-lg hover:bg-green-600 transition shadow">
           APPROVE
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- Thank You Modal (auto-closes after 5 seconds) -->
+  <div id="thank-modal" class="modal fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 p-8 border border-kachola-brown-light text-center">
+      <h3 class="text-3xl font-bold text-kachola-gold mb-4">THANK YOU FOR TRUSTING US</h3>
+      <p class="text-lg text-kachola-brown mb-6">
+        Your application has been received successfully.<br>We will contact you soon.
+      </p>
+      <button id="close-thank-btn" class="px-10 py-3 bg-kachola-gold text-kachola-brown font-bold rounded-lg hover:bg-kachola-gold-lt transition shadow">
+        CLOSE
+      </button>
     </div>
   </div>
 
@@ -209,7 +221,7 @@
     <p class="text-sm">© 2026 KaChola Student Aid. All rights reserved.</p>
   </footer>
 
-  <!-- JavaScript – full logic restored + due date in email -->
+  <!-- JavaScript -->
   <script>
     const form = document.getElementById('loan-form');
     const amountInput = document.getElementById('loan-amount');
@@ -222,10 +234,13 @@
     const confirmationCheck = document.getElementById('confirmation');
     const hiddenDueDate = document.getElementById('hidden-due-date');
 
-    const modal = document.getElementById('due-modal');
-    const modalDateSpan = document.getElementById('modal-date');
+    const dueModal = document.getElementById('due-modal');
+    const modalDate = document.getElementById('modal-date');
     const approveBtn = document.getElementById('approve-btn');
     const declineBtn = document.getElementById('decline-btn');
+
+    const thankModal = document.getElementById('thank-modal');
+    const closeThankBtn = document.getElementById('close-thank-btn');
 
     const rates = { 1: 0.11, 2: 0.22, 3: 0.345, 4: 0.39 };
     const minAmount = 200;
@@ -291,17 +306,40 @@
       const dueDate = new Date(today);
       dueDate.setDate(today.getDate() + weeks * 7);
 
-      modalDateSpan.textContent = formatDate(dueDate);
-      modal.style.display = 'flex';
+      modalDate.textContent = formatDate(dueDate);
+      dueModal.style.display = 'flex';
     }
 
-    function hideModal() {
-      modal.style.display = 'none';
+    function hideDueModal() {
+      dueModal.style.display = 'none';
     }
 
-    // APPROVE → set due_date in hidden field + submit form
+    function showThankModal() {
+      thankModal.style.display = 'flex';
+
+      // Auto-close after 5 seconds (5000 ms)
+      setTimeout(() => {
+        hideThankModal();
+      }, 5000);
+    }
+
+    function hideThankModal() {
+      thankModal.style.display = 'none';
+    }
+
+    // Form submit → show due date modal
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const weeks = parseInt(termSelect.value);
+      if (!weeks || weeks < 1 || weeks > 4) return;
+
+      showDueModal(weeks);
+    });
+
+    // APPROVE → set hidden due_date + submit
     approveBtn.addEventListener('click', () => {
-      hideModal();
+      hideDueModal();
 
       const weeks = parseInt(termSelect.value);
       const today = new Date();
@@ -309,14 +347,17 @@
       dueDate.setDate(today.getDate() + weeks * 7);
       hiddenDueDate.value = formatDate(dueDate);
 
-      // Trigger the form's submit event
       form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
 
-    declineBtn.addEventListener('click', hideModal);
+    declineBtn.addEventListener('click', hideDueModal);
 
-    // Form submission handler – only runs after APPROVE
+    closeThankBtn.addEventListener('click', hideThankModal);
+
+    // Form submission handler
     form.addEventListener('submit', async (e) => {
+      if (e.defaultPrevented) return;
+
       e.preventDefault();
 
       submitBtn.disabled = true;
@@ -335,11 +376,11 @@
         if (data.success) {
           formMessage.textContent = 'Application sent successfully! We will contact you soon.';
           formMessage.className = 'text-green-600';
-          alert('Thank you for trusting KaChola Student Aid! We will contact you soon.');
+          showThankModal();
           form.reset();
           previewDiv.classList.add('hidden');
           confirmationCheck.checked = false;
-          hiddenDueDate.value = ''; // clear hidden field
+          hiddenDueDate.value = '';
         } else {
           formMessage.textContent = data.message || 'Submission failed. Please try again.';
           formMessage.className = 'text-red-600';
@@ -352,7 +393,7 @@
       }
     });
 
-    // Event listeners
+    // Other listeners
     amountInput.addEventListener('input', updatePreview);
     termSelect.addEventListener('change', updatePreview);
     confirmationCheck.addEventListener('change', checkFormReady);
