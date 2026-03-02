@@ -130,7 +130,7 @@
             background: white;
             border-radius: 16px;
             padding: 32px 28px;
-            max-width: 420px;
+            max-width: 460px;
             width: 90%;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             transform: scale(0.8);
@@ -145,8 +145,19 @@
         }
 
         .popup-icon {
-            font-size: 4rem;
+            font-size: 4.2rem;
             margin-bottom: 20px;
+        }
+
+        .popup.loading .popup-icon {
+            font-size: 5rem;
+            color: var(--green);
+            animation: spin 1.2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .popup.success .popup-icon { color: var(--success); }
@@ -164,29 +175,41 @@
             color: #555;
             margin-bottom: 28px;
             line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .popup-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
         }
 
         .popup-btn {
-            background: var(--brown);
-            color: white;
+            padding: 12px 36px;
             border: none;
-            padding: 12px 40px;
             border-radius: 50px;
             font-size: 1.05rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            min-width: 120px;
         }
 
-        .popup-btn:hover { background: #4a2a12; }
+        .popup-btn.approve {
+            background: var(--success);
+            color: white;
+        }
 
-        .popup.success .popup-btn { background: var(--success); }
-        .popup.success .popup-btn:hover { background: #218838; }
+        .popup-btn.approve:hover { background: #218838; }
 
-        .popup.error .popup-btn { background: var(--error); }
-        .popup.error .popup-btn:hover { background: #c82333; }
+        .popup-btn.cancel {
+            background: var(--error);
+            color: white;
+        }
 
-        /* Hamburger Menu */
+        .popup-btn.cancel:hover { background: #c82333; }
+
+        /* Hamburger & other styles remain unchanged */
         .hamburger {
             display: none;
             font-size: 2rem;
@@ -525,7 +548,7 @@
             <div class="popup-icon" id="popupIcon"></div>
             <div class="popup-title" id="popupTitle"></div>
             <div class="popup-message" id="popupMessage"></div>
-            <button class="popup-btn" id="popupBtn">OK</button>
+            <div class="popup-buttons" id="popupButtons"></div>
         </div>
     </div>
 
@@ -713,15 +736,31 @@
         const popupIcon = document.getElementById('popupIcon');
         const popupTitle = document.getElementById('popupTitle');
         const popupMessage = document.getElementById('popupMessage');
-        const popupBtn = document.getElementById('popupBtn');
+        const popupButtons = document.getElementById('popupButtons');
 
-        function showPopup(type, title, message, autoCloseMs = 4500) {
+        function showPopup(type, title, message, buttons = [], autoCloseMs = 0) {
             popup.className = `popup ${type}`;
-            popupIcon.innerHTML = type === 'success' 
+            popupIcon.innerHTML = type === 'loading' 
+                ? '<i class="fas fa-spinner"></i>' 
+                : type === 'success' 
                 ? '<i class="fas fa-check-circle"></i>' 
                 : '<i class="fas fa-exclamation-circle"></i>';
             popupTitle.textContent = title;
             popupMessage.textContent = message;
+
+            popupButtons.innerHTML = '';
+
+            buttons.forEach(btn => {
+                const button = document.createElement('button');
+                button.className = `popup-btn ${btn.class}`;
+                button.textContent = btn.text;
+                button.onclick = () => {
+                    popupOverlay.classList.remove('active');
+                    popup.classList.remove('active');
+                    if (btn.onClick) btn.onClick();
+                };
+                popupButtons.appendChild(button);
+            });
 
             popupOverlay.classList.add('active');
             popup.classList.add('active');
@@ -731,7 +770,6 @@
                 popup.classList.remove('active');
             };
 
-            popupBtn.onclick = close;
             popupOverlay.onclick = e => { if (e.target === popupOverlay) close(); };
 
             if (autoCloseMs > 0) {
@@ -740,7 +778,7 @@
         }
 
         // ────────────────────────────────────────────────
-        //                  HAMBURGER MENU
+        //                  HAMBURGER MENU LOGIC
         // ────────────────────────────────────────────────
         const hamburger = document.querySelector('.hamburger');
         const mobileMenu = document.getElementById('mobileMenu');
@@ -763,7 +801,7 @@
         });
 
         // ────────────────────────────────────────────────
-        //                  FORM & ALL OTHER LOGIC (restored)
+        //                  FORM & ALL OTHER LOGIC
         // ────────────────────────────────────────────────
         const form = document.getElementById('apply-form');
         const nrcInput = document.getElementById('nrc');
@@ -904,36 +942,52 @@
             const total = repaymentAmountEl.textContent;
             const due = repaymentDueEl.textContent;
 
-            if (!confirm(`You will pay back ${total} on ${due}.\n\nDo you APPROVE this loan?`)) {
-                showPopup('error', 'Cancelled', 'Application cancelled.');
-                return;
-            }
+            // Show approval popup
+            showPopup('success', 'Loan Approval Confirmation', 
+                `You will pay back ${total} on ${due}.\n\nDo you APPROVE this loan?`,
+                0,  // no auto-close
+                [
+                    {
+                        text: 'Cancel',
+                        class: 'cancel',
+                        onClick: () => {
+                            showPopup('error', 'Cancelled', 'Application cancelled.');
+                        }
+                    },
+                    {
+                        text: 'Approve',
+                        class: 'approve',
+                        onClick: async () => {
+                            // Show loading spinner popup during submission
+                            showPopup('loading', 'Submitting...', 'Please wait while we process your application...', 0);
 
-            showPopup('success', 'Thank You', 'THANK YOU FOR TRUSTING KACHOLA', 3000);
+                            try {
+                                const res = await fetch('https://api.web3forms.com/submit', {
+                                    method: 'POST',
+                                    body: new FormData(form),
+                                    headers: { 'Accept': 'application/json' }
+                                });
+                                const data = await res.json();
 
-            try {
-                const res = await fetch('https://api.web3forms.com/submit', {
-                    method: 'POST',
-                    body: new FormData(form),
-                    headers: { 'Accept': 'application/json' }
-                });
-                const data = await res.json();
+                                if (data.success) {
+                                    showPopup('success', 'Success', 'Application sent successfully!', 5000);
 
-                if (data.success) {
-                    showPopup('success', 'Success', 'Application sent successfully!', 5000);
+                                    saveSubmitted();
+                                    showSubmitted();
 
-                    saveSubmitted();
-                    showSubmitted();
-
-                    localStorage.removeItem('kacholaApplyDraft');
-                    form.reset();
-                    repaymentInfo.classList.add('hidden');
-                } else {
-                    throw new Error(data.message || 'Submission failed');
-                }
-            } catch (err) {
-                showPopup('error', 'Error', 'Error: ' + err.message);
-            }
+                                    localStorage.removeItem('kacholaApplyDraft');
+                                    form.reset();
+                                    repaymentInfo.classList.add('hidden');
+                                } else {
+                                    throw new Error(data.message || 'Submission failed');
+                                }
+                            } catch (err) {
+                                showPopup('error', 'Error', 'Error: ' + err.message);
+                            }
+                        }
+                    }
+                ]
+            );
         });
 
         window.addEventListener('load', () => {
