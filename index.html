@@ -18,11 +18,7 @@
       --error: #dc3545;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin:0; padding:0; box-sizing:border-box; }
 
     body {
       font-family: Arial, Helvetica, sans-serif;
@@ -43,11 +39,7 @@
       z-index: -2;
     }
 
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 15px;
-    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
 
     header {
       background: var(--brown);
@@ -113,7 +105,7 @@
     }
 
     /* ────────────────────────────────────────────────
-       Modern Popup + Loading Spinner
+       Modern Popup
     ──────────────────────────────────────────────── */
     .popup-overlay {
       position: fixed;
@@ -126,13 +118,10 @@
       justify-content: center;
       opacity: 0;
       visibility: hidden;
-      transition: all 0.4s ease;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
     }
 
-    .popup-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
+    .popup-overlay.active { opacity: 1; visibility: visible; }
 
     .popup {
       background: white;
@@ -143,27 +132,15 @@
       box-shadow: 0 20px 60px rgba(0,0,0,0.3);
       transform: scale(0.8);
       opacity: 0;
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
       text-align: center;
     }
 
-    .popup.active {
-      transform: scale(1);
-      opacity: 1;
-    }
+    .popup.active { transform: scale(1); opacity: 1; }
 
     .popup-icon {
-      font-size: 4.5rem;
+      font-size: 4.2rem;
       margin-bottom: 20px;
-    }
-
-    .popup.loading .popup-icon {
-      animation: spin 1.2s linear infinite;
-      color: var(--green);
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
     }
 
     .popup.success .popup-icon { color: var(--success); }
@@ -188,7 +165,6 @@
       display: flex;
       justify-content: center;
       gap: 20px;
-      flex-wrap: wrap;
     }
 
     .popup-btn {
@@ -202,28 +178,26 @@
       transition: all 0.3s;
     }
 
-    .popup-btn.approve {
-      background: var(--success);
-      color: white;
-    }
+    .popup-btn.approve { background: var(--success); color: white; }
     .popup-btn.approve:hover { background: #218838; }
 
-    .popup-btn.cancel {
-      background: var(--error);
-      color: white;
-    }
+    .popup-btn.cancel { background: var(--error); color: white; }
     .popup-btn.cancel:hover { background: #c82333; }
 
-    /* Submit button loading style */
-    .btn.submit-loading {
+    /* Submit button dynamic loading */
+    #submitBtn {
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    #submitBtn.loading {
       background: var(--green) !important;
       color: white !important;
       pointer-events: none;
-      position: relative;
       padding-left: 48px !important;
     }
 
-    .btn.submit-loading::before {
+    #submitBtn.loading::before {
       content: '';
       position: absolute;
       left: 16px;
@@ -237,9 +211,11 @@
       animation: spin 1s linear infinite;
     }
 
-    /* ────────────────────────────────────────────────
-       Hamburger Menu
-    ──────────────────────────────────────────────── */
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Hamburger Menu */
     .hamburger {
       display: none;
       font-size: 2rem;
@@ -250,10 +226,7 @@
       z-index: 110;
     }
 
-    .nav-menu {
-      display: flex;
-      gap: 20px;
-    }
+    .nav-menu { display: flex; gap: 20px; }
 
     .nav-menu a {
       color: white;
@@ -275,10 +248,7 @@
       transition: opacity 0.3s ease, visibility 0.3s ease;
     }
 
-    .mobile-menu-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
+    .mobile-menu-overlay.active { opacity: 1; visibility: visible; }
 
     .mobile-menu {
       position: fixed;
@@ -317,7 +287,7 @@
     }
 
     /* ────────────────────────────────────────────────
-       Rest of your layout styles
+       Rest of your layout styles (unchanged)
     ──────────────────────────────────────────────── */
 
     #hero {
@@ -528,10 +498,8 @@
   </div>
 </header>
 
-<!-- Mobile Menu Overlay -->
 <div class="mobile-menu-overlay" id="menuOverlay"></div>
 
-<!-- Mobile Menu Panel -->
 <div class="mobile-menu" id="mobileMenu">
   <ul>
     <li><a href="#apply" class="mobile-link">Apply Now</a></li>
@@ -541,7 +509,6 @@
   </ul>
 </div>
 
-<!-- Modern Popup -->
 <div class="popup-overlay" id="popupOverlay">
   <div class="popup" id="popup">
     <div class="popup-icon" id="popupIcon"></div>
@@ -559,7 +526,6 @@
   </div>
 </section>
 
-<!-- APPLY NOW -->
 <section id="apply">
   <div class="container">
     <h2>Apply Now</h2>
@@ -716,275 +682,274 @@
 </footer>
 
 <script>
-  // ────────────────────────────────────────────────
-  //                  POPUP SYSTEM
-  // ────────────────────────────────────────────────
-  const popupOverlay = document.getElementById('popupOverlay');
-  const popup = document.getElementById('popup');
-  const popupIcon = document.getElementById('popupIcon');
-  const popupTitle = document.getElementById('popupTitle');
-  const popupMessage = document.getElementById('popupMessage');
-  const popupButtons = document.getElementById('popupButtons');
+// ────────────────────────────────────────────────
+//                  POPUP SYSTEM
+// ────────────────────────────────────────────────
+const popupOverlay = document.getElementById('popupOverlay');
+const popup = document.getElementById('popup');
+const popupIcon = document.getElementById('popupIcon');
+const popupTitle = document.getElementById('popupTitle');
+const popupMessage = document.getElementById('popupMessage');
+const popupButtons = document.getElementById('popupButtons');
 
-  function showPopup(type, title, message, buttons = [], autoCloseMs = 0) {
-    popup.className = `popup ${type}`;
-    popupIcon.innerHTML = type === 'loading' 
-      ? '<i class="fas fa-spinner"></i>' 
-      : type === 'success' 
-      ? '<i class="fas fa-check-circle"></i>' 
-      : '<i class="fas fa-exclamation-circle"></i>';
-    popupTitle.textContent = title;
-    popupMessage.textContent = message;
+function showPopup(type, title, message, buttons = [], autoCloseMs = 0) {
+  popup.className = `popup ${type}`;
+  popupIcon.innerHTML = type === 'success' 
+    ? '<i class="fas fa-check-circle"></i>' 
+    : '<i class="fas fa-exclamation-circle"></i>';
+  popupTitle.textContent = title;
+  popupMessage.textContent = message;
 
-    popupButtons.innerHTML = '';
+  popupButtons.innerHTML = '';
 
-    buttons.forEach(btn => {
-      const button = document.createElement('button');
-      button.className = `popup-btn ${btn.class}`;
-      button.textContent = btn.text;
-      button.onclick = () => {
-        popupOverlay.classList.remove('active');
-        popup.classList.remove('active');
-        if (btn.onClick) btn.onClick();
-      };
-      popupButtons.appendChild(button);
-    });
-
-    popupOverlay.classList.add('active');
-    popup.classList.add('active');
-
-    const close = () => {
+  buttons.forEach(btn => {
+    const button = document.createElement('button');
+    button.className = `popup-btn ${btn.class}`;
+    button.textContent = btn.text;
+    button.onclick = () => {
       popupOverlay.classList.remove('active');
       popup.classList.remove('active');
+      if (btn.onClick) btn.onClick();
     };
-
-    popupOverlay.onclick = e => { if (e.target === popupOverlay) close(); };
-
-    if (autoCloseMs > 0) setTimeout(close, autoCloseMs);
-  }
-
-  // ────────────────────────────────────────────────
-  //                  HAMBURGER MENU
-  // ────────────────────────────────────────────────
-  const hamburger = document.querySelector('.hamburger');
-  const mobileMenu = document.getElementById('mobileMenu');
-  const overlay = document.getElementById('menuOverlay');
-  const mobileLinks = document.querySelectorAll('.mobile-link');
-
-  function toggleMenu() {
-    mobileMenu.classList.toggle('active');
-    overlay.classList.toggle('active');
-  }
-
-  hamburger.addEventListener('click', toggleMenu);
-  overlay.addEventListener('click', toggleMenu);
-
-  mobileLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      mobileMenu.classList.remove('active');
-      overlay.classList.remove('active');
-    });
+    popupButtons.appendChild(button);
   });
 
-  // ────────────────────────────────────────────────
-  //                  FORM LOGIC + DYNAMIC SUBMIT BUTTON
-  // ────────────────────────────────────────────────
-  const form = document.getElementById('apply-form');
-  const submitBtn = document.getElementById('submitBtn');
-  const nrcInput = document.getElementById('nrc');
-  const tenureSelect = document.getElementById('loan_tenure');
-  const amountInput = document.getElementById('loan_amount');
-  const repaymentInfo = document.getElementById('repayment-info');
-  const repaymentAmountEl = document.getElementById('repayment-amount');
-  const repaymentDueEl = document.getElementById('repayment-due');
-  const ownershipSelect = document.getElementById('ownership');
-  const borrowedSection = document.getElementById('borrowed_owner');
-  const submittedList = document.getElementById('submitted-list');
+  popupOverlay.classList.add('active');
+  popup.classList.add('active');
 
-  const rates = {1: 11.6, 2: 22.7, 3: 32.8, 4: 38.9, 5: 48.95};
+  const close = () => {
+    popupOverlay.classList.remove('active');
+    popup.classList.remove('active');
+  };
 
-  if (nrcInput) {
-    nrcInput.addEventListener('input', e => {
-      let v = e.target.value.replace(/[^0-9/]/g, '').replace(/\/+/g, '/');
-      if (v.length > 6 && v[6] !== '/') v = v.slice(0,6) + '/' + v.slice(6);
-      if (v.length > 9 && v[9] !== '/') v = v.slice(0,9) + '/' + v.slice(9);
-      if (v.length >= 10) v = v.slice(0,10) + '1';
-      v = v.slice(0,11);
-      if (e.target.value !== v) e.target.value = v;
-    });
+  popupOverlay.onclick = e => { if (e.target === popupOverlay) close(); };
 
-    nrcInput.addEventListener('paste', () => setTimeout(() => nrcInput.dispatchEvent(new Event('input')), 0));
-  }
+  if (autoCloseMs > 0) setTimeout(close, autoCloseMs);
+}
 
-  function calculateRepayment() {
-    const amt = parseFloat(amountInput.value) || 0;
-    const wks = parseInt(tenureSelect.value) || 0;
+// ────────────────────────────────────────────────
+//                  HAMBURGER MENU
+// ────────────────────────────────────────────────
+const hamburger = document.querySelector('.hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+const overlay = document.getElementById('menuOverlay');
+const mobileLinks = document.querySelectorAll('.mobile-link');
 
-    if (amt >= 200 && amt <= 5000 && wks >= 1 && wks <= 5) {
-      const rate = rates[wks];
-      const interest = amt * (rate / 100);
-      const total = amt + interest;
+function toggleMenu() {
+  mobileMenu.classList.toggle('active');
+  overlay.classList.toggle('active');
+}
 
-      const due = new Date();
-      due.setDate(due.getDate() + wks * 7);
+hamburger.addEventListener('click', toggleMenu);
+overlay.addEventListener('click', toggleMenu);
 
-      repaymentAmountEl.textContent = `K${total.toFixed(2)}`;
-      repaymentDueEl.textContent = due.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
-      repaymentInfo.classList.remove('hidden');
+mobileLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenu.classList.remove('active');
+    overlay.classList.remove('active');
+  });
+});
 
-      document.getElementById('email-subject').value =
-        `New Application - Repay K${total.toFixed(2)} on ${repaymentDueEl.textContent}`;
-    } else {
-      repaymentInfo.classList.add('hidden');
-    }
-  }
+// ────────────────────────────────────────────────
+//                  FORM LOGIC + DYNAMIC SUBMIT BUTTON
+// ────────────────────────────────────────────────
+const form = document.getElementById('apply-form');
+const submitBtn = document.getElementById('submitBtn');
+const nrcInput = document.getElementById('nrc');
+const tenureSelect = document.getElementById('loan_tenure');
+const amountInput = document.getElementById('loan_amount');
+const repaymentInfo = document.getElementById('repayment-info');
+const repaymentAmountEl = document.getElementById('repayment-amount');
+const repaymentDueEl = document.getElementById('repayment-due');
+const ownershipSelect = document.getElementById('ownership');
+const borrowedSection = document.getElementById('borrowed_owner');
+const submittedList = document.getElementById('submitted-list');
 
-  amountInput.addEventListener('input', calculateRepayment);
-  tenureSelect.addEventListener('change', calculateRepayment);
+const rates = {1: 11.6, 2: 22.7, 3: 32.8, 4: 38.9, 5: 48.95};
 
-  ownershipSelect.addEventListener('change', () => {
-    borrowedSection.classList.toggle('hidden', ownershipSelect.value !== 'Borrowed');
+if (nrcInput) {
+  nrcInput.addEventListener('input', function(e) {
+    let v = e.target.value
+      .replace(/[^0-9/]/g, '')
+      .replace(/\/+/g, '/');
+
+    if (v.length > 6 && v[6] !== '/') v = v.slice(0,6) + '/' + v.slice(6);
+    if (v.length > 9 && v[9] !== '/') v = v.slice(0,9) + '/' + v.slice(9);
+    if (v.length >= 10) v = v.slice(0,10) + '1';
+    v = v.slice(0,11);
+
+    if (e.target.value !== v) e.target.value = v;
   });
 
-  function saveDraft() {
-    const data = {};
-    new FormData(form).forEach((v,k) => data[k] = v);
-    localStorage.setItem('kacholaApplyDraft', JSON.stringify(data));
+  nrcInput.addEventListener('paste', () => setTimeout(() => nrcInput.dispatchEvent(new Event('input')), 0));
+}
+
+function calculateRepayment() {
+  const amt = parseFloat(amountInput.value) || 0;
+  const wks = parseInt(tenureSelect.value) || 0;
+
+  if (amt >= 200 && amt <= 5000 && wks >= 1 && wks <= 5) {
+    const rate = rates[wks];
+    const interest = amt * (rate / 100);
+    const total = amt + interest;
+
+    const due = new Date();
+    due.setDate(due.getDate() + wks * 7);
+
+    repaymentAmountEl.textContent = `K${total.toFixed(2)}`;
+    repaymentDueEl.textContent = due.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+    repaymentInfo.classList.remove('hidden');
+
+    document.getElementById('email-subject').value =
+      `New Application - Repay K${total.toFixed(2)} on ${repaymentDueEl.textContent}`;
+  } else {
+    repaymentInfo.classList.add('hidden');
   }
+}
 
-  function loadDraft() {
-    const saved = localStorage.getItem('kacholaApplyDraft');
-    if (saved) {
-      const data = JSON.parse(saved);
-      Object.keys(data).forEach(k => {
-        const el = form.elements[k];
-        if (el) el.value = data[k];
-      });
-      calculateRepayment();
-      borrowedSection.classList.toggle('hidden', form.elements['ownership']?.value !== 'Borrowed');
-    }
-  }
+amountInput.addEventListener('input', calculateRepayment);
+tenureSelect.addEventListener('change', calculateRepayment);
 
-  form.addEventListener('input', saveDraft);
-  window.addEventListener('load', loadDraft);
+ownershipSelect.addEventListener('change', () => {
+  borrowedSection.classList.toggle('hidden', ownershipSelect.value !== 'Borrowed');
+});
 
-  function saveSubmitted() {
-    const data = {};
-    new FormData(form).forEach((v,k) => data[k] = v);
+function saveDraft() {
+  const data = {};
+  new FormData(form).forEach((v,k) => data[k] = v);
+  localStorage.setItem('kacholaApplyDraft', JSON.stringify(data));
+}
 
-    const submitted = JSON.parse(localStorage.getItem('kacholaSubmitted') || '[]');
-    submitted.push({
-      name: `${data.first_name || ''} ${data.last_name || ''}`.trim() || 'Unknown',
-      phone: data.phone || '—',
-      amount: data.loan_amount || '—',
-      tenure: data.loan_tenure || '—',
-      repayment: repaymentAmountEl.textContent || '—',
-      due: repaymentDueEl.textContent || '—',
-      time: new Date().toLocaleString()
+function loadDraft() {
+  const saved = localStorage.getItem('kacholaApplyDraft');
+  if (saved) {
+    const data = JSON.parse(saved);
+    Object.keys(data).forEach(k => {
+      const el = form.elements[k];
+      if (el) el.value = data[k];
     });
-    localStorage.setItem('kacholaSubmitted', JSON.stringify(submitted));
+    calculateRepayment();
+    borrowedSection.classList.toggle('hidden', form.elements['ownership']?.value !== 'Borrowed');
+  }
+}
+
+form.addEventListener('input', saveDraft);
+window.addEventListener('load', loadDraft);
+
+function saveSubmitted() {
+  const data = {};
+  new FormData(form).forEach((v,k) => data[k] = v);
+
+  const submitted = JSON.parse(localStorage.getItem('kacholaSubmitted') || '[]');
+  submitted.push({
+    name: `${data.first_name || ''} ${data.last_name || ''}`.trim() || 'Unknown',
+    phone: data.phone || '—',
+    amount: data.loan_amount || '—',
+    tenure: data.loan_tenure || '—',
+    repayment: repaymentAmountEl.textContent || '—',
+    due: repaymentDueEl.textContent || '—',
+    time: new Date().toLocaleString()
+  });
+  localStorage.setItem('kacholaSubmitted', JSON.stringify(submitted));
+}
+
+function showSubmitted() {
+  const submitted = JSON.parse(localStorage.getItem('kacholaSubmitted') || '[]');
+  submittedList.innerHTML = '';
+
+  if (submitted.length === 0) {
+    submittedList.innerHTML = '<p style="color:#666; font-style:italic;">No successful submissions yet.</p>';
+  } else {
+    submitted.forEach(app => {
+      const item = document.createElement('div');
+      item.className = 'application-item';
+      item.innerHTML = `
+        <strong>${app.name}</strong><br>
+        Phone: ${app.phone}<br>
+        Loan: ${app.amount} ZMW – ${app.tenure} week(s)<br>
+        Repay: ${app.repayment} due on ${app.due}<br>
+        <small>Submitted: ${app.time}</small>
+      `;
+      submittedList.appendChild(item);
+    });
+  }
+}
+
+form.addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const applicantPhone = form.elements['phone']?.value.trim();
+  const kinPhone = form.elements['next_of_kin']?.value.trim();
+  if (applicantPhone && kinPhone && applicantPhone === kinPhone) {
+    showPopup('error', 'Invalid Input', 'Next of kin phone number cannot be the same as your phone number.');
+    return;
   }
 
-  function showSubmitted() {
-    const submitted = JSON.parse(localStorage.getItem('kacholaSubmitted') || '[]');
-    submittedList.innerHTML = '';
-
-    if (submitted.length === 0) {
-      submittedList.innerHTML = '<p style="color:#666; font-style:italic;">No successful submissions yet.</p>';
-    } else {
-      submitted.forEach(app => {
-        const item = document.createElement('div');
-        item.className = 'application-item';
-        item.innerHTML = `
-          <strong>${app.name}</strong><br>
-          Phone: ${app.phone}<br>
-          Loan: ${app.amount} ZMW – ${app.tenure} week(s)<br>
-          Repay: ${app.repayment} due on ${app.due}<br>
-          <small>Submitted: ${app.time}</small>
-        `;
-        submittedList.appendChild(item);
-      });
-    }
+  if (repaymentInfo.classList.contains('hidden')) {
+    showPopup('error', 'Incomplete Selection', 'Please select valid loan amount and tenure.');
+    return;
   }
 
-  form.addEventListener('submit', async function(e) {
-    e.preventDefault();
+  const total = repaymentAmountEl.textContent;
+  const due = repaymentDueEl.textContent;
 
-    const applicantPhone = form.elements['phone']?.value.trim();
-    const kinPhone = form.elements['next_of_kin']?.value.trim();
-    if (applicantPhone && kinPhone && applicantPhone === kinPhone) {
-      showPopup('error', 'Invalid Input', 'Next of kin phone number cannot be the same as your phone number.');
-      return;
-    }
+  showPopup('success', 'Loan Approval Confirmation', 
+    `You will pay back ${total} on ${due}.\n\nDo you APPROVE this loan?`,
+    0,
+    [
+      {
+        text: 'Cancel',
+        class: 'cancel',
+        onClick: () => showPopup('error', 'Cancelled', 'Application cancelled.')
+      },
+      {
+        text: 'Approve',
+        class: 'approve',
+        onClick: async () => {
+          // Dynamic submit button
+          submitBtn.classList.add('loading');
+          submitBtn.disabled = true;
 
-    if (repaymentInfo.classList.contains('hidden')) {
-      showPopup('error', 'Incomplete Selection', 'Please select valid loan amount and tenure.');
-      return;
-    }
+          try {
+            const res = await fetch('https://api.web3forms.com/submit', {
+              method: 'POST',
+              body: new FormData(form),
+              headers: { 'Accept': 'application/json' }
+            });
+            const data = await res.json();
 
-    const total = repaymentAmountEl.textContent;
-    const due = repaymentDueEl.textContent;
+            // Restore button
+            submitBtn.classList.remove('loading');
+            submitBtn.disabled = false;
 
-    showPopup('success', 'Loan Approval Confirmation', 
-      `You will pay back ${total} on ${due}.\n\nDo you APPROVE this loan?`,
-      0,
-      [
-        {
-          text: 'Cancel',
-          class: 'cancel',
-          onClick: () => showPopup('error', 'Cancelled', 'Application cancelled.')
-        },
-        {
-          text: 'Approve',
-          class: 'approve',
-          onClick: async () => {
-            // Show loading on button
-            submitBtn.classList.add('submit-loading');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting...';
+            if (data.success) {
+              showPopup('success', 'Success', 'Application sent successfully!', 5000);
 
-            try {
-              const res = await fetch('https://api.web3forms.com/submit', {
-                method: 'POST',
-                body: new FormData(form),
-                headers: { 'Accept': 'application/json' }
-              });
-              const data = await res.json();
+              saveSubmitted();
+              showSubmitted();
 
-              // Restore button
-              submitBtn.classList.remove('submit-loading');
-              submitBtn.disabled = false;
-              submitBtn.textContent = 'Submit Application';
-
-              if (data.success) {
-                showPopup('success', 'Success', 'Application sent successfully!', 5000);
-
-                saveSubmitted();
-                showSubmitted();
-
-                localStorage.removeItem('kacholaApplyDraft');
-                form.reset();
-                repaymentInfo.classList.add('hidden');
-              } else {
-                throw new Error(data.message || 'Submission failed');
-              }
-            } catch (err) {
-              submitBtn.classList.remove('submit-loading');
-              submitBtn.disabled = false;
-              submitBtn.textContent = 'Submit Application';
-
-              showPopup('error', 'Error', 'Error: ' + err.message);
+              localStorage.removeItem('kacholaApplyDraft');
+              form.reset();
+              repaymentInfo.classList.add('hidden');
+            } else {
+              throw new Error(data.message || 'Submission failed');
             }
+          } catch (err) {
+            submitBtn.classList.remove('loading');
+            submitBtn.disabled = false;
+
+            showPopup('error', 'Error', 'Error: ' + err.message);
           }
         }
-      ]
-    );
-  });
+      }
+    ]
+  );
+});
 
-  window.addEventListener('load', () => {
-    loadDraft();
-    showSubmitted();
-  });
+window.addEventListener('load', () => {
+  loadDraft();
+  showSubmitted();
+});
 </script>
 
 </body>
