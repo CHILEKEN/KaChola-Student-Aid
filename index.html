@@ -89,36 +89,21 @@
             white-space: nowrap;
             padding: 8px 16px;
             border-radius: 12px;
-            /* Thick glowing green rays border */
-            box-shadow: 
-                0 0 10px 5px var(--glow-green),
-                0 0 25px 12px rgba(0, 255, 157, 0.6),
-                0 0 50px 25px rgba(0, 255, 157, 0.4),
-                0 0 80px 40px rgba(0, 255, 157, 0.2);
-            transition: box-shadow 0.4s ease;
             background: rgba(0,0,0,0.15);
-            /* Rainbow color animation on the text itself */
+            /* Rainbow color animation on the text */
             animation: rainbow 12s linear infinite;
-        }
-
-        .business-name:hover {
-            box-shadow: 
-                0 0 15px 8px var(--glow-green),
-                0 0 40px 20px rgba(0, 255, 157, 0.8),
-                0 0 80px 40px rgba(0, 255, 157, 0.6),
-                0 0 120px 60px rgba(0, 255, 157, 0.3);
         }
 
         /* Rainbow color cycle animation */
         @keyframes rainbow {
-            0%   { color: #ff0000; }     /* red */
-            14%  { color: #ff7f00; }     /* orange */
-            28%  { color: #ffff00; }     /* yellow */
-            42%  { color: #00ff00; }     /* green */
-            57%  { color: #0000ff; }     /* blue */
-            71%  { color: #4b0082; }     /* indigo */
-            85%  { color: #9400d3; }     /* violet */
-            100% { color: #ff0000; }     /* back to red */
+            0%   { color: #ff0000; }
+            14%  { color: #ff7f00; }
+            28%  { color: #ffff00; }
+            42%  { color: #00ff00; }
+            57%  { color: #0000ff; }
+            71%  { color: #4b0082; }
+            85%  { color: #9400d3; }
+            100% { color: #ff0000; }
         }
 
         .word-kachola,
@@ -127,7 +112,7 @@
             text-shadow: 0 1px 4px rgba(0,0,0,0.4);
         }
 
-        /* Hamburger Menu (unchanged) */
+        /* Hamburger Menu */
         .hamburger {
             display: none;
             font-size: 2rem;
@@ -207,7 +192,6 @@
             .nav-menu { display: none; }
         }
 
-        /* Rest of your styles remain unchanged */
         #hero {
             background: rgba(92, 51, 23, 0.75);
             color: white;
