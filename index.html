@@ -13,6 +13,7 @@
             --light-gold: #E5B567;
             --red: #c0392b;
             --green: #27ae60;
+            --glow-green: #00ff9d;
         }
 
         * { margin:0; padding:0; box-sizing:border-box; }
@@ -58,22 +59,75 @@
             position: relative;
         }
 
-        .logo-and-name { display: flex; align-items: center; gap: 12px; }
-        .logo { height: 50px; }
+        .logo-and-name {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            height: 50px;
+            border-radius: 50%;
+            /* Thick glowing green rays effect */
+            box-shadow: 
+                0 0 8px 4px var(--glow-green),
+                0 0 20px 10px rgba(0, 255, 157, 0.6),
+                0 0 40px 20px rgba(0, 255, 157, 0.4),
+                0 0 60px 30px rgba(0, 255, 157, 0.2);
+            transition: box-shadow 0.4s ease;
+        }
+
+        .logo:hover {
+            box-shadow: 
+                0 0 12px 6px var(--glow-green),
+                0 0 30px 15px rgba(0, 255, 157, 0.8),
+                0 0 60px 30px rgba(0, 255, 157, 0.6),
+                0 0 90px 45px rgba(0, 255, 157, 0.3);
+        }
+
         .business-name {
             font-size: 1.45rem;
             font-weight: 700;
             letter-spacing: 0.5px;
             white-space: nowrap;
+            padding: 8px 16px;
+            border-radius: 12px;
+            /* Thick glowing green rays effect on text container */
+            box-shadow: 
+                0 0 10px 5px var(--glow-green),
+                0 0 25px 12px rgba(0, 255, 157, 0.6),
+                0 0 50px 25px rgba(0, 255, 157, 0.4),
+                0 0 80px 40px rgba(0, 255, 157, 0.2);
+            transition: box-shadow 0.4s ease;
+            background: rgba(0,0,0,0.15);
         }
 
-        .word-kachola { color: #DAA520; text-shadow: 0 1px 4px rgba(0,0,0,0.4); }
-        .word-student { color: #5C3317; text-shadow: 0 1px 4px rgba(0,0,0,0.4); }
-        .word-aid     { color: #E5B567; text-shadow: 0 1px 4px rgba(0,0,0,0.4); }
+        .business-name:hover {
+            box-shadow: 
+                0 0 15px 8px var(--glow-green),
+                0 0 40px 20px rgba(0, 255, 157, 0.8),
+                0 0 80px 40px rgba(0, 255, 157, 0.6),
+                0 0 120px 60px rgba(0, 255, 157, 0.3);
+        }
 
-        /* ──────────────────────────────────────────────── */
-        /*               HAMBURGER MENU                     */
-        /* ──────────────────────────────────────────────── */
+        .word-kachola,
+        .word-student,
+        .word-aid {
+            text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+            transition: text-shadow 0.3s ease;
+        }
+
+        .word-kachola:hover,
+        .word-student:hover,
+        .word-aid:hover {
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .word-kachola { color: #DAA520; }
+        .word-student { color: #5C3317; }
+        .word-aid     { color: #E5B567; }
+
+        /* Hamburger Menu */
         .hamburger {
             display: none;
             font-size: 2rem;
@@ -434,6 +488,7 @@
             <div id="apply-message" class="form-message"></div>
 
             <form id="apply-form" action="https://api.web3forms.com/submit" method="POST">
+                <!-- ... full form remains unchanged ... -->
                 <input type="hidden" name="access_key" value="fe293e23-d328-4bad-86e8-d9b531e2a37d">
                 <input type="hidden" name="subject" id="email-subject" value="New KaChola Student Aid Application">
                 <input type="checkbox" name="botcheck" style="display:none;" aria-hidden="true">
@@ -590,9 +645,7 @@
     </footer>
 
     <script>
-        // ────────────────────────────────────────────────
-        //                  HAMBURGER MENU LOGIC
-        // ────────────────────────────────────────────────
+        // Hamburger Menu Logic
         const hamburger = document.querySelector('.hamburger');
         const mobileMenu = document.getElementById('mobileMenu');
         const overlay = document.getElementById('menuOverlay');
@@ -606,7 +659,6 @@
         hamburger.addEventListener('click', toggleMenu);
         overlay.addEventListener('click', toggleMenu);
 
-        // Close menu when clicking any link
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenu.classList.remove('active');
@@ -614,12 +666,7 @@
             });
         });
 
-        // Close menu when clicking outside (already handled by overlay)
-
-        // ────────────────────────────────────────────────
-        //                  REST OF THE JAVASCRIPT (unchanged)
-        // ────────────────────────────────────────────────
-
+        // Rest of your JavaScript (form logic, persistence, submitted list, etc.) remains unchanged
         const form = document.getElementById('apply-form');
         const nrcInput = document.getElementById('nrc');
         const tenureSelect = document.getElementById('loan_tenure');
