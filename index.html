@@ -1,1002 +1,991 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KaChola Student Aid – Collateral-Based Support for Zambian Students</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        :root {
-            --brown: #5C3317;
-            --gold:  #DAA520;
-            --beige: #F5F5DC;
-            --light-gold: #E5B567;
-            --red: #c0392b;
-            --green: #27ae60;
-            --glow-green: #00ff9d;
-            --success: #28a745;
-            --error: #dc3545;
-        }
-
-        * { margin:0; padding:0; box-sizing:border-box; }
-
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            color: #222;
-            line-height: 1.6;
-            min-height: 100vh;
-            background: url('photo.png') no-repeat center center fixed;
-            background-size: cover;
-            background-attachment: fixed;
-            position: relative;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: rgba(255, 255, 255, 0.78);
-            z-index: -2;
-            pointer-events: none;
-        }
-
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
-
-        header {
-            background: var(--brown);
-            color: white;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-        }
-
-        header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 15px;
-            position: relative;
-        }
-
-        .logo-and-name {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .logo {
-            height: 50px;
-            border-radius: 50%;
-            box-shadow: 
-                0 0 8px 4px var(--glow-green),
-                0 0 20px 10px rgba(0,255,157,0.6),
-                0 0 40px 20px rgba(0,255,157,0.4),
-                0 0 60px 30px rgba(0,255,157,0.2);
-            transition: box-shadow 0.4s ease;
-        }
-
-        .logo:hover {
-            box-shadow: 
-                0 0 12px 6px var(--glow-green),
-                0 0 30px 15px rgba(0,255,157,0.8),
-                0 0 60px 30px rgba(0,255,157,0.6),
-                0 0 90px 45px rgba(0,255,157,0.3);
-        }
-
-        .business-name {
-            font-size: 1.45rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-            padding: 8px 16px;
-            border-radius: 12px;
-            background: rgba(0,0,0,0.15);
-            animation: rainbow 12s linear infinite;
-        }
-
-        @keyframes rainbow {
-            0%   { color: #ff0000; }
-            14%  { color: #ff7f00; }
-            28%  { color: #ffff00; }
-            42%  { color: #00ff00; }
-            57%  { color: #0000ff; }
-            71%  { color: #4b0082; }
-            85%  { color: #9400d3; }
-            100% { color: #ff0000; }
-        }
-
-        /* ──────────────────────────────────────────────── */
-        /*           MODERN POPUP + LOADING SPINNER          */
-        /* ──────────────────────────────────────────────── */
-        .popup-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
-        }
-
-        .popup-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .popup {
-            background: white;
-            border-radius: 16px;
-            padding: 32px 28px;
-            max-width: 460px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            transform: scale(0.8);
-            opacity: 0;
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
-            text-align: center;
-        }
-
-        .popup.active {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        .popup-icon {
-            font-size: 4.2rem;
-            margin-bottom: 20px;
-        }
-
-        .popup.loading .popup-icon {
-            font-size: 5rem;
-            color: var(--green);
-            animation: spin 1.2s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .popup.success .popup-icon { color: var(--success); }
-        .popup.error   .popup-icon { color: var(--error); }
-
-        .popup-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #222;
-        }
-
-        .popup-message {
-            font-size: 1.1rem;
-            color: #555;
-            margin-bottom: 28px;
-            line-height: 1.5;
-            white-space: pre-wrap;
-        }
-
-        .popup-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .popup-btn {
-            padding: 12px 36px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 120px;
-        }
-
-        .popup-btn.approve {
-            background: var(--success);
-            color: white;
-        }
-
-        .popup-btn.approve:hover { background: #218838; }
-
-        .popup-btn.cancel {
-            background: var(--error);
-            color: white;
-        }
-
-        .popup-btn.cancel:hover { background: #c82333; }
-
-        /* Hamburger Menu */
-        .hamburger {
-            display: none;
-            font-size: 2rem;
-            cursor: pointer;
-            color: white;
-            background: none;
-            border: none;
-            z-index: 110;
-        }
-
-        .nav-menu { display: flex; gap: 20px; }
-
-        .nav-menu a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .nav-menu a:hover { color: var(--gold); }
-
-        .mobile-menu-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(4px);
-            z-index: 99;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .mobile-menu-overlay.active { opacity: 1; visibility: visible; }
-
-        .mobile-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 280px;
-            height: 100%;
-            background: var(--brown);
-            padding: 80px 30px 30px;
-            transition: right 0.4s ease;
-            z-index: 105;
-            box-shadow: -5px 0 20px rgba(0,0,0,0.4);
-        }
-
-        .mobile-menu.active { right: 0; }
-
-        .mobile-menu ul {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .mobile-menu a {
-            color: white;
-            text-decoration: none;
-            font-size: 1.3rem;
-            font-weight: 600;
-        }
-
-        .mobile-menu a:hover { color: var(--gold); }
-
-        @media (max-width: 992px) {
-            .hamburger { display: block; }
-            .nav-menu { display: none; }
-        }
-
-        /* ──────────────────────────────────────────────── */
-        /*           OTHER STYLES (unchanged)               */
-        /* ──────────────────────────────────────────────── */
-
-        #hero {
-            background: rgba(92, 51, 23, 0.75);
-            color: white;
-            text-align: center;
-            padding: 80px 15px;
-            backdrop-filter: blur(3px);
-        }
-
-        #hero h1 { font-size: 2.4rem; margin-bottom: 16px; }
-        #hero p  { font-size: 1.15rem; margin-bottom: 30px; }
-
-        .btn {
-            background: var(--gold);
-            color: var(--brown);
-            padding: 12px 28px;
-            border-radius: 6px;
-            font-weight: bold;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn:hover { background: var(--light-gold); }
-
-        section {
-            padding: 60px 0;
-            background: rgba(255,255,255,0.82);
-            margin: 20px 0;
-            border-radius: 12px;
-        }
-
-        h2 {
-            color: var(--brown);
-            text-align: center;
-            margin-bottom: 35px;
-            font-size: 2.1rem;
-        }
-
-        h3 {
-            color: var(--brown);
-            margin: 35px 0 18px;
-            border-bottom: 2px solid var(--gold);
-            padding-bottom: 8px;
-            font-size: 1.45rem;
-        }
-
-        form {
-            max-width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--brown);
-            border-radius: 6px;
-            font-size: 1rem;
-            background: rgba(255,255,255,0.95);
-        }
-
-        .hidden { display: none; }
-
-        #repayment-info {
-            padding: 16px;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.95);
-            border: 1px solid #ddd;
-            margin: 12px 0;
-            font-size: 1.05rem;
-            text-align: center;
-        }
-
-        #repayment-amount { color: var(--red); font-weight: bold; }
-        #repayment-due   { color: var(--green); font-weight: bold; }
-
-        .form-message {
-            text-align: center;
-            font-weight: bold;
-            margin: 16px 0;
-            min-height: 24px;
-        }
-
-        .whatsapp-btn {
-            background: #25D366;
-            color: white !important;
-            padding: 14px 30px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin: 20px 0;
-            font-size: 1.1rem;
-        }
-
-        .whatsapp-btn:hover { background: #20b358; }
-
-        .rates-table-container {
-            max-width: 600px;
-            margin: 30px auto;
-        }
-
-        .rates-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            background: rgba(255,255,255,0.96);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-        }
-
-        .rates-table th,
-        .rates-table td {
-            padding: 16px 20px;
-            text-align: left;
-            border-bottom: 1px solid rgba(0,0,0,0.08);
-        }
-
-        .rates-table th {
-            background: linear-gradient(135deg, var(--brown) 0%, #4a2a12 100%);
-            color: white;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 0.95rem;
-        }
-
-        .rates-table td {
-            font-size: 1.05rem;
-            color: #333;
-        }
-
-        .rates-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .rates-table tr:hover td {
-            background: rgba(218, 165, 32, 0.08);
-            transition: background 0.2s ease;
-        }
-
-        .rates-table td:first-child {
-            font-weight: 600;
-            color: var(--brown);
-        }
-
-        @media (max-width: 600px) {
-            .rates-table th, .rates-table td {
-                padding: 14px 16px;
-                font-size: 0.98rem;
-            }
-        }
-
-        .status-box {
-            background: rgba(255,255,255,0.95);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            max-width: 100%;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .status-item {
-            margin: 25px 0;
-            font-size: 1.25rem;
-            padding: 18px;
-            border-radius: 8px;
-        }
-
-        .status-pending {
-            background: rgba(255,243,205,0.95);
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
-
-        .status-success {
-            background: rgba(212,237,218,0.95);
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .application-list {
-            margin-top: 20px;
-            text-align: left;
-        }
-
-        .application-item {
-            background: rgba(248,249,250,0.95);
-            padding: 15px;
-            margin: 12px 0;
-            border-radius: 8px;
-            border-left: 5px solid var(--green);
-            font-size: 1.05rem;
-        }
-
-        footer {
-            background: var(--brown);
-            color: white;
-            text-align: center;
-            padding: 25px 15px;
-            margin-top: 40px;
-            position: relative;
-            z-index: 1;
-        }
-
-        @media (max-width: 768px) {
-            .logo { height: 45px; }
-            .business-name { font-size: 1.3rem; }
-            nav ul { gap: 16px; font-size: 0.9rem; }
-            h2 { font-size: 1.9rem; }
-            .btn { padding: 12px 24px; font-size: 1rem; }
-            input, select, textarea { font-size: 0.97rem; padding: 11px; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KaChola Student Aid – Collateral-Based Support for Zambian Students</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    :root {
+      --brown: #5C3317;
+      --gold:  #DAA520;
+      --light-gold: #E5B567;
+      --red: #c0392b;
+      --green: #27ae60;
+      --glow-green: #00ff9d;
+      --success: #28a745;
+      --error: #dc3545;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #222;
+      line-height: 1.6;
+      min-height: 100vh;
+      background: url('photo.png') no-repeat center center fixed;
+      background-size: cover;
+      background-attachment: fixed;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.78);
+      z-index: -2;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    header {
+      background: var(--brown);
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+    }
+
+    .logo-and-name {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo {
+      height: 50px;
+      border-radius: 50%;
+      box-shadow: 
+        0 0 8px 4px var(--glow-green),
+        0 0 20px 10px rgba(0,255,157,0.6),
+        0 0 40px 20px rgba(0,255,157,0.4),
+        0 0 60px 30px rgba(0,255,157,0.2);
+      transition: box-shadow 0.4s ease;
+    }
+
+    .logo:hover {
+      box-shadow: 
+        0 0 12px 6px var(--glow-green),
+        0 0 30px 15px rgba(0,255,157,0.8),
+        0 0 60px 30px rgba(0,255,157,0.6),
+        0 0 90px 45px rgba(0,255,157,0.3);
+    }
+
+    .business-name {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      padding: 8px 16px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.15);
+      animation: rainbow 12s linear infinite;
+    }
+
+    @keyframes rainbow {
+      0%   { color: #ff0000; }
+      14%  { color: #ff7f00; }
+      28%  { color: #ffff00; }
+      42%  { color: #00ff00; }
+      57%  { color: #0000ff; }
+      71%  { color: #4b0082; }
+      85%  { color: #9400d3; }
+      100% { color: #ff0000; }
+    }
+
+    /* ────────────────────────────────────────────────
+       Modern Popup + Loading Spinner
+    ──────────────────────────────────────────────── */
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(5px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+    }
+
+    .popup-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .popup {
+      background: white;
+      border-radius: 16px;
+      padding: 32px 28px;
+      max-width: 460px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      transform: scale(0.8);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-align: center;
+    }
+
+    .popup.active {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .popup-icon {
+      font-size: 4.5rem;
+      margin-bottom: 20px;
+    }
+
+    .popup.loading .popup-icon {
+      animation: spin 1.2s linear infinite;
+      color: var(--green);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .popup.success .popup-icon { color: var(--success); }
+    .popup.error   .popup-icon { color: var(--error); }
+
+    .popup-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #222;
+    }
+
+    .popup-message {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 28px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .popup-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .popup-btn {
+      padding: 12px 36px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      min-width: 120px;
+      transition: all 0.3s;
+    }
+
+    .popup-btn.approve {
+      background: var(--success);
+      color: white;
+    }
+    .popup-btn.approve:hover { background: #218838; }
+
+    .popup-btn.cancel {
+      background: var(--error);
+      color: white;
+    }
+    .popup-btn.cancel:hover { background: #c82333; }
+
+    /* Submit button loading style */
+    .btn.submit-loading {
+      background: var(--green) !important;
+      color: white !important;
+      pointer-events: none;
+      position: relative;
+      padding-left: 48px !important;
+    }
+
+    .btn.submit-loading::before {
+      content: '';
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      border: 3px solid white;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    /* ────────────────────────────────────────────────
+       Hamburger Menu
+    ──────────────────────────────────────────────── */
+    .hamburger {
+      display: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: white;
+      background: none;
+      border: none;
+      z-index: 110;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-menu a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .nav-menu a:hover { color: var(--gold); }
+
+    .mobile-menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 99;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .mobile-menu-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 280px;
+      height: 100%;
+      background: var(--brown);
+      padding: 80px 30px 30px;
+      transition: right 0.4s ease;
+      z-index: 105;
+      box-shadow: -5px 0 20px rgba(0,0,0,0.4);
+    }
+
+    .mobile-menu.active { right: 0; }
+
+    .mobile-menu ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .mobile-menu a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .mobile-menu a:hover { color: var(--gold); }
+
+    @media (max-width: 992px) {
+      .hamburger { display: block; }
+      .nav-menu { display: none; }
+    }
+
+    /* ────────────────────────────────────────────────
+       Rest of your layout styles
+    ──────────────────────────────────────────────── */
+
+    #hero {
+      background: rgba(92, 51, 23, 0.75);
+      color: white;
+      text-align: center;
+      padding: 80px 15px;
+      backdrop-filter: blur(3px);
+    }
+
+    #hero h1 { font-size: 2.4rem; margin-bottom: 16px; }
+    #hero p  { font-size: 1.15rem; margin-bottom: 30px; }
+
+    .btn {
+      background: var(--gold);
+      color: var(--brown);
+      padding: 12px 28px;
+      border-radius: 6px;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.3s;
+    }
+
+    .btn:hover { background: var(--light-gold); }
+
+    section {
+      padding: 60px 0;
+      background: rgba(255,255,255,0.82);
+      margin: 20px 0;
+      border-radius: 12px;
+    }
+
+    h2 {
+      color: var(--brown);
+      text-align: center;
+      margin-bottom: 35px;
+      font-size: 2.1rem;
+    }
+
+    h3 {
+      color: var(--brown);
+      margin: 35px 0 18px;
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 8px;
+      font-size: 1.45rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--brown);
+      border-radius: 6px;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.95);
+    }
+
+    .hidden { display: none; }
+
+    #repayment-info {
+      padding: 16px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.95);
+      border: 1px solid #ddd;
+      margin: 12px 0;
+      font-size: 1.05rem;
+      text-align: center;
+    }
+
+    #repayment-amount { color: var(--red); font-weight: bold; }
+    #repayment-due   { color: var(--green); font-weight: bold; }
+
+    .whatsapp-btn {
+      background: #25D366;
+      color: white !important;
+      padding: 14px 30px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0;
+      font-size: 1.1rem;
+    }
+
+    .whatsapp-btn:hover { background: #20b358; }
+
+    .rates-table-container {
+      max-width: 600px;
+      margin: 30px auto;
+    }
+
+    .rates-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: rgba(255,255,255,0.96);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    }
+
+    .rates-table th, .rates-table td {
+      padding: 16px 20px;
+      text-align: left;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .rates-table th {
+      background: linear-gradient(135deg, var(--brown) 0%, #4a2a12 100%);
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .rates-table td:first-child {
+      font-weight: 600;
+      color: var(--brown);
+    }
+
+    .status-box {
+      background: rgba(255,255,255,0.95);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .status-item {
+      margin: 25px 0;
+      font-size: 1.25rem;
+      padding: 18px;
+      border-radius: 8px;
+    }
+
+    .status-pending {
+      background: rgba(255,243,205,0.95);
+      color: #856404;
+      border: 1px solid #ffeeba;
+    }
+
+    .status-success {
+      background: rgba(212,237,218,0.95);
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .application-list {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .application-item {
+      background: rgba(248,249,250,0.95);
+      padding: 15px;
+      margin: 12px 0;
+      border-radius: 8px;
+      border-left: 5px solid var(--green);
+    }
+
+    footer {
+      background: var(--brown);
+      color: white;
+      text-align: center;
+      padding: 25px 15px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .logo { height: 45px; }
+      .business-name { font-size: 1.3rem; }
+      h2 { font-size: 1.9rem; }
+      .btn { padding: 12px 24px; font-size: 1rem; }
+    }
+  </style>
 </head>
 <body>
 
-    <header>
-        <div class="container">
-            <div class="logo-and-name">
-                <img src="pic.png" alt="KaChola Student Aid Logo" class="logo">
-                <div class="business-name">
-                    <span class="word-kachola">KaChola</span>
-                    <span class="word-student">Student</span>
-                    <span class="word-aid">Aid</span>
-                </div>
-            </div>
-
-            <button class="hamburger" aria-label="Toggle Menu">☰</button>
-
-            <nav class="nav-menu">
-                <a href="#apply">Apply Now</a>
-                <a href="#rates">Interest Rates</a>
-                <a href="#contact">Contact</a>
-                <a href="#my-applications">My Applications</a>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu-overlay" id="menuOverlay"></div>
-
-    <!-- Mobile Menu Panel -->
-    <div class="mobile-menu" id="mobileMenu">
-        <ul>
-            <li><a href="#apply" class="mobile-link">Apply Now</a></li>
-            <li><a href="#rates" class="mobile-link">Interest Rates</a></li>
-            <li><a href="#contact" class="mobile-link">Contact</a></li>
-            <li><a href="#my-applications" class="mobile-link">My Applications</a></li>
-        </ul>
+<header>
+  <div class="container">
+    <div class="logo-and-name">
+      <img src="pic.png" alt="KaChola Student Aid Logo" class="logo">
+      <div class="business-name">
+        <span class="word-kachola">KaChola</span>
+        <span class="word-student">Student</span>
+        <span class="word-aid">Aid</span>
+      </div>
     </div>
 
-    <!-- Modern Popup -->
-    <div class="popup-overlay" id="popupOverlay">
-        <div class="popup" id="popup">
-            <div class="popup-icon" id="popupIcon"></div>
-            <div class="popup-title" id="popupTitle"></div>
-            <div class="popup-message" id="popupMessage"></div>
-            <div class="popup-buttons" id="popupButtons"></div>
-        </div>
+    <button class="hamburger" aria-label="Toggle Menu">☰</button>
+
+    <nav class="nav-menu">
+      <a href="#apply">Apply Now</a>
+      <a href="#rates">Interest Rates</a>
+      <a href="#contact">Contact</a>
+      <a href="#my-applications">My Applications</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu-overlay" id="menuOverlay"></div>
+
+<!-- Mobile Menu Panel -->
+<div class="mobile-menu" id="mobileMenu">
+  <ul>
+    <li><a href="#apply" class="mobile-link">Apply Now</a></li>
+    <li><a href="#rates" class="mobile-link">Interest Rates</a></li>
+    <li><a href="#contact" class="mobile-link">Contact</a></li>
+    <li><a href="#my-applications" class="mobile-link">My Applications</a></li>
+  </ul>
+</div>
+
+<!-- Modern Popup -->
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup" id="popup">
+    <div class="popup-icon" id="popupIcon"></div>
+    <div class="popup-title" id="popupTitle"></div>
+    <div class="popup-message" id="popupMessage"></div>
+    <div class="popup-buttons" id="popupButtons"></div>
+  </div>
+</div>
+
+<section id="hero">
+  <div class="container">
+    <h1>Empowering Zambian Students</h1>
+    <p>Collateral-based financial aid for students at UNZA, CBU, and Evelyn Hone College</p>
+    <a href="#apply" class="btn">Apply Now</a>
+  </div>
+</section>
+
+<!-- APPLY NOW -->
+<section id="apply">
+  <div class="container">
+    <h2>Apply Now</h2>
+    <p style="text-align:center; max-width:720px; margin:0 auto 40px;">
+      Fill in the form below to request collateral-based financial support.<br>
+      All submitted information is treated confidentially.
+    </p>
+
+    <form id="apply-form" action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="fe293e23-d328-4bad-86e8-d9b531e2a37d">
+      <input type="hidden" name="subject" id="email-subject" value="New KaChola Student Aid Application">
+      <input type="checkbox" name="botcheck" style="display:none;" aria-hidden="true">
+
+      <h3>Personal Details</h3>
+      <input type="text" name="first_name" placeholder="Name (First Name) *" required>
+      <input type="text" name="middle_name" placeholder="Middle Name (if applicable)">
+      <input type="text" name="last_name" placeholder="Last Name *" required>
+      <input type="tel" name="phone" placeholder="Phone Number (preferably WhatsApp) *" pattern="^(09[567]|07[567]|096|075|095)[0-9]{7}$" title="Zambian mobile format" required>
+      <input type="email" name="email" placeholder="Email Address *" required>
+
+      <input type="text" id="nrc" name="nrc" placeholder="NRC Number (e.g. 123456/78/1) *" maxlength="11" pattern="^\d{6}/\d{2}/1$" title="Format: 6 digits / 2 digits / 1" required>
+
+      <input type="tel" name="next_of_kin" placeholder="Next of Kin Phone Number *" pattern="^(09[567]|07[567]|096|075|095)[0-9]{7}$" required>
+
+      <h3>Education Details</h3>
+      <select name="institution" required>
+        <option value="">Select Institution *</option>
+        <option value="UNZA">University of Zambia (UNZA)</option>
+        <option value="CBU">Copperbelt University (CBU)</option>
+        <option value="Evelyn Hone">Evelyn Hone College</option>
+      </select>
+      <input type="text" name="student_id" placeholder="Student ID Number *" required>
+      <input type="text" name="program" placeholder="Program of Study *" required>
+      <input type="text" name="room_number" placeholder="Room Number (if on campus)">
+      <select name="year_of_study" required>
+        <option value="">Year of Study *</option>
+        <option value="1st Year">1st Year</option>
+        <option value="2nd Year">2nd Year</option>
+        <option value="3rd Year">3rd Year</option>
+        <option value="4th Year">4th Year</option>
+        <option value="5th Year">5th Year</option>
+        <option value="6th Year">6th Year</option>
+      </select>
+
+      <h3>Collateral Details</h3>
+      <select name="collateral_type" id="collateral_type" required>
+        <option value="">Select Collateral Type *</option>
+        <option value="Phone">Phone</option>
+        <option value="Laptop">Laptop</option>
+        <option value="Refrigerator">Refrigerator</option>
+        <option value="Playstation">Playstation</option>
+        <option value="TV">TV</option>
+        <option value="Furniture">Furniture</option>
+        <option value="Locomotives">Locomotives</option>
+      </select>
+      <input type="number" name="collateral_value" placeholder="Value of Collateral (ZMW) *" min="100" required>
+      <select name="ownership" id="ownership" required>
+        <option value="">Ownership *</option>
+        <option value="Personal">Personal</option>
+        <option value="Borrowed">Borrowed</option>
+      </select>
+
+      <div id="borrowed_owner" class="hidden">
+        <h4>Owner's Details (if borrowed)</h4>
+        <input type="text" name="owner_name" placeholder="Owner's Full Name">
+        <input type="tel" name="owner_phone" placeholder="Owner's Phone Number">
+      </div>
+
+      <h3>Loan Details</h3>
+      <input type="number" name="loan_amount" id="loan_amount" placeholder="Loan Amount (200 - 5000 ZMW) *" min="200" max="5000" required>
+      <select name="loan_tenure" id="loan_tenure" required>
+        <option value="">Select Loan Tenure *</option>
+        <option value="1">1 Week → 11.6%</option>
+        <option value="2">2 Weeks → 22.7%</option>
+        <option value="3">3 Weeks → 32.8%</option>
+        <option value="4">4 Weeks → 38.9%</option>
+        <option value="5">5 Weeks → 48.95%</option>
+      </select>
+
+      <div id="repayment-info" class="hidden">
+        <p>You'll pay back <span id="repayment-amount"></span> on <span id="repayment-due"></span></p>
+      </div>
+
+      <button type="submit" class="btn" id="submitBtn">Submit Application</button>
+    </form>
+  </div>
+</section>
+
+<!-- INTEREST RATES -->
+<section id="rates">
+  <div class="container">
+    <h2>Interest Rates</h2>
+    <h3 style="text-align:center; margin-bottom:30px;">STUDENT FRIENDLY INTEREST RATES</h3>
+
+    <div class="rates-table-container">
+      <table class="rates-table">
+        <thead>
+          <tr>
+            <th>Duration</th>
+            <th>Interest Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1 Week</td><td>11.6%</td></tr>
+          <tr><td>2 Weeks</td><td>22.7%</td></tr>
+          <tr><td>3 Weeks</td><td>32.8%</td></tr>
+          <tr><td>4 Weeks</td><td>38.9%</td></tr>
+          <tr><td>5 Weeks</td><td>48.95%</td></tr>
+        </tbody>
+      </table>
     </div>
+  </div>
+</section>
 
-    <section id="hero">
-        <div class="container">
-            <h1>Empowering Zambian Students</h1>
-            <p>Collateral-based financial aid for students at UNZA, CBU, and Evelyn Hone College</p>
-            <a href="#apply" class="btn">Apply Now</a>
-        </div>
-    </section>
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <h2>Contact</h2>
+    <div style="margin-top:60px; text-align:center;">
+      <a href="https://wa.me/260979236667" target="_blank" class="whatsapp-btn">
+        <i class="fab fa-whatsapp fa-2x"></i> Chat on WhatsApp
+      </a>
+      <p style="margin-top:40px; font-size:1.3rem;">
+        Email: <a href="mailto:Kachola.aid@yahoo.com" style="color:var(--brown); font-weight:bold;">
+          Kachola.aid@yahoo.com
+        </a>
+      </p>
+    </div>
+  </div>
+</section>
 
-    <!-- APPLY NOW -->
-    <section id="apply">
-        <div class="container">
-            <h2>Apply Now</h2>
-            <p style="text-align:center; max-width:720px; margin:0 auto 40px;">
-                Fill in the form below to request collateral-based financial support.<br>
-                All submitted information is treated confidentially.
-            </p>
+<!-- MY APPLICATIONS -->
+<section id="my-applications">
+  <div class="container">
+    <h2>My Applications</h2>
+    <div class="status-box">
+      <div class="status-item status-pending">
+        <strong>PENDING</strong><br>
+        Applications that have not been submitted
+      </div>
 
-            <div id="apply-message" class="form-message"></div>
+      <div class="status-item status-success">
+        <strong>SUCCESS, wait to be contacted</strong><br>
+        <div class="application-list" id="submitted-list"></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-            <form id="apply-form" action="https://api.web3forms.com/submit" method="POST">
-                <input type="hidden" name="access_key" value="fe293e23-d328-4bad-86e8-d9b531e2a37d">
-                <input type="hidden" name="subject" id="email-subject" value="New KaChola Student Aid Application">
-                <input type="checkbox" name="botcheck" style="display:none;" aria-hidden="true">
+<footer>
+  <div class="container">
+    <p>© 2026 KaChola Student Aid. All rights reserved.</p>
+  </div>
+</footer>
 
-                <h3>Personal Details</h3>
-                <input type="text" name="first_name"    placeholder="Name (First Name) *" required>
-                <input type="text" name="middle_name"   placeholder="Middle Name (if applicable)">
-                <input type="text" name="last_name"     placeholder="Last Name *" required>
-                <input type="tel"  name="phone"         placeholder="Phone Number (preferably WhatsApp) *" pattern="^(09[567]|07[567]|096|075|095)[0-9]{7}$" title="Zambian mobile format" required>
-                <input type="email" name="email"        placeholder="Email Address *" required>
+<script>
+  // ────────────────────────────────────────────────
+  //                  POPUP SYSTEM
+  // ────────────────────────────────────────────────
+  const popupOverlay = document.getElementById('popupOverlay');
+  const popup = document.getElementById('popup');
+  const popupIcon = document.getElementById('popupIcon');
+  const popupTitle = document.getElementById('popupTitle');
+  const popupMessage = document.getElementById('popupMessage');
+  const popupButtons = document.getElementById('popupButtons');
 
-                <input type="text" id="nrc" name="nrc"
-                       placeholder="NRC Number (e.g. 123456/78/1) *"
-                       maxlength="11"
-                       pattern="^\d{6}/\d{2}/1$"
-                       title="Format: 6 digits / 2 digits / 1"
-                       required>
+  function showPopup(type, title, message, buttons = [], autoCloseMs = 0) {
+    popup.className = `popup ${type}`;
+    popupIcon.innerHTML = type === 'loading' 
+      ? '<i class="fas fa-spinner"></i>' 
+      : type === 'success' 
+      ? '<i class="fas fa-check-circle"></i>' 
+      : '<i class="fas fa-exclamation-circle"></i>';
+    popupTitle.textContent = title;
+    popupMessage.textContent = message;
 
-                <input type="tel"  name="next_of_kin"
-                       placeholder="Next of Kin Phone Number *"
-                       pattern="^(09[567]|07[567]|096|075|095)[0-9]{7}$"
-                       title="Must be different from your phone"
-                       required>
+    popupButtons.innerHTML = '';
 
-                <h3>Education Details</h3>
-                <select name="institution" required>
-                    <option value="">Select Institution *</option>
-                    <option value="UNZA">University of Zambia (UNZA)</option>
-                    <option value="CBU">Copperbelt University (CBU)</option>
-                    <option value="Evelyn Hone">Evelyn Hone College</option>
-                </select>
-                <input type="text" name="student_id"    placeholder="Student ID Number *" required>
-                <input type="text" name="program"       placeholder="Program of Study *" required>
-                <input type="text" name="room_number"   placeholder="Room Number (if on campus)">
-                <select name="year_of_study" required>
-                    <option value="">Year of Study *</option>
-                    <option value="1st Year">1st Year</option>
-                    <option value="2nd Year">2nd Year</option>
-                    <option value="3rd Year">3rd Year</option>
-                    <option value="4th Year">4th Year</option>
-                    <option value="5th Year">5th Year</option>
-                    <option value="6th Year">6th Year</option>
-                </select>
+    buttons.forEach(btn => {
+      const button = document.createElement('button');
+      button.className = `popup-btn ${btn.class}`;
+      button.textContent = btn.text;
+      button.onclick = () => {
+        popupOverlay.classList.remove('active');
+        popup.classList.remove('active');
+        if (btn.onClick) btn.onClick();
+      };
+      popupButtons.appendChild(button);
+    });
 
-                <h3>Collateral Details</h3>
-                <select name="collateral_type" id="collateral_type" required>
-                    <option value="">Select Collateral Type *</option>
-                    <option value="Phone">Phone</option>
-                    <option value="Laptop">Laptop</option>
-                    <option value="Refrigerator">Refrigerator</option>
-                    <option value="Playstation">Playstation</option>
-                    <option value="TV">TV</option>
-                    <option value="Furniture">Furniture</option>
-                    <option value="Locomotives">Locomotives</option>
-                </select>
-                <input type="number" name="collateral_value" placeholder="Value of Collateral (ZMW) *" min="100" required>
-                <select name="ownership" id="ownership" required>
-                    <option value="">Ownership *</option>
-                    <option value="Personal">Personal</option>
-                    <option value="Borrowed">Borrowed</option>
-                </select>
+    popupOverlay.classList.add('active');
+    popup.classList.add('active');
 
-                <div id="borrowed_owner" class="hidden">
-                    <h4>Owner's Details (if borrowed)</h4>
-                    <input type="text" name="owner_name" placeholder="Owner's Full Name">
-                    <input type="tel"  name="owner_phone" placeholder="Owner's Phone Number">
-                </div>
+    const close = () => {
+      popupOverlay.classList.remove('active');
+      popup.classList.remove('active');
+    };
 
-                <h3>Loan Details</h3>
-                <input type="number" name="loan_amount" id="loan_amount" placeholder="Loan Amount (200 - 5000 ZMW) *" min="200" max="5000" required>
-                <select name="loan_tenure" id="loan_tenure" required>
-                    <option value="">Select Loan Tenure *</option>
-                    <option value="1">1 Week → 11.6%</option>
-                    <option value="2">2 Weeks → 22.7%</option>
-                    <option value="3">3 Weeks → 32.8%</option>
-                    <option value="4">4 Weeks → 38.9%</option>
-                    <option value="5">5 Weeks → 48.95%</option>
-                </select>
+    popupOverlay.onclick = e => { if (e.target === popupOverlay) close(); };
 
-                <div id="repayment-info" class="hidden">
-                    <p>You'll pay back <span id="repayment-amount"></span> on <span id="repayment-due"></span></p>
-                </div>
+    if (autoCloseMs > 0) setTimeout(close, autoCloseMs);
+  }
 
-                <button type="submit" class="btn">Submit Application</button>
-            </form>
-        </div>
-    </section>
+  // ────────────────────────────────────────────────
+  //                  HAMBURGER MENU
+  // ────────────────────────────────────────────────
+  const hamburger = document.querySelector('.hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const overlay = document.getElementById('menuOverlay');
+  const mobileLinks = document.querySelectorAll('.mobile-link');
 
-    <!-- INTEREST RATES -->
-    <section id="rates">
-        <div class="container">
-            <h2>Interest Rates</h2>
-            <h3 style="text-align:center; margin-bottom:30px;">STUDENT FRIENDLY INTEREST RATES</h3>
+  function toggleMenu() {
+    mobileMenu.classList.toggle('active');
+    overlay.classList.toggle('active');
+  }
 
-            <div class="rates-table-container">
-                <table class="rates-table">
-                    <thead>
-                        <tr>
-                            <th>Duration</th>
-                            <th>Interest Rate</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>1 Week</td><td>11.6%</td></tr>
-                        <tr><td>2 Weeks</td><td>22.7%</td></tr>
-                        <tr><td>3 Weeks</td><td>32.8%</td></tr>
-                        <tr><td>4 Weeks</td><td>38.9%</td></tr>
-                        <tr><td>5 Weeks</td><td>48.95%</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
+  hamburger.addEventListener('click', toggleMenu);
+  overlay.addEventListener('click', toggleMenu);
 
-    <!-- CONTACT -->
-    <section id="contact">
-        <div class="container">
-            <h2>Contact</h2>
-            <div class="contact-info" style="margin-top:60px; text-align:center;">
-                <a href="https://wa.me/260979236667" target="_blank" class="whatsapp-btn">
-                    <i class="fab fa-whatsapp fa-2x"></i> Chat on WhatsApp
-                </a>
-                <p style="margin-top:40px; font-size:1.3rem;">
-                    Email: <a href="mailto:Kachola.aid@yahoo.com" style="color:var(--brown); font-weight:bold;">
-                        Kachola.aid@yahoo.com
-                    </a>
-                </p>
-            </div>
-        </div>
-    </section>
+  mobileLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+  });
 
-    <!-- MY APPLICATIONS -->
-    <section id="my-applications">
-        <div class="container">
-            <h2>My Applications</h2>
-            <div class="status-box">
-                <div class="status-item status-pending">
-                    <strong>PENDING</strong><br>
-                    Applications that have not been submitted
-                </div>
+  // ────────────────────────────────────────────────
+  //                  FORM LOGIC + DYNAMIC SUBMIT BUTTON
+  // ────────────────────────────────────────────────
+  const form = document.getElementById('apply-form');
+  const submitBtn = document.getElementById('submitBtn');
+  const nrcInput = document.getElementById('nrc');
+  const tenureSelect = document.getElementById('loan_tenure');
+  const amountInput = document.getElementById('loan_amount');
+  const repaymentInfo = document.getElementById('repayment-info');
+  const repaymentAmountEl = document.getElementById('repayment-amount');
+  const repaymentDueEl = document.getElementById('repayment-due');
+  const ownershipSelect = document.getElementById('ownership');
+  const borrowedSection = document.getElementById('borrowed_owner');
+  const submittedList = document.getElementById('submitted-list');
 
-                <div class="status-item status-success">
-                    <strong>SUCCESS, wait to be contacted</strong><br>
-                    <div class="application-list" id="submitted-list"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+  const rates = {1: 11.6, 2: 22.7, 3: 32.8, 4: 38.9, 5: 48.95};
 
-    <footer>
-        <div class="container">
-            <p>© 2026 KaChola Student Aid. All rights reserved.</p>
-        </div>
-    </footer>
+  if (nrcInput) {
+    nrcInput.addEventListener('input', e => {
+      let v = e.target.value.replace(/[^0-9/]/g, '').replace(/\/+/g, '/');
+      if (v.length > 6 && v[6] !== '/') v = v.slice(0,6) + '/' + v.slice(6);
+      if (v.length > 9 && v[9] !== '/') v = v.slice(0,9) + '/' + v.slice(9);
+      if (v.length >= 10) v = v.slice(0,10) + '1';
+      v = v.slice(0,11);
+      if (e.target.value !== v) e.target.value = v;
+    });
 
-    <script>
-        // ────────────────────────────────────────────────
-        //                  MODERN POPUP + LOADING SPINNER
-        // ────────────────────────────────────────────────
-        const popupOverlay = document.getElementById('popupOverlay');
-        const popup = document.getElementById('popup');
-        const popupIcon = document.getElementById('popupIcon');
-        const popupTitle = document.getElementById('popupTitle');
-        const popupMessage = document.getElementById('popupMessage');
-        const popupButtons = document.getElementById('popupButtons');
+    nrcInput.addEventListener('paste', () => setTimeout(() => nrcInput.dispatchEvent(new Event('input')), 0));
+  }
 
-        function showPopup(type, title, message, buttons = [], autoCloseMs = 0) {
-            popup.className = `popup ${type}`;
-            popupIcon.innerHTML = type === 'loading' 
-                ? '<i class="fas fa-spinner"></i>' 
-                : type === 'success' 
-                ? '<i class="fas fa-check-circle"></i>' 
-                : '<i class="fas fa-exclamation-circle"></i>';
-            popupTitle.textContent = title;
-            popupMessage.textContent = message;
+  function calculateRepayment() {
+    const amt = parseFloat(amountInput.value) || 0;
+    const wks = parseInt(tenureSelect.value) || 0;
 
-            popupButtons.innerHTML = '';
+    if (amt >= 200 && amt <= 5000 && wks >= 1 && wks <= 5) {
+      const rate = rates[wks];
+      const interest = amt * (rate / 100);
+      const total = amt + interest;
 
-            buttons.forEach(btn => {
-                const button = document.createElement('button');
-                button.className = `popup-btn ${btn.class}`;
-                button.textContent = btn.text;
-                button.onclick = () => {
-                    popupOverlay.classList.remove('active');
-                    popup.classList.remove('active');
-                    if (btn.onClick) btn.onClick();
-                };
-                popupButtons.appendChild(button);
-            });
+      const due = new Date();
+      due.setDate(due.getDate() + wks * 7);
 
-            popupOverlay.classList.add('active');
-            popup.classList.add('active');
+      repaymentAmountEl.textContent = `K${total.toFixed(2)}`;
+      repaymentDueEl.textContent = due.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+      repaymentInfo.classList.remove('hidden');
 
-            const close = () => {
-                popupOverlay.classList.remove('active');
-                popup.classList.remove('active');
-            };
+      document.getElementById('email-subject').value =
+        `New Application - Repay K${total.toFixed(2)} on ${repaymentDueEl.textContent}`;
+    } else {
+      repaymentInfo.classList.add('hidden');
+    }
+  }
 
-            popupOverlay.onclick = e => { if (e.target === popupOverlay) close(); };
+  amountInput.addEventListener('input', calculateRepayment);
+  tenureSelect.addEventListener('change', calculateRepayment);
 
-            if (autoCloseMs > 0) {
-                setTimeout(close, autoCloseMs);
-            }
-        }
+  ownershipSelect.addEventListener('change', () => {
+    borrowedSection.classList.toggle('hidden', ownershipSelect.value !== 'Borrowed');
+  });
 
-        // ────────────────────────────────────────────────
-        //                  HAMBURGER MENU LOGIC
-        // ────────────────────────────────────────────────
-        const hamburger = document.querySelector('.hamburger');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const overlay = document.getElementById('menuOverlay');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
+  function saveDraft() {
+    const data = {};
+    new FormData(form).forEach((v,k) => data[k] = v);
+    localStorage.setItem('kacholaApplyDraft', JSON.stringify(data));
+  }
 
-        function toggleMenu() {
-            mobileMenu.classList.toggle('active');
-            overlay.classList.toggle('active');
-        }
+  function loadDraft() {
+    const saved = localStorage.getItem('kacholaApplyDraft');
+    if (saved) {
+      const data = JSON.parse(saved);
+      Object.keys(data).forEach(k => {
+        const el = form.elements[k];
+        if (el) el.value = data[k];
+      });
+      calculateRepayment();
+      borrowedSection.classList.toggle('hidden', form.elements['ownership']?.value !== 'Borrowed');
+    }
+  }
 
-        hamburger.addEventListener('click', toggleMenu);
-        overlay.addEventListener('click', toggleMenu);
+  form.addEventListener('input', saveDraft);
+  window.addEventListener('load', loadDraft);
 
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.remove('active');
-                overlay.classList.remove('active');
-            });
-        });
+  function saveSubmitted() {
+    const data = {};
+    new FormData(form).forEach((v,k) => data[k] = v);
 
-        // ────────────────────────────────────────────────
-        //                  FORM & ALL OTHER LOGIC (restored)
-        // ────────────────────────────────────────────────
-        const form = document.getElementById('apply-form');
-        const nrcInput = document.getElementById('nrc');
-        const tenureSelect = document.getElementById('loan_tenure');
-        const amountInput = document.getElementById('loan_amount');
-        const repaymentInfo = document.getElementById('repayment-info');
-        const repaymentAmountEl = document.getElementById('repayment-amount');
-        const repaymentDueEl = document.getElementById('repayment-due');
-        const ownershipSelect = document.getElementById('ownership');
-        const borrowedSection = document.getElementById('borrowed_owner');
-        const submittedList = document.getElementById('submitted-list');
+    const submitted = JSON.parse(localStorage.getItem('kacholaSubmitted') || '[]');
+    submitted.push({
+      name: `${data.first_name || ''} ${data.last_name || ''}`.trim() || 'Unknown',
+      phone: data.phone || '—',
+      amount: data.loan_amount || '—',
+      tenure: data.loan_tenure || '—',
+      repayment: repaymentAmountEl.textContent || '—',
+      due: repaymentDueEl.textContent || '—',
+      time: new Date().toLocaleString()
+    });
+    localStorage.setItem('kacholaSubmitted', JSON.stringify(submitted));
+  }
 
-        const rates = {1: 11.6, 2: 22.7, 3: 32.8, 4: 38.9, 5: 48.95};
+  function showSubmitted() {
+    const submitted = JSON.parse(localStorage.getItem('kacholaSubmitted') || '[]');
+    submittedList.innerHTML = '';
 
-        if (nrcInput) {
-            nrcInput.addEventListener('input', function(e) {
-                let v = e.target.value
-                    .replace(/[^0-9/]/g, '')
-                    .replace(/\/+/g, '/');
+    if (submitted.length === 0) {
+      submittedList.innerHTML = '<p style="color:#666; font-style:italic;">No successful submissions yet.</p>';
+    } else {
+      submitted.forEach(app => {
+        const item = document.createElement('div');
+        item.className = 'application-item';
+        item.innerHTML = `
+          <strong>${app.name}</strong><br>
+          Phone: ${app.phone}<br>
+          Loan: ${app.amount} ZMW – ${app.tenure} week(s)<br>
+          Repay: ${app.repayment} due on ${app.due}<br>
+          <small>Submitted: ${app.time}</small>
+        `;
+        submittedList.appendChild(item);
+      });
+    }
+  }
 
-                if (v.length > 6 && v[6] !== '/') v = v.slice(0,6) + '/' + v.slice(6);
-                if (v.length > 9 && v[9] !== '/') v = v.slice(0,9) + '/' + v.slice(9);
-                if (v.length >= 10) v = v.slice(0,10) + '1';
-                v = v.slice(0,11);
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
 
-                if (e.target.value !== v) e.target.value = v;
-            });
+    const applicantPhone = form.elements['phone']?.value.trim();
+    const kinPhone = form.elements['next_of_kin']?.value.trim();
+    if (applicantPhone && kinPhone && applicantPhone === kinPhone) {
+      showPopup('error', 'Invalid Input', 'Next of kin phone number cannot be the same as your phone number.');
+      return;
+    }
 
-            nrcInput.addEventListener('paste', () => setTimeout(() => nrcInput.dispatchEvent(new Event('input')), 0));
-        }
+    if (repaymentInfo.classList.contains('hidden')) {
+      showPopup('error', 'Incomplete Selection', 'Please select valid loan amount and tenure.');
+      return;
+    }
 
-        function calculateRepayment() {
-            const amt = parseFloat(amountInput.value) || 0;
-            const wks = parseInt(tenureSelect.value) || 0;
+    const total = repaymentAmountEl.textContent;
+    const due = repaymentDueEl.textContent;
 
-            if (amt >= 200 && amt <= 5000 && wks >= 1 && wks <= 5) {
-                const rate = rates[wks];
-                const interest = amt * (rate / 100);
-                const total = amt + interest;
+    showPopup('success', 'Loan Approval Confirmation', 
+      `You will pay back ${total} on ${due}.\n\nDo you APPROVE this loan?`,
+      0,
+      [
+        {
+          text: 'Cancel',
+          class: 'cancel',
+          onClick: () => showPopup('error', 'Cancelled', 'Application cancelled.')
+        },
+        {
+          text: 'Approve',
+          class: 'approve',
+          onClick: async () => {
+            // Show loading on button
+            submitBtn.classList.add('submit-loading');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
 
-                const due = new Date();
-                due.setDate(due.getDate() + wks * 7);
+            try {
+              const res = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'Accept': 'application/json' }
+              });
+              const data = await res.json();
 
-                repaymentAmountEl.textContent = `K${total.toFixed(2)}`;
-                repaymentDueEl.textContent = due.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
-                repaymentInfo.classList.remove('hidden');
+              // Restore button
+              submitBtn.classList.remove('submit-loading');
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Submit Application';
 
-                document.getElementById('email-subject').value =
-                    `New Application - Repay K${total.toFixed(2)} on ${repaymentDueEl.textContent}`;
-            } else {
+              if (data.success) {
+                showPopup('success', 'Success', 'Application sent successfully!', 5000);
+
+                saveSubmitted();
+                showSubmitted();
+
+                localStorage.removeItem('kacholaApplyDraft');
+                form.reset();
                 repaymentInfo.classList.add('hidden');
+              } else {
+                throw new Error(data.message || 'Submission failed');
+              }
+            } catch (err) {
+              submitBtn.classList.remove('submit-loading');
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Submit Application';
+
+              showPopup('error', 'Error', 'Error: ' + err.message);
             }
+          }
         }
+      ]
+    );
+  });
 
-        amountInput.addEventListener('input', calculateRepayment);
-        tenureSelect.addEventListener('change', calculateRepayment);
-
-        ownershipSelect.addEventListener('change', () => {
-            borrowedSection.classList.toggle('hidden', ownershipSelect.value !== 'Borrowed');
-        });
-
-        function saveDraft() {
-            const data = {};
-            new FormData(form).forEach((v,k) => data[k] = v);
-            localStorage.setItem('kacholaApplyDraft', JSON.stringify(data));
-        }
-
-        function loadDraft() {
-            const saved = localStorage.getItem('kacholaApplyDraft');
-            if (saved) {
-                const data = JSON.parse(saved);
-                Object.keys(data).forEach(k => {
-                    const el = form.elements[k];
-                    if (el) el.value = data[k];
-                });
-                calculateRepayment();
-                borrowedSection.classList.toggle('hidden', form.elements['ownership']?.value !== 'Borrowed');
-            }
-        }
-
-        form.addEventListener('input', saveDraft);
-        window.addEventListener('load', loadDraft);
-
-        function saveSubmitted() {
-            const data = {};
-            new FormData(form).forEach((v,k) => data[k] = v);
-
-            const submitted = JSON.parse(localStorage.getItem('kacholaSubmitted') || '[]');
-            submitted.push({
-                name: `${data.first_name || ''} ${data.last_name || ''}`.trim() || 'Unknown',
-                phone: data.phone || '—',
-                amount: data.loan_amount || '—',
-                tenure: data.loan_tenure || '—',
-                repayment: repaymentAmountEl.textContent || '—',
-                due: repaymentDueEl.textContent || '—',
-                time: new Date().toLocaleString()
-            });
-            localStorage.setItem('kacholaSubmitted', JSON.stringify(submitted));
-        }
-
-        function showSubmitted() {
-            const submitted = JSON.parse(localStorage.getItem('kacholaSubmitted') || '[]');
-            submittedList.innerHTML = '';
-
-            if (submitted.length === 0) {
-                submittedList.innerHTML = '<p style="color:#666; font-style:italic;">No successful submissions yet.</p>';
-            } else {
-                submitted.forEach(app => {
-                    const item = document.createElement('div');
-                    item.className = 'application-item';
-                    item.innerHTML = `
-                        <strong>${app.name}</strong><br>
-                        Phone: ${app.phone}<br>
-                        Loan: ${app.amount} ZMW – ${app.tenure} week(s)<br>
-                        Repay: ${app.repayment} due on ${app.due}<br>
-                        <small>Submitted: ${app.time}</small>
-                    `;
-                    submittedList.appendChild(item);
-                });
-            }
-        }
-
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const applicantPhone = form.elements['phone']?.value.trim();
-            const kinPhone = form.elements['next_of_kin']?.value.trim();
-            if (applicantPhone && kinPhone && applicantPhone === kinPhone) {
-                showPopup('error', 'Invalid Input', 'Next of kin phone number cannot be the same as your phone number.');
-                return;
-            }
-
-            if (repaymentInfo.classList.contains('hidden')) {
-                showPopup('error', 'Incomplete Selection', 'Please select valid loan amount and tenure.');
-                return;
-            }
-
-            const total = repaymentAmountEl.textContent;
-            const due = repaymentDueEl.textContent;
-
-            // Show approval popup
-            showPopup('success', 'Loan Approval Confirmation', 
-                `You will pay back ${total} on ${due}.\n\nDo you APPROVE this loan?`,
-                0,  // no auto-close
-                [
-                    {
-                        text: 'Cancel',
-                        class: 'cancel',
-                        onClick: () => {
-                            showPopup('error', 'Cancelled', 'Application cancelled.');
-                        }
-                    },
-                    {
-                        text: 'Approve',
-                        class: 'approve',
-                        onClick: async () => {
-                            // Show loading spinner during submission
-                            showPopup('loading', 'Submitting Application', 'Please wait while we process your request...', 0);
-
-                            try {
-                                const res = await fetch('https://api.web3forms.com/submit', {
-                                    method: 'POST',
-                                    body: new FormData(form),
-                                    headers: { 'Accept': 'application/json' }
-                                });
-                                const data = await res.json();
-
-                                if (data.success) {
-                                    showPopup('success', 'Success', 'Application sent successfully!', 5000);
-
-                                    saveSubmitted();
-                                    showSubmitted();
-
-                                    localStorage.removeItem('kacholaApplyDraft');
-                                    form.reset();
-                                    repaymentInfo.classList.add('hidden');
-                                } else {
-                                    throw new Error(data.message || 'Submission failed');
-                                }
-                            } catch (err) {
-                                showPopup('error', 'Error', 'Error: ' + err.message);
-                            }
-                        }
-                    }
-                ]
-            );
-        });
-
-        window.addEventListener('load', () => {
-            loadDraft();
-            showSubmitted();
-        });
-    </script>
+  window.addEventListener('load', () => {
+    loadDraft();
+    showSubmitted();
+  });
+</script>
 
 </body>
 </html>
