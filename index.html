@@ -184,27 +184,43 @@
     .popup-btn.cancel { background: var(--error); color: white; }
     .popup-btn.cancel:hover { background: #c82333; }
 
-    /* Submit button dynamic loading */
+    /* ────────────────────────────────────────────────
+       Modern Dynamic Submit Button
+    ──────────────────────────────────────────────── */
     #submitBtn {
       transition: all 0.3s ease;
       position: relative;
+      overflow: hidden;
     }
 
     #submitBtn.loading {
       background: var(--green) !important;
       color: white !important;
       pointer-events: none;
-      padding-left: 48px !important;
+    }
+
+    #submitBtn.loading span {
+      opacity: 0;
+    }
+
+    #submitBtn.loading::after {
+      content: "Submitting...";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-weight: bold;
     }
 
     #submitBtn.loading::before {
       content: '';
       position: absolute;
-      left: 16px;
+      left: 12px;
       top: 50%;
       transform: translateY(-50%);
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       border: 3px solid white;
       border-top-color: transparent;
       border-radius: 50%;
@@ -212,7 +228,7 @@
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to { transform: translateY(-50%) rotate(360deg); }
     }
 
     /* Hamburger Menu */
@@ -609,7 +625,7 @@
         <p>You'll pay back <span id="repayment-amount"></span> on <span id="repayment-due"></span></p>
       </div>
 
-      <button type="submit" class="btn" id="submitBtn">Submit Application</button>
+      <button type="submit" class="btn" id="submitBtn"><span>Submit Application</span></button>
     </form>
   </div>
 </section>
@@ -751,7 +767,7 @@ mobileLinks.forEach(link => {
 });
 
 // ────────────────────────────────────────────────
-//                  FORM LOGIC + DYNAMIC SUBMIT BUTTON
+//                  FORM LOGIC + FULLY DYNAMIC SUBMIT BUTTON
 // ────────────────────────────────────────────────
 const form = document.getElementById('apply-form');
 const submitBtn = document.getElementById('submitBtn');
@@ -906,7 +922,7 @@ form.addEventListener('submit', async function(e) {
         text: 'Approve',
         class: 'approve',
         onClick: async () => {
-          // Dynamic submit button
+          // Modern dynamic button loading
           submitBtn.classList.add('loading');
           submitBtn.disabled = true;
 
