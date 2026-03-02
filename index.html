@@ -28,26 +28,18 @@
             position: relative;
         }
 
-        /* Very faint overlay to keep text readable without solid backgrounds */
         body::before {
             content: "";
             position: fixed;
             inset: 0;
-            background: rgba(255, 255, 255, 0.78); /* light white tint – adjust opacity if needed */
+            background: rgba(255, 255, 255, 0.78);
             z-index: -2;
             pointer-events: none;
         }
 
-        main, section, header, footer {
-            position: relative;
-            z-index: 1;
-        }
+        main, section, header, footer { position: relative; z-index: 1; }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
 
         header {
             background: var(--brown);
@@ -139,7 +131,7 @@
 
         section {
             padding: 60px 0;
-            background: rgba(255,255,255,0.82); /* very light overlay only for content readability */
+            background: rgba(255,255,255,0.82);
             margin: 20px 0;
             border-radius: 12px;
         }
@@ -213,57 +205,63 @@
 
         .whatsapp-btn:hover { background: #20b358; }
 
+        /* ──────────────────────────────────────────────── */
+        /*      CLEAN PROFESSIONAL INTEREST RATES TABLE     */
+        /* ──────────────────────────────────────────────── */
+        .rates-table-container {
+            max-width: 600px;
+            margin: 30px auto;
+        }
+
         .rates-table {
             width: 100%;
-            margin: 30px auto;
-            border-collapse: collapse;
-            background: rgba(255,255,255,0.95);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border-radius: 10px;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: rgba(255,255,255,0.96);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
         }
 
-        .rates-table th, .rates-table td {
-            padding: 14px;
-            text-align: center;
-            border-bottom: 1px solid #e0e0e0;
+        .rates-table th,
+        .rates-table td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
         }
 
-        .rates-table th { background: var(--brown); color: white; }
+        .rates-table th {
+            background: linear-gradient(135deg, var(--brown) 0%, #4a2a12 100%);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.95rem;
+        }
 
-        .rates-table tr:nth-child(even) { background: rgba(251,250,248,0.9); }
+        .rates-table td {
+            font-size: 1.05rem;
+            color: #333;
+        }
 
-        /* Responsive table for small screens */
+        .rates-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rates-table tr:hover td {
+            background: rgba(218, 165, 32, 0.08);
+            transition: background 0.2s ease;
+        }
+
+        .rates-table td:first-child {
+            font-weight: 600;
+            color: var(--brown);
+        }
+
         @media (max-width: 600px) {
-            .rates-table thead { display: none; }
-            .rates-table tr {
-                display: block;
-                margin-bottom: 15px;
-                border: 1px solid rgba(0,0,0,0.15);
-                border-radius: 8px;
-                overflow: hidden;
-            }
-            .rates-table td {
-                display: block;
-                text-align: right;
-                position: relative;
-                padding-left: 50%;
-                border: none;
-                border-bottom: 1px solid #eee;
-            }
-            .rates-table td:last-child { border-bottom: none; }
-            .rates-table td::before {
-                content: attr(data-label);
-                position: absolute;
-                left: 0;
-                width: 50%;
-                padding-left: 15px;
-                font-weight: bold;
-                text-align: left;
-                background: var(--brown);
-                color: white;
-                height: 100%;
-                display: flex;
-                align-items: center;
+            .rates-table th, .rates-table td {
+                padding: 14px 16px;
+                font-size: 0.98rem;
             }
         }
 
@@ -462,42 +460,44 @@
         </div>
     </section>
 
-    <!-- INTEREST RATES -->
+    <!-- INTEREST RATES – clean, professional 2-column table -->
     <section id="rates">
         <div class="container">
             <h2>Interest Rates</h2>
             <h3 style="text-align:center; margin-bottom:30px;">STUDENT FRIENDLY INTEREST RATES</h3>
 
-            <table class="rates-table">
-                <thead>
-                    <tr>
-                        <th data-label="Duration">Duration</th>
-                        <th data-label="Interest Rate">Interest Rate</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td data-label="Duration">1 Week</td>
-                        <td data-label="Interest Rate">11.6%</td>
-                    </tr>
-                    <tr>
-                        <td data-label="Duration">2 Weeks</td>
-                        <td data-label="Interest Rate">22.7%</td>
-                    </tr>
-                    <tr>
-                        <td data-label="Duration">3 Weeks</td>
-                        <td data-label="Interest Rate">32.8%</td>
-                    </tr>
-                    <tr>
-                        <td data-label="Duration">4 Weeks</td>
-                        <td data-label="Interest Rate">38.9%</td>
-                    </tr>
-                    <tr>
-                        <td data-label="Duration">5 Weeks</td>
-                        <td data-label="Interest Rate">48.95%</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="rates-table-container">
+                <table class="rates-table">
+                    <thead>
+                        <tr>
+                            <th>Duration</th>
+                            <th>Interest Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1 Week</td>
+                            <td>11.6%</td>
+                        </tr>
+                        <tr>
+                            <td>2 Weeks</td>
+                            <td>22.7%</td>
+                        </tr>
+                        <tr>
+                            <td>3 Weeks</td>
+                            <td>32.8%</td>
+                        </tr>
+                        <tr>
+                            <td>4 Weeks</td>
+                            <td>38.9%</td>
+                        </tr>
+                        <tr>
+                            <td>5 Weeks</td>
+                            <td>48.95%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </section>
 
@@ -543,10 +543,6 @@
     </footer>
 
     <script>
-        // ────────────────────────────────────────────────
-        //                  JAVASCRIPT (unchanged)
-        // ────────────────────────────────────────────────
-
         const form = document.getElementById('apply-form');
         const nrcInput = document.getElementById('nrc');
         const tenureSelect = document.getElementById('loan_tenure');
