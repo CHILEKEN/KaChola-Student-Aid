@@ -38,8 +38,6 @@
             pointer-events: none;
         }
 
-        main, section, header, footer { position: relative; z-index: 1; }
-
         .container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
 
         header {
@@ -68,7 +66,6 @@
         .logo {
             height: 50px;
             border-radius: 50%;
-            /* Thick glowing green rays effect */
             box-shadow: 
                 0 0 8px 4px var(--glow-green),
                 0 0 20px 10px rgba(0, 255, 157, 0.6),
@@ -92,7 +89,7 @@
             white-space: nowrap;
             padding: 8px 16px;
             border-radius: 12px;
-            /* Thick glowing green rays effect on text container */
+            /* Thick glowing green rays border */
             box-shadow: 
                 0 0 10px 5px var(--glow-green),
                 0 0 25px 12px rgba(0, 255, 157, 0.6),
@@ -100,6 +97,8 @@
                 0 0 80px 40px rgba(0, 255, 157, 0.2);
             transition: box-shadow 0.4s ease;
             background: rgba(0,0,0,0.15);
+            /* Rainbow color animation on the text itself */
+            animation: rainbow 12s linear infinite;
         }
 
         .business-name:hover {
@@ -110,24 +109,25 @@
                 0 0 120px 60px rgba(0, 255, 157, 0.3);
         }
 
+        /* Rainbow color cycle animation */
+        @keyframes rainbow {
+            0%   { color: #ff0000; }     /* red */
+            14%  { color: #ff7f00; }     /* orange */
+            28%  { color: #ffff00; }     /* yellow */
+            42%  { color: #00ff00; }     /* green */
+            57%  { color: #0000ff; }     /* blue */
+            71%  { color: #4b0082; }     /* indigo */
+            85%  { color: #9400d3; }     /* violet */
+            100% { color: #ff0000; }     /* back to red */
+        }
+
         .word-kachola,
         .word-student,
         .word-aid {
             text-shadow: 0 1px 4px rgba(0,0,0,0.4);
-            transition: text-shadow 0.3s ease;
         }
 
-        .word-kachola:hover,
-        .word-student:hover,
-        .word-aid:hover {
-            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-        }
-
-        .word-kachola { color: #DAA520; }
-        .word-student { color: #5C3317; }
-        .word-aid     { color: #E5B567; }
-
-        /* Hamburger Menu */
+        /* Hamburger Menu (unchanged) */
         .hamburger {
             display: none;
             font-size: 2rem;
@@ -152,7 +152,6 @@
 
         .nav-menu a:hover { color: var(--gold); }
 
-        /* Mobile menu overlay */
         .mobile-menu-overlay {
             position: fixed;
             inset: 0;
@@ -201,15 +200,14 @@
             transition: color 0.2s;
         }
 
-        .mobile-menu a:hover {
-            color: var(--gold);
-        }
+        .mobile-menu a:hover { color: var(--gold); }
 
         @media (max-width: 992px) {
             .hamburger { display: block; }
             .nav-menu { display: none; }
         }
 
+        /* Rest of your styles remain unchanged */
         #hero {
             background: rgba(92, 51, 23, 0.75);
             color: white;
@@ -488,7 +486,6 @@
             <div id="apply-message" class="form-message"></div>
 
             <form id="apply-form" action="https://api.web3forms.com/submit" method="POST">
-                <!-- ... full form remains unchanged ... -->
                 <input type="hidden" name="access_key" value="fe293e23-d328-4bad-86e8-d9b531e2a37d">
                 <input type="hidden" name="subject" id="email-subject" value="New KaChola Student Aid Application">
                 <input type="checkbox" name="botcheck" style="display:none;" aria-hidden="true">
@@ -666,7 +663,7 @@
             });
         });
 
-        // Rest of your JavaScript (form logic, persistence, submitted list, etc.) remains unchanged
+        // Rest of your JavaScript remains unchanged
         const form = document.getElementById('apply-form');
         const nrcInput = document.getElementById('nrc');
         const tenureSelect = document.getElementById('loan_tenure');
