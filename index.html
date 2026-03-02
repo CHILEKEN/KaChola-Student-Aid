@@ -16,31 +16,11 @@
         }
 
         * { margin:0; padding:0; box-sizing:border-box; }
-
         body {
             font-family: Arial, Helvetica, sans-serif;
+            background-color: var(--beige);
             color: #333;
             line-height: 1.6;
-            min-height: 100vh;
-            position: relative;
-            background: var(--beige) url('photo.png') no-repeat center center fixed;
-            background-size: cover;
-            background-attachment: fixed;
-        }
-
-        /* Faint overlay to make the wallpaper less dominant */
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: rgba(245, 245, 220, 0.75); /* beige tint at 75% opacity */
-            z-index: -2;
-            pointer-events: none;
-        }
-
-        main, section, footer {
-            position: relative;
-            z-index: 1;
         }
 
         .container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
@@ -75,14 +55,14 @@
         .word-kachola,
         .word-student,
         .word-aid {
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+            text-shadow: 0 1px 4px rgba(0,0,0,0.35);
             transition: text-shadow 0.3s ease;
         }
 
         .word-kachola:hover,
         .word-student:hover,
         .word-aid:hover {
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.45);
         }
 
         .word-kachola { color: #DAA520; }
@@ -109,11 +89,10 @@
         nav a:hover { color: var(--gold); }
 
         #hero {
-            background: rgba(92, 51, 23, 0.7); /* semi-transparent brown overlay */
+            background: var(--brown);
             color: white;
             text-align: center;
             padding: 80px 15px;
-            backdrop-filter: blur(4px); /* subtle blur for readability */
         }
 
         #hero h1 { font-size: 2.4rem; margin-bottom: 16px; }
@@ -163,7 +142,6 @@
             border: 1px solid var(--brown);
             border-radius: 6px;
             font-size: 1rem;
-            background: rgba(255,255,255,0.92); /* semi-transparent white for readability */
         }
 
         .hidden { display: none; }
@@ -171,7 +149,7 @@
         #repayment-info {
             padding: 16px;
             border-radius: 8px;
-            background: rgba(255,255,255,0.9);
+            background: #f9f9f9;
             border: 1px solid #ddd;
             margin: 12px 0;
             font-size: 1.05rem;
@@ -204,14 +182,11 @@
 
         .whatsapp-btn:hover { background: #20b358; }
 
-        .rates-table-wrapper { overflow-x: auto; }
-
         .rates-table {
             width: 100%;
-            min-width: 500px;
             margin: 30px auto;
             border-collapse: collapse;
-            background: rgba(255,255,255,0.95);
+            background: white;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border-radius: 10px;
         }
@@ -224,10 +199,36 @@
 
         .rates-table th { background: var(--brown); color: white; }
 
-        .rates-table tr:nth-child(even) { background: rgba(251,250,248,0.8); }
+        .rates-table tr:nth-child(even) { background: #fbfaf8; }
+
+        @media (max-width: 600px) {
+            .rates-table thead { display: none; }
+            .rates-table tr {
+                display: block;
+                margin-bottom: 15px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            .rates-table td {
+                display: block;
+                text-align: right;
+                position: relative;
+                padding-left: 50%;
+            }
+            .rates-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 50%;
+                padding-left: 15px;
+                font-weight: bold;
+                text-align: left;
+            }
+        }
 
         .status-box {
-            background: rgba(255,255,255,0.95);
+            background: white;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -275,8 +276,6 @@
             text-align: center;
             padding: 25px 15px;
             margin-top: 40px;
-            position: relative;
-            z-index: 1;
         }
 
         @media (max-width: 768px) {
@@ -422,14 +421,19 @@
     </section>
 
     <!-- INTEREST RATES -->
-    <section id="rates" style="background:rgba(255,255,255,0.92);">
+    <section id="rates" style="background:#fff;">
         <div class="container">
             <h2>Interest Rates</h2>
             <h3 style="text-align:center; margin-bottom:30px;">STUDENT FRIENDLY INTEREST RATES</h3>
 
             <div class="rates-table-wrapper">
                 <table class="rates-table">
-                    <thead><tr><th>Duration</th><th>Interest Rate</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Duration</th>
+                            <th>Interest Rate</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <tr><td>1 Week</td><td>11.6%</td></tr>
                         <tr><td>2 Weeks</td><td>22.7%</td></tr>
@@ -460,7 +464,7 @@
     </section>
 
     <!-- MY APPLICATIONS -->
-    <section id="my-applications" style="background:rgba(255,255,255,0.92);">
+    <section id="my-applications" style="background:#fff;">
         <div class="container">
             <h2>My Applications</h2>
             <div class="status-box">
@@ -497,7 +501,6 @@
 
         const rates = {1: 11.6, 2: 22.7, 3: 32.8, 4: 38.9, 5: 48.95};
 
-        // NRC auto-formatting
         if (nrcInput) {
             nrcInput.addEventListener('input', function(e) {
                 let v = e.target.value
@@ -515,7 +518,6 @@
             nrcInput.addEventListener('paste', () => setTimeout(() => nrcInput.dispatchEvent(new Event('input')), 0));
         }
 
-        // Loan repayment calculation
         function calculateRepayment() {
             const amt = parseFloat(amountInput.value) || 0;
             const wks = parseInt(tenureSelect.value) || 0;
@@ -542,12 +544,10 @@
         amountInput.addEventListener('input', calculateRepayment);
         tenureSelect.addEventListener('change', calculateRepayment);
 
-        // Borrowed collateral toggle
         ownershipSelect.addEventListener('change', () => {
             borrowedSection.classList.toggle('hidden', ownershipSelect.value !== 'Borrowed');
         });
 
-        // Form persistence (draft)
         function saveDraft() {
             const data = {};
             new FormData(form).forEach((v,k) => data[k] = v);
@@ -570,7 +570,6 @@
         form.addEventListener('input', saveDraft);
         window.addEventListener('load', loadDraft);
 
-        // Save submitted application
         function saveSubmitted() {
             const data = {};
             new FormData(form).forEach((v,k) => data[k] = v);
@@ -588,7 +587,6 @@
             localStorage.setItem('kacholaSubmitted', JSON.stringify(submitted));
         }
 
-        // Display submitted applications
         function showSubmitted() {
             const submitted = JSON.parse(localStorage.getItem('kacholaSubmitted') || '[]');
             submittedList.innerHTML = '';
@@ -611,7 +609,6 @@
             }
         }
 
-        // Submit handler
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -664,7 +661,6 @@
             }
         });
 
-        // Load everything on page load
         window.addEventListener('load', () => {
             loadDraft();
             showSubmitted();
