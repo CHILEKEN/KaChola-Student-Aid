@@ -96,6 +96,8 @@
             padding-bottom: 10px;
         }
 
+        h4 { color: var(--brown); margin: 20px 0 12px; }
+
         form {
             max-width: 720px;
             margin: 0 auto;
@@ -124,7 +126,7 @@
         }
 
         #repayment-amount { color: var(--red); font-weight: bold; }
-        #repayment-due { color: var(--green); font-weight: bold; }
+        #repayment-due   { color: var(--green); font-weight: bold; }
 
         .form-message {
             text-align: center;
@@ -224,8 +226,19 @@
                 <input type="text" name="last_name"     placeholder="Last Name *" required>
                 <input type="tel"  name="phone"         placeholder="Phone Number (preferably WhatsApp) *" pattern="^(09[567]|07[567]|096|075|095)[0-9]{7}$" title="Zambian mobile format: 097xxxxxxx, 077xxxxxxx etc." required>
                 <input type="email" name="email"        placeholder="Email Address *" required>
-                <input type="text" name="nrc"           placeholder="NRC Number (e.g. 123456789A) *" pattern="[0-9]{9}[A-Za-z]?" title="9 digits optionally followed by a letter" required>
-                <input type="tel"  name="next_of_kin"   placeholder="Next of Kin Phone Number *" pattern="^(09[567]|07[567]|096|075|095)[0-9]{7}$" title="Must be different from your phone" required>
+
+                <input type="text" id="nrc" name="nrc"
+                       placeholder="NRC Number (e.g. 123456/78/1) *"
+                       maxlength="11"
+                       pattern="^\d{6}/\d{2}/1$"
+                       title="Format: 6 digits / 2 digits / 1 (Zambian citizen format)"
+                       required>
+
+                <input type="tel"  name="next_of_kin"
+                       placeholder="Next of Kin Phone Number *"
+                       pattern="^(09[567]|07[567]|096|075|095)[0-9]{7}$"
+                       title="Must be different from your phone"
+                       required>
 
                 <h3>Education Details</h3>
                 <select name="institution" required>
@@ -291,13 +304,11 @@
         </div>
     </section>
 
-    <!-- INTEREST RATES SECTION (unchanged) -->
+    <!-- INTEREST RATES SECTION – updated as requested -->
     <section id="rates" style="background:#fff;">
         <div class="container">
             <h2>Interest Rates</h2>
-            <p style="text-align:center; max-width:780px; margin:0 auto 45px; font-size:1.1rem;">
-                Weekly interest rates for short-term collateral-based loans
-            </p>
+            <h3 style="text-align:center; margin-bottom:30px;">STUDENT FRIENDLY INTEREST RATES</h3>
 
             <table class="rates-table">
                 <thead>
@@ -315,18 +326,10 @@
                     <tr><td>5 Weeks</td>    <td>48.95%</td> <td>K4,895 (Total: K14,895)</td></tr>
                 </tbody>
             </table>
-
-            <ul style="max-width:780px; margin:40px auto; padding-left:28px; font-size:1.05rem;">
-                <li>Interest is flat and applied once at the start of the term</li>
-                <li>Repayment is typically due as a lump sum at the end of the term</li>
-                <li>Collateral (verifiable assets or guarantor) is required</li>
-                <li>Any processing fee is minimal and disclosed during approval</li>
-                <li>Rates effective as of March 2026 – subject to review</li>
-            </ul>
         </div>
     </section>
 
-    <!-- CONTACT SECTION (unchanged) -->
+    <!-- CONTACT SECTION -->
     <section id="contact">
         <div class="container">
             <h2>Contact</h2>
@@ -358,7 +361,7 @@
         </div>
     </section>
 
-    <!-- MY APPLICATIONS SECTION (unchanged) -->
+    <!-- MY APPLICATIONS SECTION -->
     <section id="my-applications" style="background:#fff;">
         <div class="container">
             <h2>My Applications</h2>
@@ -384,6 +387,7 @@
 
     <script>
         const form = document.getElementById('apply-form');
+        const nrcInput = document.getElementById('nrc');
         const tenureSelect = document.getElementById('loan_tenure');
         const amountInput = document.getElementById('loan_amount');
         const repaymentInfo = document.getElementById('repayment-info');
@@ -392,128 +396,151 @@
         const ownershipSelect = document.getElementById('ownership');
         const borrowedSection = document.getElementById('borrowed_owner');
 
-        // Interest rates per week (flat %)
         const rates = {1: 11.6, 2: 22.7, 3: 32.8, 4: 38.9, 5: 48.95};
 
-        // Persist form data
-        function saveFormData() {
-            const data = {};
-            new FormData(form).forEach((value, key) => { data[key] = value; });
-            localStorage.setItem('kacholaApplyForm', JSON.stringify(data));
+        // NRC auto-formatting
+        if (nrcInput) {
+            nrcInput.addEventListener('input', function(e) {
+                let v = e.target.value
+                    .replace(/[^0-9/]/g, '')
+                    .replace(/\/+/g, '/');
+
+                if (v.length > 6 && v[6] !== '/') v = v.slice(0,6) + '/' + v.slice(6);
+                if (v.length > 9 && v[9] !== '/') v = v.slice(0,9) + '/' + v.slice(9);
+                if (v.length >= 10) v = v.slice(0,10) + '1';
+                v = v.slice(0,11);
+
+                if (e.target.value !== v) e.target.value = v;
+            });
+
+            nrcInput.addEventListener('paste', () => setTimeout(() => nrcInput.dispatchEvent(new Event('input')), 0));
         }
 
-        function loadFormData() {
-            const saved = localStorage.getItem('kacholaApplyForm');
-            if (saved) {
-                const data = JSON.parse(saved);
-                Object.keys(data).forEach(key => {
-                    const el = form.elements[key];
-                    if (el) el.value = data[key];
-                });
-                calculateRepayment(); // Update repayment display on load
-                toggleBorrowed();     // Show/hide borrowed fields
-            }
-        }
-
-        // Calculate repayment & due date
+        // Loan repayment calculation
         function calculateRepayment() {
-            const amount = parseFloat(amountInput.value) || 0;
-            const weeks = parseInt(tenureSelect.value) || 0;
+            const amt = parseFloat(amountInput.value) || 0;
+            const wks = parseInt(tenureSelect.value) || 0;
 
-            if (amount >= 200 && amount <= 5000 && weeks >= 1 && weeks <= 5) {
-                const rate = rates[weeks];
-                const interest = amount * (rate / 100);
-                const total = amount + interest;
+            if (amt >= 200 && amt <= 5000 && wks >= 1 && wks <= 5) {
+                const rate = rates[wks];
+                const interest = amt * (rate / 100);
+                const total = amt + interest;
 
-                const today = new Date();
-                const due = new Date(today);
-                due.setDate(today.getDate() + weeks * 7);
-
-                const dueStr = due.toLocaleDateString('en-GB', {
-                    day: 'numeric', month: 'long', year: 'numeric'
-                });
+                const due = new Date();
+                due.setDate(due.getDate() + wks * 7);
 
                 repaymentAmountEl.textContent = `K${total.toFixed(2)}`;
-                repaymentDueEl.textContent = dueStr;
+                repaymentDueEl.textContent = due.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
                 repaymentInfo.classList.remove('hidden');
 
-                // Update hidden field for email
-                document.getElementById('email-subject').value = 
-                    `New Application - Repay K${total.toFixed(2)} on ${dueStr}`;
+                document.getElementById('email-subject').value =
+                    `New Application - Repay K${total.toFixed(2)} on ${repaymentDueEl.textContent}`;
             } else {
                 repaymentInfo.classList.add('hidden');
             }
         }
 
-        // Show/hide borrowed owner fields
-        function toggleBorrowed() {
-            if (ownershipSelect.value === 'Borrowed') {
-                borrowedSection.classList.remove('hidden');
-            } else {
-                borrowedSection.classList.add('hidden');
+        amountInput.addEventListener('input', calculateRepayment);
+        tenureSelect.addEventListener('change', calculateRepayment);
+
+        // Borrowed collateral toggle
+        ownershipSelect.addEventListener('change', () => {
+            borrowedSection.classList.toggle('hidden', ownershipSelect.value !== 'Borrowed');
+        });
+
+        // Form persistence
+        function saveForm() {
+            const data = {};
+            new FormData(form).forEach((v,k) => data[k] = v);
+            localStorage.setItem('kacholaApplyForm', JSON.stringify(data));
+        }
+
+        function loadForm() {
+            const saved = localStorage.getItem('kacholaApplyForm');
+            if (saved) {
+                const data = JSON.parse(saved);
+                Object.keys(data).forEach(k => {
+                    const el = form.elements[k];
+                    if (el) el.value = data[k];
+                });
+                calculateRepayment();
+                borrowedSection.classList.toggle('hidden', form.elements['ownership']?.value !== 'Borrowed');
             }
         }
 
-        // Events
-        amountInput.addEventListener('input', calculateRepayment);
-        tenureSelect.addEventListener('change', calculateRepayment);
-        ownershipSelect.addEventListener('change', toggleBorrowed);
-        form.addEventListener('input', saveFormData);
+        form.addEventListener('input', saveForm);
+        window.addEventListener('load', loadForm);
 
-        // Submit handler with approval prompt
+        // Submit with approval
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            if (!repaymentInfo.classList.contains('hidden')) {
-                const totalText = repaymentAmountEl.textContent;
-                const dueText = repaymentDueEl.textContent;
+            const applicantPhone = form.elements['phone']?.value.trim();
+            const kinPhone = form.elements['next_of_kin']?.value.trim();
+            if (applicantPhone && kinPhone && applicantPhone === kinPhone) {
+                alert("Next of kin phone number cannot be the same as your phone number.");
+                return;
+            }
 
-                const approved = confirm(
-                    `You will pay back ${totalText} on ${dueText}.\n\nDo you APPROVE this loan?`
-                );
-
-                if (!approved) {
-                    alert("Application cancelled.");
-                    return;
-                }
-
-                // Thank you + send
-                alert("THANK YOU FOR TRUSTING KACHOLA");
-
-                try {
-                    const res = await fetch('https://api.web3forms.com/submit', {
-                        method: 'POST',
-                        body: new FormData(form),
-                        headers: { 'Accept': 'application/json' }
-                    });
-                    const data = await res.json();
-
-                    if (data.success) {
-                        document.getElementById('apply-message').style.color = 'green';
-                        document.getElementById('apply-message').textContent = 'Application sent successfully!';
-                        localStorage.removeItem('kacholaApplyForm'); // Clear saved data
-                        form.reset();
-                        repaymentInfo.classList.add('hidden');
-                    } else {
-                        document.getElementById('apply-message').style.color = 'red';
-                        document.getElementById('apply-message').textContent = 'Submission failed. Try again.';
-                    }
-                } catch (err) {
-                    document.getElementById('apply-message').style.color = 'red';
-                    document.getElementById('apply-message').textContent = 'Network error.';
-                }
-            } else {
+            if (repaymentInfo.classList.contains('hidden')) {
                 alert("Please select valid loan amount and tenure.");
+                return;
+            }
+
+            const total = repaymentAmountEl.textContent;
+            const due = repaymentDueEl.textContent;
+
+            if (!confirm(`You will pay back ${total} on ${due}.\n\nDo you APPROVE this loan?`)) {
+                alert("Application cancelled.");
+                return;
+            }
+
+            alert("THANK YOU FOR TRUSTING KACHOLA");
+
+            try {
+                const res = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: { 'Accept': 'application/json' }
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    document.getElementById('apply-message').style.color = 'green';
+                    document.getElementById('apply-message').textContent = 'Application sent successfully!';
+                    localStorage.removeItem('kacholaApplyForm');
+                    form.reset();
+                    repaymentInfo.classList.add('hidden');
+                } else {
+                    throw new Error(data.message || 'Submission failed');
+                }
+            } catch (err) {
+                document.getElementById('apply-message').style.color = 'red';
+                document.getElementById('apply-message').textContent = 'Error: ' + err.message;
             }
         });
 
-        // Load saved data on page load
-        window.addEventListener('load', loadFormData);
-
-        // Contact form (unchanged)
+        // Contact form handler
         document.getElementById('contact-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            // ... same as before ...
+            const msg = document.getElementById('contact-message');
+            msg.style.color = 'var(--brown)';
+            msg.textContent = 'Sending...';
+
+            try {
+                const res = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    body: new FormData(this),
+                    headers: { 'Accept': 'application/json' }
+                });
+                const data = await res.json();
+                msg.style.color = data.success ? 'green' : 'red';
+                msg.textContent = data.success ? 'Message sent!' : (data.message || 'Failed');
+                if (data.success) this.reset();
+            } catch {
+                msg.style.color = 'red';
+                msg.textContent = 'Network error';
+            }
         });
     </script>
 
