@@ -106,7 +106,9 @@
             100% { color: #ff0000; }
         }
 
-        /* Modern Popup Styles */
+        /* ──────────────────────────────────────────────── */
+        /*           MODERN POPUP + LOADING SPINNER          */
+        /* ──────────────────────────────────────────────── */
         .popup-overlay {
             position: fixed;
             inset: 0;
@@ -209,7 +211,7 @@
 
         .popup-btn.cancel:hover { background: #c82333; }
 
-        /* Hamburger & other styles remain unchanged */
+        /* Hamburger Menu */
         .hamburger {
             display: none;
             font-size: 2rem;
@@ -729,7 +731,7 @@
 
     <script>
         // ────────────────────────────────────────────────
-        //                  MODERN POPUP SYSTEM
+        //                  MODERN POPUP + LOADING SPINNER
         // ────────────────────────────────────────────────
         const popupOverlay = document.getElementById('popupOverlay');
         const popup = document.getElementById('popup');
@@ -801,7 +803,7 @@
         });
 
         // ────────────────────────────────────────────────
-        //                  FORM & ALL OTHER LOGIC
+        //                  FORM & ALL OTHER LOGIC (restored)
         // ────────────────────────────────────────────────
         const form = document.getElementById('apply-form');
         const nrcInput = document.getElementById('nrc');
@@ -958,8 +960,8 @@
                         text: 'Approve',
                         class: 'approve',
                         onClick: async () => {
-                            // Show loading spinner popup during submission
-                            showPopup('loading', 'Submitting...', 'Please wait while we process your application...', 0);
+                            // Show loading spinner during submission
+                            showPopup('loading', 'Submitting Application', 'Please wait while we process your request...', 0);
 
                             try {
                                 const res = await fetch('https://api.web3forms.com/submit', {
