@@ -1,247 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>KaChola Student Aid - Collateral-Based Student Loans</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'kachola-brown':   '#3B2415',
-            'kachola-gold':    '#D4A017',
-            'kachola-gold-lt': '#E8C670',
-            'apply-btn':       '#F59E0B',
-            'approve-green':   '#10B981',
-            'decline-red':     '#EF4444',
-          },
-          fontFamily: { oswald: ['Oswald', 'sans-serif'] }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaChola Student Aid</title>
+    <style>
+        :root {
+            --primary-color: #964B00;
+            --accent-color: #FFD700;
+            --background-color: #F5F5DC;
         }
-      }
-    }
-  </script>
 
-  <style>
-    body { background-color: #F5F0E9; }
-    .modal { display: none !important; }
-  </style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        header nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        header nav li {
+            margin-right: 20px;
+        }
+
+        header nav a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .hero {
+            background-image: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+            padding: 5rem;
+            text-align: center;
+            color: #fff;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #fff;
+            color: var(--accent-color);
+        }
+
+        form {
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            height: 40px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
-<body class="font-oswald text-gray-800">
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="logo.png" alt="KaChola Student Aid logo" width="50" height="50">
+            </div>
+            <h1>KaChola Student Aid</h1>
+            <ul>
+                <li><a href="                          
+                <li><a href="#my-applications">MY APPLICATIONS</a></li>
+                <li><a href="                                        
+                <li><a href="#contact">CONTACT</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="hero">
+            <h2>Empowering Students with Financial Aid</h2>
+            <p>Get the support you need to achieve your academic goals</p>
+            <button>APPLY NOW</button>
+        </section>
 
-  <!-- Navigation -->
-  <nav class="bg-kachola-brown text-white fixed top-0 left-0 right-0 z-50 shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16 md:h-18">
-        <div class="flex items-center space-x-3 sm:space-x-4">
-          <img src="pic.png" alt="Logo" class="h-9 sm:h-10 md:h-12 w-auto object-contain" />
-          <span class="text-xl sm:text-2xl md:text-3xl font-bold tracking-wide">
-            KaChola <span class="text-kachola-gold-lt">Student Aid</span>
-          </span>
-        </div>
-        <div class="flex items-center space-x-5 sm:space-x-8">
-          <a href="#form" class="px-5 py-2.5 bg-apply-btn text-white font-semibold rounded-full hover:bg-apply-btn-hover transition shadow-sm text-sm sm:text-base">
-            Apply Now
-          </a>
-          <a href="#" class="text-white hover:text-kachola-gold-lt font-medium text-sm sm:text-base">
-            My Applications
-          </a>
-        </div>
-      </div>
-    </div>
-  </nav>
+        <section id="apply">
+            <h2>Apply for a Loan</h2>
+            <form id="loan-form" action="https:                                          
+                <input type="hidden" name="access_key" value="fe293e23-d328-4bad-86e8-d9b531e2a37d">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                <label for="amount">Loan Amount:</label>
+                <input type="number" id="amount" name="amount" required>
+                <button type="submit">SUBMIT APPLICATION</button>
+            </form>
+        </section>
 
-  <div class="h-16 md:h-18"></div>
+        <section id="my-applications">
+            <h2>My Applications</h2>
+            <!-- Display applications here -->
+        </section>
+        <section id="interest-rates">
+            <h2>Interest Rates</h2>
+            <!-- Display interest rates here -->
+        </section>
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <!-- Contact form or info here -->
+        </section>
+    </main>
+    <script>
+        const form = document.getElementById('loan-form');
 
-  <main class="pt-4">
+        form.addEventListener('submit', (e) => {
+            const inputs = form.querySelectorAll('input');
+            let isValid = true;
 
-    <!-- Interest Rates -->
-    <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-white rounded-xl shadow-lg">
-      <h3 class="text-2xl font-bold text-kachola-gold text-center mb-5">Interest Rates (Flat – Charged Upfront)</h3>
-      <p class="text-center mb-6 text-gray-700">Repayment in full at end of term. Collateral required. No hidden fees.</p>
+            inputs.forEach((input) => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.style.border = '1px solid red';
+                    const errorMessage = document.createElement('div');
+                    errorMessage.textContent = `Please fill in ${input.placeholder || input.name}`;
+                    errorMessage.classList.add('error-message');
+                    input.parentNode.appendChild(errorMessage);
+                }
+            });
 
-      <div class="overflow-x-auto">
-        <table class="min-w-full bg-kachola-cream border border-kachola-brown-light rounded-lg overflow-hidden">
-          <thead class="bg-kachola-brown text-kachola-gold">
-            <tr>
-              <th class="px-6 py-3 text-center font-semibold">Term</th>
-              <th class="px-6 py-3 text-center font-semibold">Interest Rate</th>
-            </tr>
-          </thead>
-          <tbody class="text-center divide-y divide-kachola-brown-light">
-            <tr><td class="px-6 py-4">1 Week</td><td class="px-6 py-4 font-medium">11%</td></tr>
-            <tr><td class="px-6 py-4">2 Weeks</td><td class="px-6 py-4 font-medium">22%</td></tr>
-            <tr><td class="px-6 py-4">3 Weeks</td><td class="px-6 py-4 font-medium">34.5%</td></tr>
-            <tr><td class="px-6 py-4">4 Weeks</td><td class="px-6 py-4 font-medium">39%</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <p class="text-center mt-6 text-sm text-gray-600">
-        Example: ZMW 5,000 over 2 weeks → Interest ZMW 1,100 → Total repayment ZMW 6,100
-      </p>
-    </section>
-
-    <!-- Loan Application -->
-    <!-- YOUR ENTIRE ORIGINAL FORM SECTION REMAINS EXACTLY THE SAME -->
-    <!-- I DID NOT REMOVE ANY INPUTS -->
-
-  </main>
-
-  <!-- KEEP YOUR ORIGINAL MODALS HERE UNCHANGED -->
-
-  <script>
-    // ✅ FIX 1: Define form (THIS WAS MISSING)
-    const form = document.getElementById('loan-form');
-
-    const submitBtn = document.getElementById('submit-btn');
-    const formMessage = document.getElementById('form-message');
-    const amountInput = document.getElementById('loan-amount');
-    const termSelect = document.getElementById('loan-term');
-    const previewDiv = document.getElementById('repayment-preview');
-    const previewText = document.getElementById('repayment-text');
-    const amountError = document.getElementById('amount-error');
-    const confirmationCheck = document.getElementById('confirmation');
-    const hiddenDueDate = document.getElementById('hidden-due-date');
-
-    const dueModal = document.getElementById('due-modal');
-    const modalDate = document.getElementById('modal-date');
-    const approveBtn = document.getElementById('approve-btn');
-    const declineBtn = document.getElementById('decline-btn');
-
-    const thankModal = document.getElementById('thank-modal');
-    const closeThankBtn = document.getElementById('close-thank-btn');
-
-    const rates = { 1: 0.11, 2: 0.22, 3: 0.345, 4: 0.39 };
-    const minAmount = 200;
-    const maxAmount = 5000;
-
-    dueModal.style.display = 'none';
-    thankModal.style.display = 'none';
-
-    // ✅ FIX 2: Missing function
-    function formatDate(date) {
-      return date.toLocaleDateString('en-ZM', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    }
-
-    function validateAmount(amount) {
-      if (isNaN(amount) || amount < minAmount) {
-        amountError.textContent = `Minimum amount is ZMW ${minAmount}`;
-        amountError.classList.remove('hidden');
-        return false;
-      }
-      if (amount > maxAmount) {
-        amountError.textContent = `Maximum amount is ZMW ${maxAmount}`;
-        amountError.classList.remove('hidden');
-        return false;
-      }
-      amountError.classList.add('hidden');
-      return true;
-    }
-
-    function updatePreview() {
-      const amount = parseFloat(amountInput.value) || 0;
-      const weeks = parseInt(termSelect.value) || 0;
-
-      if (validateAmount(amount) && weeks >= 1 && weeks <= 4) {
-        const rate = rates[weeks];
-        const total = amount + (amount * rate);
-        previewText.textContent = `You will pay back ZMW ${Math.round(total).toLocaleString('en-US')}`;
-        previewDiv.classList.remove('hidden');
-      } else {
-        previewDiv.classList.add('hidden');
-      }
-    }
-
-    // ✅ FIX 3: Proper checkbox validation
-    function checkFormReady() {
-      const required = form.querySelectorAll('[required]');
-      let valid = true;
-
-      required.forEach(field => {
-        if (field.type === "checkbox") {
-          if (!field.checked) valid = false;
-        } else {
-          if (!field.value.trim()) valid = false;
-        }
-      });
-
-      submitBtn.disabled = !valid;
-    }
-
-    submitBtn.addEventListener('click', () => {
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-
-      const weeks = parseInt(termSelect.value);
-      const today = new Date();
-      const dueDate = new Date(today);
-      dueDate.setDate(today.getDate() + weeks * 7);
-
-      modalDate.textContent = formatDate(dueDate);
-      dueModal.style.display = 'flex';
-    });
-
-    approveBtn.addEventListener('click', async () => {
-      dueModal.style.display = 'none';
-
-      const weeks = parseInt(termSelect.value);
-      const today = new Date();
-      const dueDate = new Date(today);
-      dueDate.setDate(today.getDate() + weeks * 7);
-      hiddenDueDate.value = formatDate(dueDate);
-
-      formMessage.textContent = 'Submitting...';
-      formMessage.className = 'text-blue-600';
-
-      const formData = new FormData(form);
-
-      try {
-        const res = await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          body: formData
+            if (!isValid) {
+                e.preventDefault();
+            }
         });
-
-        const data = await res.json();
-
-        if (data.success) {
-          thankModal.style.display = 'flex';
-          form.reset();
-        } else {
-          formMessage.textContent = 'Submission failed.';
-          formMessage.className = 'text-red-600';
-        }
-      } catch (err) {
-        formMessage.textContent = 'Network error.';
-        formMessage.className = 'text-red-600';
-      }
-    });
-
-    declineBtn.addEventListener('click', () => dueModal.style.display = 'none');
-    closeThankBtn.addEventListener('click', () => thankModal.style.display = 'none');
-
-    amountInput.addEventListener('input', updatePreview);
-    termSelect.addEventListener('change', updatePreview);
-    confirmationCheck.addEventListener('change', checkFormReady);
-
-    form.querySelectorAll('input, select, textarea').forEach(el => {
-      el.addEventListener('input', checkFormReady);
-    });
-
-    checkFormReady();
-  </script>
-
+    </script>
 </body>
 </html>
