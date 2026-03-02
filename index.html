@@ -16,14 +16,38 @@
         }
 
         * { margin:0; padding:0; box-sizing:border-box; }
+
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background-color: var(--beige);
-            color: #333;
+            color: #222;
             line-height: 1.6;
+            min-height: 100vh;
+            background: url('photo.png') no-repeat center center fixed;
+            background-size: cover;
+            background-attachment: fixed;
+            position: relative;
         }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
+        /* Very faint overlay to keep text readable without solid backgrounds */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.78); /* light white tint – adjust opacity if needed */
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        main, section, header, footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
 
         header {
             background: var(--brown);
@@ -31,7 +55,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
         }
 
         header .container {
@@ -55,14 +79,14 @@
         .word-kachola,
         .word-student,
         .word-aid {
-            text-shadow: 0 1px 4px rgba(0,0,0,0.35);
+            text-shadow: 0 1px 4px rgba(0,0,0,0.4);
             transition: text-shadow 0.3s ease;
         }
 
         .word-kachola:hover,
         .word-student:hover,
         .word-aid:hover {
-            text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
         }
 
         .word-kachola { color: #DAA520; }
@@ -89,10 +113,11 @@
         nav a:hover { color: var(--gold); }
 
         #hero {
-            background: var(--brown);
+            background: rgba(92, 51, 23, 0.75);
             color: white;
             text-align: center;
             padding: 80px 15px;
+            backdrop-filter: blur(3px);
         }
 
         #hero h1 { font-size: 2.4rem; margin-bottom: 16px; }
@@ -112,7 +137,12 @@
 
         .btn:hover { background: var(--light-gold); }
 
-        section { padding: 60px 0; }
+        section {
+            padding: 60px 0;
+            background: rgba(255,255,255,0.82); /* very light overlay only for content readability */
+            margin: 20px 0;
+            border-radius: 12px;
+        }
 
         h2 {
             color: var(--brown);
@@ -142,6 +172,7 @@
             border: 1px solid var(--brown);
             border-radius: 6px;
             font-size: 1rem;
+            background: rgba(255,255,255,0.95);
         }
 
         .hidden { display: none; }
@@ -149,7 +180,7 @@
         #repayment-info {
             padding: 16px;
             border-radius: 8px;
-            background: #f9f9f9;
+            background: rgba(255,255,255,0.95);
             border: 1px solid #ddd;
             margin: 12px 0;
             font-size: 1.05rem;
@@ -186,7 +217,7 @@
             width: 100%;
             margin: 30px auto;
             border-collapse: collapse;
-            background: white;
+            background: rgba(255,255,255,0.95);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border-radius: 10px;
         }
@@ -199,14 +230,15 @@
 
         .rates-table th { background: var(--brown); color: white; }
 
-        .rates-table tr:nth-child(even) { background: #fbfaf8; }
+        .rates-table tr:nth-child(even) { background: rgba(251,250,248,0.9); }
 
+        /* Responsive table for small screens */
         @media (max-width: 600px) {
             .rates-table thead { display: none; }
             .rates-table tr {
                 display: block;
                 margin-bottom: 15px;
-                border: 1px solid #ddd;
+                border: 1px solid rgba(0,0,0,0.15);
                 border-radius: 8px;
                 overflow: hidden;
             }
@@ -215,7 +247,10 @@
                 text-align: right;
                 position: relative;
                 padding-left: 50%;
+                border: none;
+                border-bottom: 1px solid #eee;
             }
+            .rates-table td:last-child { border-bottom: none; }
             .rates-table td::before {
                 content: attr(data-label);
                 position: absolute;
@@ -226,11 +261,14 @@
                 text-align: left;
                 background: var(--brown);
                 color: white;
+                height: 100%;
+                display: flex;
+                align-items: center;
             }
         }
 
         .status-box {
-            background: white;
+            background: rgba(255,255,255,0.95);
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -247,13 +285,13 @@
         }
 
         .status-pending {
-            background: #fff3cd;
+            background: rgba(255,243,205,0.95);
             color: #856404;
             border: 1px solid #ffeeba;
         }
 
         .status-success {
-            background: #d4edda;
+            background: rgba(212,237,218,0.95);
             color: #155724;
             border: 1px solid #c3e6cb;
         }
@@ -264,7 +302,7 @@
         }
 
         .application-item {
-            background: #f8f9fa;
+            background: rgba(248,249,250,0.95);
             padding: 15px;
             margin: 12px 0;
             border-radius: 8px;
@@ -278,6 +316,8 @@
             text-align: center;
             padding: 25px 15px;
             margin-top: 40px;
+            position: relative;
+            z-index: 1;
         }
 
         @media (max-width: 768px) {
@@ -423,43 +463,41 @@
     </section>
 
     <!-- INTEREST RATES -->
-    <section id="rates" style="background:#fff;">
+    <section id="rates">
         <div class="container">
             <h2>Interest Rates</h2>
             <h3 style="text-align:center; margin-bottom:30px;">STUDENT FRIENDLY INTEREST RATES</h3>
 
-            <div class="rates-table-wrapper">
-                <table class="rates-table">
-                    <thead>
-                        <tr>
-                            <th data-label="Duration">Duration</th>
-                            <th data-label="Interest Rate">Interest Rate</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td data-label="Duration">1 Week</td>
-                            <td data-label="Interest Rate">11.6%</td>
-                        </tr>
-                        <tr>
-                            <td data-label="Duration">2 Weeks</td>
-                            <td data-label="Interest Rate">22.7%</td>
-                        </tr>
-                        <tr>
-                            <td data-label="Duration">3 Weeks</td>
-                            <td data-label="Interest Rate">32.8%</td>
-                        </tr>
-                        <tr>
-                            <td data-label="Duration">4 Weeks</td>
-                            <td data-label="Interest Rate">38.9%</td>
-                        </tr>
-                        <tr>
-                            <td data-label="Duration">5 Weeks</td>
-                            <td data-label="Interest Rate">48.95%</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <table class="rates-table">
+                <thead>
+                    <tr>
+                        <th data-label="Duration">Duration</th>
+                        <th data-label="Interest Rate">Interest Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-label="Duration">1 Week</td>
+                        <td data-label="Interest Rate">11.6%</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Duration">2 Weeks</td>
+                        <td data-label="Interest Rate">22.7%</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Duration">3 Weeks</td>
+                        <td data-label="Interest Rate">32.8%</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Duration">4 Weeks</td>
+                        <td data-label="Interest Rate">38.9%</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Duration">5 Weeks</td>
+                        <td data-label="Interest Rate">48.95%</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </section>
 
@@ -481,7 +519,7 @@
     </section>
 
     <!-- MY APPLICATIONS -->
-    <section id="my-applications" style="background:#fff;">
+    <section id="my-applications">
         <div class="container">
             <h2>My Applications</h2>
             <div class="status-box">
@@ -505,6 +543,10 @@
     </footer>
 
     <script>
+        // ────────────────────────────────────────────────
+        //                  JAVASCRIPT (unchanged)
+        // ────────────────────────────────────────────────
+
         const form = document.getElementById('apply-form');
         const nrcInput = document.getElementById('nrc');
         const tenureSelect = document.getElementById('loan_tenure');
