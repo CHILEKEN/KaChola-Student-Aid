@@ -23,11 +23,7 @@
             line-height: 1.6;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
 
         header {
             background: var(--brown);
@@ -47,14 +43,8 @@
             gap: 12px;
         }
 
-        .logo-and-name {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
+        .logo-and-name { display: flex; align-items: center; gap: 12px; }
         .logo { height: 50px; }
-
         .business-name {
             font-size: 1.45rem;
             font-weight: 700;
@@ -65,14 +55,14 @@
         .word-kachola,
         .word-student,
         .word-aid {
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+            text-shadow: 0 1px 4px rgba(0,0,0,0.35);
             transition: text-shadow 0.3s ease;
         }
 
         .word-kachola:hover,
         .word-student:hover,
         .word-aid:hover {
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.45);
         }
 
         .word-kachola { color: #DAA520; }
@@ -112,13 +102,12 @@
             background: var(--gold);
             color: var(--brown);
             padding: 12px 28px;
-            text-decoration: none;
-            font-weight: bold;
             border-radius: 6px;
+            font-weight: bold;
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-size: 1rem;
         }
 
         .btn:hover { background: var(--light-gold); }
@@ -175,13 +164,6 @@
             font-weight: bold;
             margin: 16px 0;
             min-height: 24px;
-        }
-
-        .contact-info {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 1.3rem;
-            line-height: 1.8;
         }
 
         .whatsapp-btn {
@@ -251,6 +233,20 @@
             border: 1px solid #c3e6cb;
         }
 
+        .application-list {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .application-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 8px;
+            border-left: 5px solid var(--green);
+            font-size: 1.05rem;
+        }
+
         footer {
             background: var(--brown);
             color: white;
@@ -259,49 +255,13 @@
             margin-top: 40px;
         }
 
-        /* ──────────────────────────────────────────────── */
-        /*               RESPONSIVE DESIGN                  */
-        /* ──────────────────────────────────────────────── */
-
-        @media (max-width: 992px) {
-            header .container {
-                flex-direction: column;
-                gap: 12px;
-            }
-            nav ul {
-                justify-content: center;
-                gap: 16px;
-                font-size: 0.9rem;
-            }
-        }
-
         @media (max-width: 768px) {
             .logo { height: 45px; }
             .business-name { font-size: 1.3rem; }
-            .logo-and-name { gap: 10px; }
-
-            #hero { padding: 60px 15px; }
-            #hero h1 { font-size: 2rem; }
-            #hero p  { font-size: 1.05rem; }
-
+            nav ul { gap: 16px; font-size: 0.9rem; }
             h2 { font-size: 1.9rem; }
-            h3 { font-size: 1.35rem; }
-
             .btn { padding: 12px 24px; font-size: 1rem; }
-
             input, select, textarea { font-size: 0.97rem; padding: 11px; }
-
-            .rates-table th, .rates-table td { padding: 12px; font-size: 0.92rem; }
-
-            .status-item { font-size: 1.15rem; padding: 15px; }
-
-            .whatsapp-btn { padding: 12px 24px; font-size: 1rem; }
-        }
-
-        @media (max-width: 480px) {
-            .container { padding: 0 12px; }
-            nav ul { gap: 12px; font-size: 0.85rem; }
-            .business-name { font-size: 1.15rem; }
         }
     </style>
 </head>
@@ -341,7 +301,7 @@
     <section id="apply">
         <div class="container">
             <h2>Apply Now</h2>
-            <p style="text-align:center; max-width:720px; margin:0 auto 40px; font-size:1.1rem;">
+            <p style="text-align:center; max-width:720px; margin:0 auto 40px;">
                 Fill in the form below to request collateral-based financial support.<br>
                 All submitted information is treated confidentially.
             </p>
@@ -357,14 +317,14 @@
                 <input type="text" name="first_name"    placeholder="Name (First Name) *" required>
                 <input type="text" name="middle_name"   placeholder="Middle Name (if applicable)">
                 <input type="text" name="last_name"     placeholder="Last Name *" required>
-                <input type="tel"  name="phone"         placeholder="Phone Number (preferably WhatsApp) *" pattern="^(09[567]|07[567]|096|075|095)[0-9]{7}$" title="Zambian mobile format: 097xxxxxxx, 077xxxxxxx etc." required>
+                <input type="tel"  name="phone"         placeholder="Phone Number (preferably WhatsApp) *" pattern="^(09[567]|07[567]|096|075|095)[0-9]{7}$" title="Zambian mobile format" required>
                 <input type="email" name="email"        placeholder="Email Address *" required>
 
                 <input type="text" id="nrc" name="nrc"
                        placeholder="NRC Number (e.g. 123456/78/1) *"
                        maxlength="11"
                        pattern="^\d{6}/\d{2}/1$"
-                       title="Format: 6 digits / 2 digits / 1 (Zambian citizen format)"
+                       title="Format: 6 digits / 2 digits / 1"
                        required>
 
                 <input type="tel"  name="next_of_kin"
@@ -445,18 +405,13 @@
 
             <div class="rates-table-wrapper">
                 <table class="rates-table">
-                    <thead>
-                        <tr>
-                            <th>Duration</th>
-                            <th>Interest Rate</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Duration</th><th>Interest Rate</th></tr></thead>
                     <tbody>
-                        <tr><td>1 Week</td>     <td>11.6%</td></tr>
-                        <tr><td>2 Weeks</td>    <td>22.7%</td></tr>
-                        <tr><td>3 Weeks</td>    <td>32.8%</td></tr>
-                        <tr><td>4 Weeks</td>    <td>38.9%</td></tr>
-                        <tr><td>5 Weeks</td>    <td>48.95%</td></tr>
+                        <tr><td>1 Week</td><td>11.6%</td></tr>
+                        <tr><td>2 Weeks</td><td>22.7%</td></tr>
+                        <tr><td>3 Weeks</td><td>32.8%</td></tr>
+                        <tr><td>4 Weeks</td><td>38.9%</td></tr>
+                        <tr><td>5 Weeks</td><td>48.95%</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -467,14 +422,12 @@
     <section id="contact">
         <div class="container">
             <h2>Contact</h2>
-
-            <div class="contact-info" style="margin-top: 60px;">
+            <div class="contact-info" style="margin-top:60px; text-align:center;">
                 <a href="https://wa.me/260979236667" target="_blank" class="whatsapp-btn">
                     <i class="fab fa-whatsapp fa-2x"></i> Chat on WhatsApp
                 </a>
-
-                <p style="margin-top: 40px; font-size: 1.3rem;">
-                    Email: <a href="mailto:Kachola.aid@yahoo.com" style="color: var(--brown); font-weight: bold;">
+                <p style="margin-top:40px; font-size:1.3rem;">
+                    Email: <a href="mailto:Kachola.aid@yahoo.com" style="color:var(--brown); font-weight:bold;">
                         Kachola.aid@yahoo.com
                     </a>
                 </p>
@@ -486,7 +439,6 @@
     <section id="my-applications" style="background:#fff;">
         <div class="container">
             <h2>My Applications</h2>
-
             <div class="status-box">
                 <div class="status-item status-pending">
                     <strong>PENDING</strong><br>
@@ -495,7 +447,7 @@
 
                 <div class="status-item status-success">
                     <strong>SUCCESS, wait to be contacted</strong><br>
-                    Applications that have been submitted
+                    <div class="application-list" id="submitted-list"></div>
                 </div>
             </div>
         </div>
@@ -508,10 +460,6 @@
     </footer>
 
     <script>
-        // ────────────────────────────────────────────────
-        //                  JAVASCRIPT (full functionality)
-        // ────────────────────────────────────────────────
-
         const form = document.getElementById('apply-form');
         const nrcInput = document.getElementById('nrc');
         const tenureSelect = document.getElementById('loan_tenure');
@@ -521,6 +469,7 @@
         const repaymentDueEl = document.getElementById('repayment-due');
         const ownershipSelect = document.getElementById('ownership');
         const borrowedSection = document.getElementById('borrowed_owner');
+        const submittedList = document.getElementById('submitted-list');
 
         const rates = {1: 11.6, 2: 22.7, 3: 32.8, 4: 38.9, 5: 48.95};
 
@@ -574,15 +523,15 @@
             borrowedSection.classList.toggle('hidden', ownershipSelect.value !== 'Borrowed');
         });
 
-        // Form persistence
-        function saveForm() {
+        // Form persistence (draft)
+        function saveDraft() {
             const data = {};
             new FormData(form).forEach((v,k) => data[k] = v);
-            localStorage.setItem('kacholaApplyForm', JSON.stringify(data));
+            localStorage.setItem('kacholaApplyDraft', JSON.stringify(data));
         }
 
-        function loadForm() {
-            const saved = localStorage.getItem('kacholaApplyForm');
+        function loadDraft() {
+            const saved = localStorage.getItem('kacholaApplyDraft');
             if (saved) {
                 const data = JSON.parse(saved);
                 Object.keys(data).forEach(k => {
@@ -594,10 +543,51 @@
             }
         }
 
-        form.addEventListener('input', saveForm);
-        window.addEventListener('load', loadForm);
+        form.addEventListener('input', saveDraft);
+        window.addEventListener('load', loadDraft);
 
-        // Submit with approval
+        // Save submitted application
+        function saveSubmitted() {
+            const data = {};
+            new FormData(form).forEach((v,k) => data[k] = v);
+
+            const submitted = JSON.parse(localStorage.getItem('kacholaSubmitted') || '[]');
+            submitted.push({
+                name: `${data.first_name || ''} ${data.last_name || ''}`.trim() || 'Unknown',
+                phone: data.phone || '—',
+                amount: data.loan_amount || '—',
+                tenure: data.loan_tenure || '—',
+                repayment: repaymentAmountEl.textContent || '—',
+                due: repaymentDueEl.textContent || '—',
+                time: new Date().toLocaleString()
+            });
+            localStorage.setItem('kacholaSubmitted', JSON.stringify(submitted));
+        }
+
+        // Display submitted applications
+        function showSubmitted() {
+            const submitted = JSON.parse(localStorage.getItem('kacholaSubmitted') || '[]');
+            submittedList.innerHTML = '';
+
+            if (submitted.length === 0) {
+                submittedList.innerHTML = '<p style="color:#666; font-style:italic;">No successful submissions yet.</p>';
+            } else {
+                submitted.forEach(app => {
+                    const item = document.createElement('div');
+                    item.className = 'application-item';
+                    item.innerHTML = `
+                        <strong>${app.name}</strong><br>
+                        Phone: ${app.phone}<br>
+                        Loan: ${app.amount} ZMW – ${app.tenure} week(s)<br>
+                        Repay: ${app.repayment} due on ${app.due}<br>
+                        <small>Submitted: ${app.time}</small>
+                    `;
+                    submittedList.appendChild(item);
+                });
+            }
+        }
+
+        // Submit handler
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -634,7 +624,13 @@
                 if (data.success) {
                     document.getElementById('apply-message').style.color = 'green';
                     document.getElementById('apply-message').textContent = 'Application sent successfully!';
-                    localStorage.removeItem('kacholaApplyForm');
+
+                    // Save to submitted list
+                    saveSubmitted();
+                    showSubmitted();
+
+                    // Clear draft & form
+                    localStorage.removeItem('kacholaApplyDraft');
                     form.reset();
                     repaymentInfo.classList.add('hidden');
                 } else {
@@ -646,10 +642,10 @@
             }
         });
 
-        // Contact form handler (if you ever add a form again)
-        document.getElementById('contact-form')?.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            // ... same as before ...
+        // Load everything on page load
+        window.addEventListener('load', () => {
+            loadDraft();
+            showSubmitted();
         });
     </script>
 
